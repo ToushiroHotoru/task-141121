@@ -7,6 +7,25 @@
     <title>Document</title>
 </head>
 <body>
-    <div>hello world</div>
+    <div id="content_wrap">
+    <button class="123">123</button>
+        <script>
+            $("body").on("click", ".123", function () {
+                $.ajax({
+                    url: "/all-data",
+                    type: "GET",
+                    data: {
+                    page: data,
+                    },
+                     success: function (data) {
+                        const parsedData = JSON.parse(data);
+                     }
+                })
+            })
+        </script>
+
+
+
+    </div>
 </body>
 </html>
