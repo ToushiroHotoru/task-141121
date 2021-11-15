@@ -14,25 +14,64 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
+
 app.get("/send-data", async (req, res) => {
     const dataForm = new DataForm({
         city: {
             cityName: 'cheby',
             company: [{
-                companyName: 'fist.inc',
-                workers: [{
-                    workerName: 'Tolyan',
-                }],
-            }],
-        }
+                    companyName: 'fist.inc',
+                    workers: [{
+                            workerName: 'Tolyan',
+                        },
+                        {
+                            workerName: 'Lena',
+                        },
+                        {
+                            workerName: 'Roma',
+                        },
+                    ],
+                },
+                {
+                    companyName: 'fist132.inc',
+                    workers: [{
+                            workerName: 'Tolyan',
+                        },
+                        {
+                            workerName: 'Lena',
+                        },
+                        {
+                            workerName: 'Roma',
+                        },
+                    ],
+                },
+                {
+                    companyName: 'fist.inc',
+                    workers: [{
+                            workerName: 'Tolyan',
+                        },
+                        {
+                            workerName: 'Lena',
+                        },
+                        {
+                            workerName: 'Roma',
+                        },
+                    ],
+                },
+            ],
+        },
+        
     });
-    try {
-        const data = await dataForm.save();
-        res.send(data);
-    } catch (err) {
+
+   dataForm.save()
+    .then((result) => {
+        res.redirect('/');
+    })
+    .catch((err)=>{
         console.log(err);
-    }
+    })
 });
+
 
 app.get("/all-data", async (req, res) => {
     try {
