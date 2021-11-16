@@ -1,26 +1,27 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const dataForms = new Schema({
-  city: {
-    cityName: {
-      type: String,
-      required: true
-    },
-    company: [{
-      companyName: {
+const dataForms = new Schema(
+  {
+    city: {
+      cityName: {
         type: String,
+        required: true,
       },
-      workers: [{
-        workerName: {
-          type: String,
+      company: [
+        {
+          companyName: {
+            type: String,
+          },
+          workers: [],
         },
-      }],
-    }],
+      ],
+    },
+  },
+  {
+    timestamps: true,
   }
-}, {
-  timestamps: true
-});
+);
 
 const dataFrom = mongoose.model("dataFrom", dataForms);
 module.exports = dataFrom;
