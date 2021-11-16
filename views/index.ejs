@@ -1,31 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
 </head>
+
 <body>
-    <div id="content_wrap">
-    <button class="123">123</button>
-        <script>
-            $("body").on("click", ".123", function () {
-                $.ajax({
-                    url: "/all-data",
-                    type: "GET",
-                    data: {
-                    page: data,
-                    },
-                     success: function (data) {
-                        const parsedData = JSON.parse(data);
-                     }
-                })
-            })
-        </script>
-
-
-
+    <div class="main">
+        <div class="main-btn-roup mb-2">
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="btnradio1">Чек-лист</label>
+                  
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio2">Результаты</label>
+                  </div>
+              </div>
+        </div>
+        <hr />
+        <div class="main-select-group">
+            
+        <select name="select" class="city form-select main-select-group__item">
+            <option selected>Выберите подразделение</option>
+        </select>
+        <select name="select" class="company form-select main-select-group__item">
+            <option selected>Выберите салон</option>
+        </select>
+        <div>
+            <input type="text" class="form-control search" placeholder="Введите ФИО менеджера" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default"></div>
+        <div class="main-search_help"></div>
+        
     </div>
+    <hr />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $("document").ready(function () {
+            $.ajax({
+                url: "/all-data",
+                type: "GET",
+                success: function (data) {
+                    let i = 0;
+                    for (key in data) {
+                        $(".city").append(
+                            `<option class="cityName">${getCityName(data[key]["city"])}</option>`
+                        );
+
+                        i++;
+                    }
+
+                    $('.city').change(function () {
+                        const form = $(this)
+                        let output = form.val();
+                        for (key in data) {
+                            if (data[key]["city"]['cityName'] == output) {
+                                $(".company").append(
+                                    `${getCompanyName(data[key]["city"]["company"])}`
+                                );
+                            }
+                        }
+                    });
+
+                    function getCityName(object) {
+                        let data = "";
+                        let i = 1;
+                        data += object["cityName"];
+                        return data;
+                    }
+
+                    function getCompanyName(data) {
+                        console.log(data);
+                        let leak = [];
+                        for (let i = 0; i < data.length; i++) {
+
+                            leak.push('<option class="companyName">' + data[i]["companyName"] +
+                                '</option>');
+                            console.log(data[i]["companyName"]);
+
+                        }
+                        console.log(leak);
+                        return leak;
+                    }
+
+
+                    $(".search").keyup(function () {
+                        const search = $(this);
+                        let searchValue = search.val();
+                        for(key in data){
+                            for(let i = 0; i < data[key]["city"]["company"].length; i++) {
+                                for(let j = 0; j < data[key]["city"]["company"][i]["workers"].length; j++) {
+                                    if(data[key]["city"]["company"][i]["workers"][j]["workerName"].includes(searchValue)){
+                                        $(".main-search_help").css("display", "block");
+                                        $(".main-search_help").text(data[key]["city"]["company"][i]["workers"][j]["workerName"]);
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                }
+            })
+        })
+    </script>
+
 </body>
+
 </html>
