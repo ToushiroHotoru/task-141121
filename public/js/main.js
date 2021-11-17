@@ -30,7 +30,6 @@ $("document").ready(function () {
         if (output !== "Выберите салон") {
           $(".search").removeAttr("readonly");
         }
-        console.log(getWorkersNames());
         $(".search").autocomplete({
           source: getWorkersNames(),
         });
@@ -59,6 +58,7 @@ $("document").ready(function () {
         for (key in data) {
           for (let i = 0; i < data[key]["city"]["company"].length; i++) {
             if (companyName == data[key]["city"]["company"][i]["companyName"]) {
+              var workersGlobal = data[key]["city"]["company"][i]["workers"];
               return data[key]["city"]["company"][i]["workers"];
             }
           }
@@ -68,30 +68,45 @@ $("document").ready(function () {
   });
 });
 
-$("body").on("keyup", ".search", function () {
+
+$("body").on("keyup || click", ".search", function () {
   let workerName = $(".search").val();
   $.ajax({
     url: "/quiz",
     type: "GET",
     success: function (data) {
       $(".main-form").empty();
+      if(workerName != ""){
       let i = 1;
       $(".main-form").append(`${workerName}`);
+      //console.log(workersGlobal);
       for (key in data) {
         $(".main-form").append(`
          <div>${i}. ${data[key]["note"]}</div>
         <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
-          <label class="form-check-label" for="flexSwitchCheckChecked">no</label>
+          <input class="form-check-input pala${i}" swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
+          <label class="form-check-label pala${i}" swich_id="${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
         </div>
       `);
         i++;
+        // Функция для смены no/yes
+     
       }
+         $(".form-check-input").click(function () {
+            let swid = $(this).attr("swich_id");
+            if (this.checked) {
+              $(".pala" + swid).text("yes");
+            } else {
+              $(".pala" + swid).text("no");
+            }
+          });
+       // Функция для смены no/yes 
       $(".main-form").append(
-        `<button class="btn btn-primary">Отправить</button>`
+        `<button onclick="alert('1')" id="pal3" class="btn btn-primary">Отправить</button>`
       );
-
+      }
       $()
     },
   });
 });
+
