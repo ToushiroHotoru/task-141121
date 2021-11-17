@@ -33,7 +33,16 @@ app.get("/all-data", async (req, res) => {
   }
 });
 
-app.post("/quiz", async (req, res) => {
+app.get("/quiz", async (req, res) => {
+  try {
+    const result = await Quiz.find().lean();
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/quiz-save", async (req, res) => {
   const quiz = new Quiz(req.body);
   try {
     await quiz.save();

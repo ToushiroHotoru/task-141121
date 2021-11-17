@@ -30,11 +30,14 @@ $("document").ready(function () {
         if (output !== "Выберите салон") {
           $(".search").removeAttr("readonly");
         }
+        console.log(getWorkersNames());
+        $(".search").autocomplete({
+          source: getWorkersNames(),
+        });
       });
 
       function getCityName(object) {
         let data = "";
-        let i = 1;
         data += object["cityName"];
         return data;
       }
@@ -48,22 +51,47 @@ $("document").ready(function () {
               "</option>"
           );
         }
-
         return leak;
       }
 
-      $(".search").keyup(function () {
+      function getWorkersNames() {
+        let companyName = $(".company").val();
         for (key in data) {
           for (let i = 0; i < data[key]["city"]["company"].length; i++) {
-            let avilableNames = data[key]["city"]["company"][i]["workers"];
-
-            console.log(avilableNames);
-            $(".search").autocomplete({
-              source: avilableNames,
-            });
+            if (companyName == data[key]["city"]["company"][i]["companyName"]) {
+              return data[key]["city"]["company"][i]["workers"];
+            }
           }
         }
-      });
+      }
+    },
+  });
+});
+
+$("body").on("keyup", ".search", function () {
+  let workerName = $(".search").val();
+  $.ajax({
+    url: "/quiz",
+    type: "GET",
+    success: function (data) {
+      $(".main-form").empty();
+      let i = 1;
+      $(".main-form").append(`${workerName}`);
+      for (key in data) {
+        $(".main-form").append(`
+         <div>${i}. ${data[key]["note"]}</div>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+          <label class="form-check-label" for="flexSwitchCheckChecked">no</label>
+        </div>
+      `);
+        i++;
+      }
+      $(".main-form").append(
+        `<button class="btn btn-primary">Отправить</button>`
+      );
+
+      $()
     },
   });
 });
