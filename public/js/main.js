@@ -68,18 +68,18 @@ $("document").ready(function () {
   });
 });
 
-function palfun1(cnopcaN){
-      if (cnopcaN == 1) {
-        alert('1');
-      }
-      if (cnopcaN == 2) {
-        alert('2');
-      }
-      }
+function palfun1(cnopcaN) {
+  if (cnopcaN == 1) {
+    alert("1");
+  }
+  if (cnopcaN == 2) {
+    alert("2");
+  }
+}
 
-function palfun2(){
-      alert('1');
-      }
+function palfun2() {
+  alert("1");
+}
 
 $("body").on("keyup || click", ".search", function () {
   let workerName = $(".search").val();
@@ -88,37 +88,35 @@ $("body").on("keyup || click", ".search", function () {
     type: "GET",
     success: function (data) {
       $(".main-form").empty();
-      if(workerName != ""){
-      let i = 1;
-      $(".main-form").append(`${workerName}`);
-      //console.log(workersGlobal);
-      for (key in data) {
-        $(".main-form").append(`
+      if (workerName != "") {
+        let i = 1;
+        $(".main-form").append(`${workerName}`);
+        //console.log(workersGlobal);
+        for (key in data) {
+          $(".main-form").append(`
          <div>${i}. ${data[key]["note"]}</div>
         <div class="form-check form-switch">
-          <input class="form-check-input pala${i}" swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
-          <label class="form-check-label pala${i}" swich_id="${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
+          <input class="form-check-input" swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
+          <label class="form-check-label pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
         </div>
       `);
-        i++;
+          i++;
+          // Функция для смены no/yes
+        }
+        $(".form-check-input").click(function () {
+          let swid = $(this).attr("swich_id");
+          if (this.checked) {
+            $(".pala" + swid).text("yes");
+          } else {
+            $(".pala" + swid).text("no");
+          }
+        });
         // Функция для смены no/yes
-     
+        $(".main-form").append(
+          `<button onclick="palfun2()" id="pal3" class="btn btn-primary">Отправить</button>`
+        );
       }
-         $(".form-check-input").click(function () {
-            let swid = $(this).attr("swich_id");
-            if (this.checked) {
-              $(".pala" + swid).text("yes");
-            } else {
-              $(".pala" + swid).text("no");
-            }
-          });
-       // Функция для смены no/yes 
-      $(".main-form").append(
-        `<button onclick="palfun2()" id="pal3" class="btn btn-primary">Отправить</button>`
-      );
-      }
-      $()
+      $();
     },
   });
 });
-
