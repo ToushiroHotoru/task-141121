@@ -68,6 +68,18 @@ $("document").ready(function () {
   });
 });
 
+function palfun1(cnopcaN){
+      if (cnopcaN == 1) {
+        alert('1');
+      }
+      if (cnopcaN == 2) {
+        alert('2');
+      }
+      }
+
+function palfun2(){
+      alert('1');
+      }
 
 $("body").on("keyup || click", ".search", function () {
   let workerName = $(".search").val();
@@ -102,7 +114,7 @@ $("body").on("keyup || click", ".search", function () {
           });
        // Функция для смены no/yes 
       $(".main-form").append(
-        `<button onclick="alert('1')" id="pal3" class="btn btn-primary">Отправить</button>`
+        `<button onclick="palfun2()" id="pal3" class="btn btn-primary">Отправить</button>`
       );
       }
       $()
