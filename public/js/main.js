@@ -71,13 +71,15 @@ $("document").ready(function () {
               select: function (event, ui) {
                 $(".main-form").empty();
                 if (workNames.includes(ui.item.value)) {
-                  $(".main-form").append(`<div class="nameTo">${ui.item.value}</div>`);
+                  $(".main-form").append(
+                    `<div class="nameTo">${ui.item.value}</div>`
+                  );
                   let i = 1;
                   for (key in data) {
                     $(".main-form").append(`
                       <div>${i}. ${data[key]["note"]}</div>
                       <div class="form-check form-switch">
-                        <input class="form-check-input" swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
+                        <input class="form-check-input quiz" swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
                       </div>
                     `);
@@ -113,24 +115,37 @@ function palfun1(cnopcaN) {
   }
 }
 
-$("body").on("click",".otpravka", function(){
-  let Name = $(".nameTo").val();
-  let company = $(".company ").val();
+$("body").on("click", ".otpravka", async function (e) {
+  e.preventDefault();
+  let name = $(".nameTo").text();
+  let companyName = $(".company").val();
   let cityName = $(".city").val();
-  let answers = $(".city").val();
-$.ajax({
-  url: "/save-answer",
-  type: "POST",
-  data: {
-    cityName: cityName,
-    company:company,
-    name: Name,
-    answers:answers
-  },
-  success: function () {
-  console.log(cityName, company, Name, answers) 
-  },
-  
+  console.log("point");
+  let answers = [];
+  $(".quiz:checkbox").each(function () {
+    if ($(this).is(":checked")) {
+      answers.push("yes");
+    } else {
+      answers.push("no");
+    }
+  });
+  console.log(cityName, companyName, name, answers);
+  console.log(answers);
 
-})
+  $.ajax({
+    url: "/save-answer",
+    type: "POST",
+    data: {
+      cityName: cityName,
+      companyName: companyName,
+      name: name,
+      answers: answers,
+    },
+    success: function () {
+      console.log("kek");
+    },
+    error: function (e) {
+      throw e;
+    },
+  });
 });

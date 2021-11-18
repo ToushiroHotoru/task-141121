@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const DataForm = require("./models/dataForms");
 const Quiz = require("./models/quiz");
-const AnserForm = require("./models/answerForm");
+const AnswerForm = require("./models/answerForm");
 
 const app = express();
 
@@ -44,7 +44,7 @@ app.get("/quiz", async (req, res) => {
 });
 
 app.post("/save-answer", async (req, res) => {
-  const data = new AnserForm(req.body);
+  const data = new AnswerForm(req.body);
   try {
     await data.save();
   } catch (err) {

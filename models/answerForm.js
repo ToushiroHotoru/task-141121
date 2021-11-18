@@ -16,18 +16,7 @@ const answerForms = new Schema(
         type: String,
         required: true,
       },
-      answers: [
-        {
-          question: {
-            type: String,
-            required: true,
-          },
-          answer: {
-            type: String,
-            required: true,
-          },
-        },
-      ],
+      answers: [],
     },
   },
   {
