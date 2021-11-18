@@ -61,20 +61,18 @@ $("document").ready(function () {
         }
       }
       $("body").on("click", ".search", function () {
-        let workerName = $(".search").val();
         $.ajax({
           url: "/quiz",
           type: "GET",
           success: function (data) {
-            $(".main-form").empty();
             const workNames = getWorkersNames();
             $(".search").autocomplete({
               source: getWorkersNames(),
               select: function (event, ui) {
+                $(".main-form").empty();
                 if (workNames.includes(ui.item.value)) {
                   $(".main-form").append(ui.item.value);
                   let i = 1;
-                  // $(".main-form").append(`${workerName}`);
                   for (key in data) {
                     $(".main-form").append(`
                       <div>${i}. ${data[key]["note"]}</div>
