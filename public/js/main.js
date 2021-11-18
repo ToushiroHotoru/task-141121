@@ -71,7 +71,7 @@ $("document").ready(function () {
               select: function (event, ui) {
                 $(".main-form").empty();
                 if (workNames.includes(ui.item.value)) {
-                  $(".main-form").append(ui.item.value);
+                  $(".main-form").append(`<div class="nameTo">${ui.item.value}</div>`);
                   let i = 1;
                   for (key in data) {
                     $(".main-form").append(`
@@ -84,7 +84,7 @@ $("document").ready(function () {
                     i++;
                   }
                   $(".main-form").append(
-                    `<button onclick="palfun2()" id="pal3" class="btn btn-primary">Отправить</button>`
+                    `<button id="pal3" class="btn btn-primary otpravka">Отправить</button>`
                   );
                   $(".form-check-input").click(function () {
                     let swid = $(this).attr("swich_id");
@@ -113,6 +113,24 @@ function palfun1(cnopcaN) {
   }
 }
 
-function palfun2() {
-  alert("1");
-}
+$("body").on("click",".otpravka", function(){
+  let Name = $(".nameTo").val();
+  let company = $(".company ").val();
+  let cityName = $(".city").val();
+  let answers = $(".city").val();
+$.ajax({
+  url: "/save-answer",
+  type: "POST",
+  data: {
+    cityName: cityName,
+    company:company,
+    name: Name,
+    answers:answers
+  },
+  success: function () {
+  console.log(cityName, company, Name, answers) 
+  },
+  
+
+})
+});
