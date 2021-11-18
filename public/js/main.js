@@ -30,9 +30,6 @@ $("document").ready(function () {
         if (output !== "Выберите салон") {
           $(".search").removeAttr("readonly");
         }
-        $(".search").autocomplete({
-          source: getWorkersNames(),
-        });
       });
 
       function getCityName(object) {
@@ -58,12 +55,53 @@ $("document").ready(function () {
         for (key in data) {
           for (let i = 0; i < data[key]["city"]["company"].length; i++) {
             if (companyName == data[key]["city"]["company"][i]["companyName"]) {
-              var workersGlobal = data[key]["city"]["company"][i]["workers"];
               return data[key]["city"]["company"][i]["workers"];
             }
           }
         }
       }
+      $("body").on("click", ".search", function () {
+        let workerName = $(".search").val();
+        $.ajax({
+          url: "/quiz",
+          type: "GET",
+          success: function (data) {
+            $(".main-form").empty();
+            const workNames = getWorkersNames();
+            $(".search").autocomplete({
+              source: getWorkersNames(),
+              select: function (event, ui) {
+                if (workNames.includes(ui.item.value)) {
+                  $(".main-form").append(ui.item.value);
+                  let i = 1;
+                  // $(".main-form").append(`${workerName}`);
+                  for (key in data) {
+                    $(".main-form").append(`
+                      <div>${i}. ${data[key]["note"]}</div>
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
+                        <label class="form-check-label pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
+                      </div>
+                    `);
+                    i++;
+                  }
+                  $(".main-form").append(
+                    `<button onclick="palfun2()" id="pal3" class="btn btn-primary">Отправить</button>`
+                  );
+                  $(".form-check-input").click(function () {
+                    let swid = $(this).attr("swich_id");
+                    if (this.checked) {
+                      $(".pala" + swid).text("yes");
+                    } else {
+                      $(".pala" + swid).text("no");
+                    }
+                  });
+                }
+              },
+            });
+          },
+        });
+      });
     },
   });
 });
@@ -80,43 +118,3 @@ function palfun1(cnopcaN) {
 function palfun2() {
   alert("1");
 }
-
-$("body").on("keyup || click", ".search", function () {
-  let workerName = $(".search").val();
-  $.ajax({
-    url: "/quiz",
-    type: "GET",
-    success: function (data) {
-      $(".main-form").empty();
-      if (workerName != "") {
-        let i = 1;
-        $(".main-form").append(`${workerName}`);
-        //console.log(workersGlobal);
-        for (key in data) {
-          $(".main-form").append(`
-         <div>${i}. ${data[key]["note"]}</div>
-        <div class="form-check form-switch">
-          <input class="form-check-input" swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
-          <label class="form-check-label pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
-        </div>
-      `);
-          i++;
-          // Функция для смены no/yes
-        }
-        $(".form-check-input").click(function () {
-          let swid = $(this).attr("swich_id");
-          if (this.checked) {
-            $(".pala" + swid).text("yes");
-          } else {
-            $(".pala" + swid).text("no");
-          }
-        });
-        // Функция для смены no/yes
-        $(".main-form").append(
-          `<button onclick="palfun2()" id="pal3" class="btn btn-primary">Отправить</button>`
-        );
-      }
-      $();
-    },
-  });
-});
