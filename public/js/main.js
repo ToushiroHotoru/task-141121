@@ -2,6 +2,7 @@ $("document").ready(function () {
   $.ajax({
     url: "/all-data",
     type: "GET",
+    cache: false,
     success: function (data) {
       let i = 0;
       for (key in data) {
@@ -64,6 +65,7 @@ $("document").ready(function () {
         $.ajax({
           url: "/quiz",
           type: "GET",
+          cache: false,
           success: function (data) {
             const workNames = getWorkersNames();
             $(".search").autocomplete({
@@ -115,6 +117,22 @@ function palfun1(cnopcaN) {
   }
 }
 
+// $("body").on("submit", ".testForm", function (e) {
+//   e.preventDefault();
+//   let filed = $(".data").val();
+
+//   $.ajax({
+//     url: "/answer",
+//     type: "POST",
+//     data: {
+//       filed: filed,
+//     },
+//     success: function () {
+//       console.log("success");
+//     },
+//   });
+// });
+
 $("body").on("click", ".otpravka", async function (e) {
   e.preventDefault();
   let name = $(".nameTo").text();
@@ -133,7 +151,7 @@ $("body").on("click", ".otpravka", async function (e) {
   console.log(answers);
 
   $.ajax({
-    url: "/save-answer",
+    url: "/answer",
     type: "POST",
     data: {
       cityName: cityName,
@@ -143,9 +161,6 @@ $("body").on("click", ".otpravka", async function (e) {
     },
     success: function () {
       console.log("kek");
-    },
-    error: function (e) {
-      throw e;
     },
   });
 });

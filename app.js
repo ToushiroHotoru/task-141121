@@ -43,10 +43,14 @@ app.get("/quiz", async (req, res) => {
   }
 });
 
-app.post("/save-answer", async (req, res) => {
+app.post("/answer", async (req, res) => {
+  console.log("работает");
+  console.log(req.body);
   const data = new AnswerForm(req.body);
+
   try {
     await data.save();
+    res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
   }
