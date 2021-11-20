@@ -4,15 +4,12 @@ $("document").ready(function () {
     type: "GET",
     cache: false,
     success: function (data) {
-      let i = 0;
-
       outputResults(data);
 
       for (key in data) {
         $(".city").append(
           `<option class="cityName">${getCityName(data[key]["city"])}</option>`
         );
-        i++;
       }
 
       $(".city").change(function () {
@@ -20,6 +17,7 @@ $("document").ready(function () {
         let output = form.val();
         for (key in data) {
           if (data[key]["city"]["cityName"] == output) {
+            $(".main-select-group__selected").remove();
             $(".company").append(
               `${getCompanyName(data[key]["city"]["company"])}`
             );
@@ -46,7 +44,7 @@ $("document").ready(function () {
         let leak = [];
         for (let i = 0; i < data.length; i++) {
           leak.push(
-            '<option class="companyName">' +
+            '<option class="companyName main-select-group__selected">' +
               data[i]["companyName"] +
               "</option>"
           );
@@ -77,7 +75,7 @@ $("document").ready(function () {
                 $(".main-form").empty();
                 if (workNames.includes(ui.item.value)) {
                   $(".main-form").append(
-                    `<div class="nameTo">${ui.item.value}</div>`
+                    `<div>Сотрудник: <span class="nameTo">${ui.item.value}</span></div>`
                   );
                   let i = 1;
                   for (key in data) {
@@ -91,7 +89,7 @@ $("document").ready(function () {
                     i++;
                   }
                   $(".main-form").append(
-                    `<button id="pal3" class="btn btn-primary send-form">Отправить</button>`
+                    `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
                   );
                   $(".form-check-input").click(function () {
                     let swid = $(this).attr("swich_id");
@@ -116,7 +114,6 @@ $("body").on("click", ".send-form", async function (e) {
   let name = $(".nameTo").text();
   let companyName = $(".company").val();
   let cityName = $(".city").val();
-  console.log("point");
   let answers = [];
   $(".quiz:checkbox").each(function () {
     if ($(this).is(":checked")) {
@@ -136,7 +133,15 @@ $("body").on("click", ".send-form", async function (e) {
       answers: answers,
     },
     success: function () {
-      console.log("kek");
+      $(".main-form").empty();
+
+      const sendAlert =
+        $(`<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Форма отправлена!</strong> Благодарим вас, за обратную связь!.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`).hide();
+
+      sendAlert.appendTo(".main").fadeIn();
     },
   });
 });

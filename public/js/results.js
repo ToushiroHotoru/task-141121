@@ -1,10 +1,7 @@
 function outputResults(data) {
-  console.log(data);
   $("#datepicker").change(function () {
     for (key in data) {
       let serverDate = data[key]["createdAt"].split("T");
-      console.log(serverDate);
-      console.log($("#datepicker").val());
       if ($("#datepicker").val() == serverDate) {
         console.log("Есть такая дата");
       }
@@ -16,6 +13,7 @@ function outputResults(data) {
       $(".ui-widget").remove();
       $(".showBtn").remove();
       $(".company").removeAttr("disabled");
+      $(".main-form").empty();
       $(".main-select-group").prepend(`
     <div class="ui-widget">
       <input type="text" class="form-control" id="datepicker" placeholder="Выберите дату">
@@ -34,6 +32,7 @@ function outputResults(data) {
     if ($("#btnradio1").is(":checked")) {
       $(".ui-widget").remove();
       $(".showBtn").remove();
+      $(".main-form").empty();
       $(".company").prop("disabled", true);
       $(".main-select-group").append(`
     <div class="ui-widget">
@@ -47,25 +46,27 @@ function outputResults(data) {
     let dateForSend = $("#datepicker").val();
     let departmentForSend = $(".city").val();
     let salonForSend = $(".company").val();
-    if (dateForSend !== "" && departmentForSend !== "" && salonForSend !== "") {
-      console.log("данные взяты");
+    if (
+      dateForSend !== null &&
+      departmentForSend !== "" &&
+      salonForSend !== "" &&
+      salonForSend !== "Выберите салон" &&
+      departmentForSend !== "Выберите подразделение"
+    ) {
       $(".showBtn").removeAttr("disabled");
     }
   });
 
   $("body").on("click", ".showBtn", function () {
     let dateTime = $("#datepicker").val().split("-");
-    console.log(dateTime);
     let gte = new Date(dateTime[0], parseInt(dateTime[1]) - 1, dateTime[2]);
     let lt = new Date(
       dateTime[0],
       parseInt(dateTime[1]) - 1,
       parseInt(dateTime[2]) + 1
     );
-    console.log(gte, lt);
     let departmentForSend = $(".city").val();
     let salonForSend = $(".company").val();
-    console.log(gte);
 
     $.ajax({
       url: "/search-answer",
@@ -77,25 +78,36 @@ function outputResults(data) {
         companyName: salonForSend,
       },
       success: function (data) {
-        $(".main-form").append(`
+        let i = 1;
+        if (data.length === 0) {
+          $(".main-form").empty();
+
+          const sendAlert =
+            $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+                  <strong>Ничего не найдено!</strong> В этот день, в данной компании, отправок форм не было.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`).hide();
+
+          sendAlert.appendTo(".main").fadeIn();
+        } else {
+          $(".main-form").append(`
           <div class="accordion" id="accordionExample"></div>
         `);
-
-        for (key in data) {
-          $(".accordion").append(`
+          for (key in data) {
+            $(".accordion").append(`
             <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <h2 class="accordion-header" id="flush-heading${i}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${i}" aria-expanded="false" aria-controls="flush-collapse${i}">
                   ${data[key]["name"]}
                 </button>
               </h2>
-              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    hui
-                </div>
+              <div id="flush-collapse${i}" class="accordion-collapse collapse" aria-labelledby="flush-heading${i}" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">hui</div>
               </div>
             </div>
           `);
+            i++;
+          }
         }
       },
     });
