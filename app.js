@@ -44,8 +44,6 @@ app.get("/quiz", async (req, res) => {
 });
 
 app.post("/answer", async (req, res) => {
-  console.log("работает");
-  console.log(req.body);
   const data = new AnswerForm(req.body);
 
   try {
@@ -53,6 +51,21 @@ app.post("/answer", async (req, res) => {
     res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
+  }
+});
+
+app.post("/search-answer", async (req, res) => {
+  try {
+    const result = await AnswerForm.find({
+      companyName: req.body.companyName,
+      cityName: req.body.cityName,
+      createdAt: { $gte: req.body.gte, $lt: req.body.lt },
+    });
+    // res.status(200).json({ success: result });
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(502);
   }
 });
 

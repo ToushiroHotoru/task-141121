@@ -5,6 +5,9 @@ $("document").ready(function () {
     cache: false,
     success: function (data) {
       let i = 0;
+
+      outputResults(data);
+
       for (key in data) {
         $(".city").append(
           `<option class="cityName">${getCityName(data[key]["city"])}</option>`
@@ -88,7 +91,7 @@ $("document").ready(function () {
                     i++;
                   }
                   $(".main-form").append(
-                    `<button id="pal3" class="btn btn-primary otpravka">Отправить</button>`
+                    `<button id="pal3" class="btn btn-primary send-form">Отправить</button>`
                   );
                   $(".form-check-input").click(function () {
                     let swid = $(this).attr("swich_id");
@@ -108,32 +111,7 @@ $("document").ready(function () {
   });
 });
 
-function palfun1(cnopcaN) {
-  if (cnopcaN == 1) {
-    alert("1");
-  }
-  if (cnopcaN == 2) {
-    alert("2");
-  }
-}
-
-// $("body").on("submit", ".testForm", function (e) {
-//   e.preventDefault();
-//   let filed = $(".data").val();
-
-//   $.ajax({
-//     url: "/answer",
-//     type: "POST",
-//     data: {
-//       filed: filed,
-//     },
-//     success: function () {
-//       console.log("success");
-//     },
-//   });
-// });
-
-$("body").on("click", ".otpravka", async function (e) {
+$("body").on("click", ".send-form", async function (e) {
   e.preventDefault();
   let name = $(".nameTo").text();
   let companyName = $(".company").val();
@@ -147,8 +125,6 @@ $("body").on("click", ".otpravka", async function (e) {
       answers.push("no");
     }
   });
-  console.log(cityName, companyName, name, answers);
-  console.log(answers);
 
   $.ajax({
     url: "/answer",
