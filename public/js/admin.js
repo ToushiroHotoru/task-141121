@@ -7,7 +7,7 @@ function adminId3(data){
         $(".showBtn").remove();
         $(".company").removeAttr("disabled");
         $(".main-form").empty();
-        $(".osnovnayaForma").addClass("osnovnayaForma2");
+        $(".main-select-group").addClass("osnovnayaForma2");
         let i = 1;
         for (key in data) {
                 $(".main-form").append(`
