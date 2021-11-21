@@ -7,9 +7,11 @@ $("#btnradio3").click(function () {
       $(".company").removeAttr("disabled");
       $(".main-form").empty();
       $(".osnovnayaForma").addClass("osnovnayaForma2");
-      $(".main-select-group").prepend(`
-    <div class="ui-widget">
+      $(".main-select-group").append(`
+      <div class="ui-widget">
       
-    </div>`);
+      </div>
+        <button class="btn btn-primary showBtn">Показать</button>
+      `);
     }
   });
