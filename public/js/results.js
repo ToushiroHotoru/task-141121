@@ -10,7 +10,7 @@ function outputResults(data) {
 
   $("#btnradio2").click(function () {
     if ($("#btnradio2").is(":checked")) {
-      $(".osnovnayaForma").removeClass("osnovnayaForma2");
+      $(".main-select-group").removeClass("osnovnayaForma2");
       $(".ui-widget").remove();
       $(".city").prop("selectedIndex", 0);
       $(".company").prop("selectedIndex", 0);
@@ -33,7 +33,7 @@ function outputResults(data) {
 
   $("#btnradio1").click(function () {
     if ($("#btnradio1").is(":checked")) {
-      $(".osnovnayaForma").removeClass("osnovnayaForma2");
+      $(".main-select-group").removeClass("osnovnayaForma2");
       $(".ui-widget").remove();
       $(".showBtn").remove();
       $(".city").prop("selectedIndex", 0);
