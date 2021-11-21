@@ -27,4 +27,20 @@ body {
 }
 .main-search-help {
   display: none;
-}/*# sourceMappingURL=style.css.map */
+} /*# sourceMappingURL=style.css.map */
+
+.formatVoprosov {
+  display: flex;
+  border: 1px solid #eeddff;
+  border-radius: 5px;
+  padding-top: 10px;
+  padding-left: 10px;
+  height: 40px;
+  margin-top: 5px;
+}
+.formatVoprosovChek {
+  border: 1px solid #eeddff;
+}
+.osnovnayaForma2 {
+  display: none;
+}

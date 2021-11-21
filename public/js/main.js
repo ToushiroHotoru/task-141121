@@ -80,11 +80,11 @@ $("document").ready(function () {
                   let i = 1;
                   for (key in data) {
                     $(".main-form").append(`
-                      <div>${i}. ${data[key]["note"]}</div>
-                      <div class="form-check form-switch">
-                        <input class="form-check-input quiz" swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
+                      <div class="formatVoprosov">${i}. ${data[key]["note"]}
+                      <div class="form-check form-switch formatVoprosovChek">
+                        <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
-                      </div>
+                      </div></div>
                     `);
                     i++;
                   }
