@@ -95,7 +95,7 @@ function outputResults(data) {
     }
 
     $.ajax({
-      url: "/search-answer",
+      url: "/answer/search-answer",
       type: "POST",
       data: {
         gte: gte,
