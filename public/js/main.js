@@ -77,6 +77,8 @@ $("document").ready(function () {
                   $(".main-form").append(
                     `<div>Сотрудник: <span class="nameTo">${ui.item.value}</span></div>`
                   );
+                  
+                  adminId3(data);
                   let i = 1;
                   for (key in data) {
                     $(".main-form").append(`
