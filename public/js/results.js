@@ -11,6 +11,8 @@ function outputResults(data) {
   $("#btnradio2").click(function () {
     if ($("#btnradio2").is(":checked")) {
       $(".ui-widget").remove();
+      $(".city").prop("selectedIndex", 0);
+      $(".company").prop("selectedIndex", 0);
       $(".showBtn").remove();
       $(".company").removeAttr("disabled");
       $(".main-form").empty();
@@ -19,7 +21,7 @@ function outputResults(data) {
       <input type="text" class="form-control" id="datepicker" placeholder="Выберите дату">
     </div>`);
       $(".main-select-group").append(`
-        <button class="btn btn-primary showBtn" disabled>Показать</button>
+        <button class="btn btn-primary showBtn">Показать</button>
       `);
       $("#datepicker").datepicker({
         dateFormat: "yy-mm-dd",
@@ -32,6 +34,8 @@ function outputResults(data) {
     if ($("#btnradio1").is(":checked")) {
       $(".ui-widget").remove();
       $(".showBtn").remove();
+      $(".city").prop("selectedIndex", 0);
+      $(".company").prop("selectedIndex", 0);
       $(".main-form").empty();
       $(".company").prop("disabled", true);
       $(".main-select-group").append(`
@@ -42,22 +46,29 @@ function outputResults(data) {
     }
   });
 
-  $("#datepicker, .city, .company").change(function () {
+  $(".showBtn").click(function () {
     let dateForSend = $("#datepicker").val();
     let departmentForSend = $(".city").val();
     let salonForSend = $(".company").val();
+    console.log(dateForSend, departmentForSend, salonForSend);
     if (
-      dateForSend !== null &&
-      departmentForSend !== "" &&
-      salonForSend !== "" &&
-      salonForSend !== "Выберите салон" &&
-      departmentForSend !== "Выберите подразделение"
+      dateForSend == "" ||
+      salonForSend == "Выберите салон" ||
+      departmentForSend == "Выберите подразделение"
     ) {
-      $(".showBtn").removeAttr("disabled");
+      const sendAlert =
+        $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+                  <strong>Не все поля заполнены!</strong> Пожалуйста заполните все поля.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`).hide();
+
+      sendAlert.appendTo(".main").fadeIn();
     }
   });
 
   $("body").on("click", ".showBtn", function () {
+    let departmentForSend = $(".city").val();
+    let salonForSend = $(".company").val();
     let dateTime = $("#datepicker").val().split("-");
     let gte = new Date(dateTime[0], parseInt(dateTime[1]) - 1, dateTime[2]);
     let lt = new Date(
@@ -65,8 +76,21 @@ function outputResults(data) {
       parseInt(dateTime[1]) - 1,
       parseInt(dateTime[2]) + 1
     );
-    let departmentForSend = $(".city").val();
-    let salonForSend = $(".company").val();
+    let alertFlag = true;
+    if (
+      dateTime == "" ||
+      salonForSend == "Выберите салон" ||
+      departmentForSend == "Выберите подразделение"
+    ) {
+      const sendAlert =
+        $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+                  <strong>Не все поля заполнены!</strong> Пожалуйста заполните все поля.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`).hide();
+
+      sendAlert.appendTo(".main").fadeIn();
+      alertFlag = false;
+    }
 
     $.ajax({
       url: "/search-answer",
@@ -79,7 +103,7 @@ function outputResults(data) {
       },
       success: function (data) {
         let i = 1;
-        if (data.length === 0) {
+        if (data.length === 0 && alertFlag) {
           $(".main-form").empty();
 
           const sendAlert =
