@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const answerForms = new Schema(
+const Answers = new Schema(
   {
     name: {
       type: String,
@@ -22,5 +22,5 @@ const answerForms = new Schema(
   }
 );
 
-const answerForm = mongoose.model("answerForm", answerForms);
-module.exports = answerForm;
+const answer = mongoose.model("answer", Answers);
+module.exports = answer;
