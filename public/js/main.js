@@ -64,7 +64,7 @@ $("document").ready(function () {
       }
       $("body").on("click", ".search", function () {
         $.ajax({
-          url: "/quiz",
+          url: "/get-quiz",
           type: "GET",
           cache: false,
           success: function (data) {
@@ -124,7 +124,7 @@ $("body").on("click", ".send-form", async function (e) {
   });
 
   $.ajax({
-    url: "/answer",
+    url: "/search-answer",
     type: "POST",
     data: {
       cityName: cityName,
