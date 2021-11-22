@@ -31,7 +31,9 @@ function outputResults(data) {
       `);
       $("#datepicker").datepicker({
         dateFormat: "yy-mm-dd",
-        regional: "ru",
+        minDate: new Date($('#hiddendelivdate').val()),
+      	monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+	      dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
       });
     }
   });
