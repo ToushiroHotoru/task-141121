@@ -31,9 +31,22 @@ function outputResults(data) {
       `);
       $("#datepicker").datepicker({
         dateFormat: "yy-mm-dd",
-        minDate: new Date($('#hiddendelivdate').val()),
-      	monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
-	      dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+        minDate: new Date($("#hiddendelivdate").val()),
+        monthNames: [
+          "Январь",
+          "Февраль",
+          "Март",
+          "Апрель",
+          "Май",
+          "Июнь",
+          "Июль",
+          "Август",
+          "Сентябрь",
+          "Октябрь",
+          "Ноябрь",
+          "Декабрь",
+        ],
+        dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
       });
     }
   });
@@ -79,6 +92,7 @@ function outputResults(data) {
   });
 
   $("body").on("click", ".showBtn", function () {
+    $(".main-form").empty();
     let departmentForSend = $(".city").val();
     let salonForSend = $(".company").val();
     let dateTime = $("#datepicker").val().split("-");
@@ -144,13 +158,17 @@ function outputResults(data) {
         `);
 
           function outputAnswers(name) {
+            let check = "";
             for (key in data) {
-              if (data[key] == name) {
-                data[key]["answers"].map((item, i) => {
-                  return `<div>${item}</div>`;
-                });
+              if (data[key]["name"] == name) {
+                for (let j = 0; j < data[key]["answers"].length; j++) {
+                  check += `<div>${data[key]["answers"][j]}</div>`;
+                }
+
+                console.log(data[key]["answers"]);
               }
             }
+            return check;
           }
 
           names.forEach((item, i) => {
