@@ -81,7 +81,7 @@ $("document").ready(function () {
                   let i = 1;
                   for (key in data) {
                     $(".main-form").append(`
-                      <div class="formatVoprosov">${i}. ${data[key]["note"]}
+                      <div><span class="quizMainValue">${i}. ${data[key]["note"]}</span>
                       <div class="form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
@@ -117,9 +117,11 @@ $("body").on("click", ".send-form", async function (e) {
   let cityName = $(".city").val();
   let answers = [];
   let quizzes = [];
-  $(".form-check-label").each(function () {
-    quizzes.push($(".form-check-label").text());
-  });
+  quizzes.push(
+    $(".quizMainValue").text(function (index, text) {
+      text = text.textContent + "/";
+    })
+  );
   console.log(quizzes);
 
   $(".quiz:checkbox").each(function () {
