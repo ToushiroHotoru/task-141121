@@ -175,11 +175,11 @@ function outputResults(data) {
             $(".accordion").append(`
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-heading${i}">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${i}" aria-expanded="false" aria-controls="flush-collapse${i}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${i}" aria-controls="flush-collapse${i}">
                   ${item}
                 </button>
               </h2>
-              <div id="flush-collapse${i}" class="accordion-collapse collapse" aria-labelledby="flush-heading${i}" data-bs-parent="#accordionFlushExample">
+              <div id="flush-collapse${i}" class="accordion-collapse collapse" aria-labelledby="flush-heading${i}">
                 <div class="accordion-body">${outputAnswers(item)}</div>
               </div>
             </div>
