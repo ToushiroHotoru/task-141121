@@ -161,9 +161,9 @@ function outputResults(data) {
             let check = "";
             for (key in data) {
               if (data[key]["name"] == name) {
-                for (let j = 0; j < data[key]["answers"].length; j++) {
-                  check += `<div>${data[key]["answers"][j]}</div>`;
-                }
+                // for (let j = 0; j < data[key]["answers"].length; j++) {
+                check += `<div>${data[key]["answers"]}</div>`;
+                // }
 
                 console.log(data[key]["answers"]);
               }

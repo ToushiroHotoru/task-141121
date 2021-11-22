@@ -116,6 +116,12 @@ $("body").on("click", ".send-form", async function (e) {
   let companyName = $(".company").val();
   let cityName = $(".city").val();
   let answers = [];
+  let quizzes = [];
+  $(".form-check-label").each(function () {
+    quizzes.push($(".form-check-label").text());
+  });
+  console.log(quizzes);
+
   $(".quiz:checkbox").each(function () {
     if ($(this).is(":checked")) {
       answers.push("yes");

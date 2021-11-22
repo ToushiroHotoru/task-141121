@@ -16,6 +16,7 @@ const Answers = new Schema(
       required: true,
     },
     answers: [],
+    quizzes: [],
   },
   {
     timestamps: true,
