@@ -10,20 +10,24 @@ function outputResults(data) {
 
   $("#btnradio2").click(function () {
     if ($("#btnradio2").is(":checked")) {
-      $(".main-select-group").removeClass("osnovnayaForma2");
-      $(".ui-widget").remove();
+      $(".quizNewDataParent").remove();
+      $(".col-ui-widget").remove();
       $(".city").prop("selectedIndex", 0);
       $(".company").prop("selectedIndex", 0);
       $(".showBtn").remove();
       $(".company").removeAttr("disabled");
       $(".main-form").empty();
       $(".main-select-group, hr").show();
-      $(".main-select-group").prepend(`
-    <div class="ui-widget">
-      <input type="text" class="form-control" id="datepicker" placeholder="Выберите дату">
-    </div>`);
+      $(".main-select-group-row").prepend(`
+      <div class="col col-ui-widget">
+        <div class="ui-widget">
+          <input type="text" class="form-control" id="datepicker" placeholder="Выберите дату">
+        </div>
+      </div>`);
       $(".main-select-group").append(`
-        <button class="btn btn-dark showBtn">Показать</button>
+        <div class="col">
+          <button class="btn btn-dark showBtn">Показать</button>
+        </div>
       `);
       $("#datepicker").datepicker({
         dateFormat: "yy-mm-dd",
@@ -34,18 +38,20 @@ function outputResults(data) {
 
   $("#btnradio1").click(function () {
     if ($("#btnradio1").is(":checked")) {
-      $(".main-select-group").removeClass("osnovnayaForma2");
-      $(".ui-widget").remove();
+      $(".quizNewDataParent").remove();
+      $(".col-ui-widget").remove();
       $(".showBtn").remove();
       $(".city").prop("selectedIndex", 0);
       $(".company").prop("selectedIndex", 0);
       $(".main-form").empty();
       $(".company").prop("disabled", true);
       $(".main-select-group, hr").show();
-      $(".main-select-group").append(`
-    <div class="ui-widget">
-      <input type="text" class="form-control search" placeholder="Введите ФИО менеджера"
-      aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly>
+      $(".main-select-group-row").append(`
+    <div class="col col-ui-widget">
+      <div class="ui-widget">
+        <input type="text" class="form-control search" placeholder="Введите ФИО менеджера"
+        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly>
+      </div>
     </div>`);
     }
   });
@@ -118,6 +124,18 @@ function outputResults(data) {
 
           sendAlert.appendTo(".main").fadeIn();
         } else {
+          let names = [];
+
+          for (key in data) {
+            names.foreach((item, i, arr) => {
+              if (!names.includes(item)) {
+                names.push(item);
+              }
+            });
+          }
+
+          console.log(names);
+
           $(".main-form").append(`
           <div class="accordion" id="accordionExample"></div>
         `);

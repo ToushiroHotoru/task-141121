@@ -1,6 +1,6 @@
 $("#btnradio3").click(function () {
   if ($("#btnradio3").is(":checked")) {
-    $(".quizNewData-parent").remove();
+    $(".quizNewDataParent").remove();
     $(".ui-widget").remove();
     $(".city").prop("selectedIndex", 0);
     $(".company").prop("selectedIndex", 0);
@@ -29,7 +29,7 @@ $("#btnradio3").click(function () {
           i++;
         }
         $(".main").append(`
-        <div class="d-flex align-items-center ms-3">
+        <div class="d-flex align-items-center quizNewDataParent ms-3">
                 <div><input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData"></div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить</button>

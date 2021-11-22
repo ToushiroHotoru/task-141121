@@ -1,5 +1,4 @@
 const Answer = require("../models/answer");
-const mongoose = require("mongoose");
 
 const save_answer = async (req, res) => {
   console.log(req.body);

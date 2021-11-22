@@ -16,16 +16,27 @@
         </div>
 
         <hr />
-        <div class="main-select-group">
-            <select name="select" class="city form-select main-select-group__item">
-                <option selected>Выберите подразделение</option>
-            </select>
-            <select name="select" class="company form-select main-select-group__item " disabled>
-                <option selected>Выберите салон</option>
-            </select>
-            <div class="main-autocomplete ui-widget">
-                <input type="text" class="form-control search" placeholder="Введите ФИО менеджера"
-                    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly></div>
+        <div class="main-select-group container-fluid">
+            <div class="row main-select-group-row w-100">
+                <div class="col">
+                    <select name="select" class="city form-select main-select-group__item">
+                        <option selected>Выберите подразделение</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <select name="select" class="company form-select main-select-group__item " disabled>
+                        <option selected>Выберите салон</option>
+                    </select>
+                </div>
+
+                
+                    <div class="col col-ui-widget">
+                        <div class="main-autocomplete ui-widget">
+                            <input type="text" class="form-control search" placeholder="Введите ФИО менеджера"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly></div>
+                    </div>
+            
+            </div>
         </div>
         <hr />
 
