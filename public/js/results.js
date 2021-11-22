@@ -125,11 +125,12 @@ function outputResults(data) {
           sendAlert.appendTo(".main").fadeIn();
         } else {
           let names = [];
+          names.push(data[0]["name"]);
 
           for (key in data) {
-            names.foreach((item, i, arr) => {
-              if (!names.includes(item)) {
-                names.push(item);
+            names.forEach(() => {
+              if (!names.includes(data[key]["name"])) {
+                names.push(data[key]["name"]);
               }
             });
           }
@@ -139,21 +140,32 @@ function outputResults(data) {
           $(".main-form").append(`
           <div class="accordion" id="accordionExample"></div>
         `);
-          for (key in data) {
+
+          function outputAnswers(name) {
+            for (key in data) {
+              if (data[key] == name) {
+                data[key]["answers"].map((item, i) => {
+                  return `<div>${item}</div>`;
+                });
+              }
+            }
+          }
+
+          names.forEach((item, i) => {
             $(".accordion").append(`
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-heading${i}">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${i}" aria-expanded="false" aria-controls="flush-collapse${i}">
-                  ${data[key]["name"]}
+                  ${item}
                 </button>
               </h2>
               <div id="flush-collapse${i}" class="accordion-collapse collapse" aria-labelledby="flush-heading${i}" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">hui</div>
+                <div class="accordion-body">${outputAnswers(item)}</div>
               </div>
             </div>
           `);
             i++;
-          }
+          });
         }
       },
     });
