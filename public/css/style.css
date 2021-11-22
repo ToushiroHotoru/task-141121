@@ -26,4 +26,8 @@ body {
 }
 .main-autocomplete {
   min-width: 220px;
+}
+
+.input-group {
+  max-width: 400px;
 }/*# sourceMappingURL=style.css.map */

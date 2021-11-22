@@ -1,6 +1,8 @@
 const Answer = require("../models/answer");
+const mongoose = require("mongoose");
 
-const get_answer = async (req, res) => {
+const save_answer = async (req, res) => {
+  console.log(req.body);
   const data = new Answer(req.body);
   try {
     await data.save();
@@ -10,7 +12,8 @@ const get_answer = async (req, res) => {
   }
 };
 
-const search_answer = async (req, res) => {
+const get_answer = async (req, res) => {
+  console.log(req.body);
   try {
     const result = await Answer.find({
       companyName: req.body.companyName,
@@ -26,5 +29,5 @@ const search_answer = async (req, res) => {
 
 module.exports = {
   get_answer,
-  search_answer,
+  save_answer,
 };

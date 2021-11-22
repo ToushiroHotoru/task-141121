@@ -17,12 +17,13 @@ function outputResults(data) {
       $(".showBtn").remove();
       $(".company").removeAttr("disabled");
       $(".main-form").empty();
+      $(".main-select-group, hr").show();
       $(".main-select-group").prepend(`
     <div class="ui-widget">
       <input type="text" class="form-control" id="datepicker" placeholder="Выберите дату">
     </div>`);
       $(".main-select-group").append(`
-        <button class="btn btn-primary showBtn">Показать</button>
+        <button class="btn btn-dark showBtn">Показать</button>
       `);
       $("#datepicker").datepicker({
         dateFormat: "yy-mm-dd",
@@ -40,6 +41,7 @@ function outputResults(data) {
       $(".company").prop("selectedIndex", 0);
       $(".main-form").empty();
       $(".company").prop("disabled", true);
+      $(".main-select-group, hr").show();
       $(".main-select-group").append(`
     <div class="ui-widget">
       <input type="text" class="form-control search" placeholder="Введите ФИО менеджера"
@@ -95,7 +97,7 @@ function outputResults(data) {
     }
 
     $.ajax({
-      url: "/answer/search-answer",
+      url: "/answer/get-answer",
       type: "POST",
       data: {
         gte: gte,

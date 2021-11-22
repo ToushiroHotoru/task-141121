@@ -11,6 +11,7 @@ const get_quiz = async (req, res) => {
 
 const create_quiz = async (req, res) => {
   const quizNewData = new Quiz(req.body);
+  console.log(req.body);
   try {
     await quizNewData.save();
     res.status(200).json({ success: true });
