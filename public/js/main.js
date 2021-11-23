@@ -1,6 +1,6 @@
 $("document").ready(function () {
   $.ajax({
-    url: "/all-data",
+    url: "/get-data",
     type: "GET",
     cache: false,
     success: function (data) {
