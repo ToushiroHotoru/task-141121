@@ -157,20 +157,6 @@ function outputResults(data) {
           <div class="accordion" id="accordionExample"></div>
         `);
 
-          function outputAnswers(name) {
-            let check = "";
-            for (key in data) {
-              if (data[key]["name"] == name) {
-                // for (let j = 0; j < data[key]["answers"].length; j++) {
-                check += `<div>${data[key]["answers"]}</div>`;
-                // }
-
-                console.log(data[key]["answers"]);
-              }
-            }
-            return check;
-          }
-
           names.forEach((item, i) => {
             $(".accordion").append(`
             <div class="accordion-item">
@@ -180,12 +166,57 @@ function outputResults(data) {
                 </button>
               </h2>
               <div id="flush-collapse${i}" class="accordion-collapse collapse" aria-labelledby="flush-heading${i}">
-                <div class="accordion-body">${outputAnswers(item)}</div>
+                <div class="accordion-body">
+                     ${outputTables(item)}
+                </div>
               </div>
             </div>
           `);
             i++;
           });
+
+          function outputAnswers(arrQuiz, arrAnswer) {
+            console.log(arrQuiz);
+            console.log(arrAnswer);
+            let result = "";
+            for (let j = 0; j < arrAnswer.length; j++) {
+              console.log("quizzes");
+              result += `<tr><th scope="row">${j + 1}</th><td>${
+                arrQuiz[j]
+              }</td> <td>${arrAnswer[j]}</td></tr>`;
+            }
+            console.log(result);
+            return result;
+          }
+
+          function outputTables(name) {
+            let table = "";
+            console.log(data);
+            for (key in data) {
+              console.log(data[key]["name"]);
+              console.log(name);
+              if (data[key]["name"] == name) {
+                table += `<table class="table table-striped my-4">
+                   <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Вопрос</th>
+                        <th scope="col">Ответ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                     ${outputAnswers(
+                       data[key]["quizzes"],
+                       data[key]["answers"]
+                     )}
+                    </tbody>
+                        
+                  </table><hr style="height: 12px; color: red;" />`;
+                console.log(table);
+              }
+            }
+            return table;
+          }
         }
       },
     });

@@ -81,7 +81,7 @@ $("document").ready(function () {
                   let i = 1;
                   for (key in data) {
                     $(".main-form").append(`
-                      <div><span class="quizMainValue">${i}. ${data[key]["note"]}</span>
+                      <div>${i}. <span class="quizMainValue">${data[key]["note"]}</span>
                       <div class="form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
@@ -117,12 +117,16 @@ $("body").on("click", ".send-form", async function (e) {
   let cityName = $(".city").val();
   let answers = [];
   let quizzes = [];
-  quizzes.push(
-    $(".quizMainValue").text(function (index, text) {
-      text = text.textContent + "/";
-    })
-  );
-  console.log(quizzes);
+  $(".quizMainValue").each(function (i) {
+    let something = i + 1 + ". " + $(this).text() + "/";
+    quizzes.push(something);
+  });
+
+  quizzes = quizzes.splice("/");
+  quizzes.forEach((item, i, arr) => {
+    item = item.slice(0, -1);
+    arr.splice(i, 1, item);
+  });
 
   $(".quiz:checkbox").each(function () {
     if ($(this).is(":checked")) {
@@ -140,6 +144,7 @@ $("body").on("click", ".send-form", async function (e) {
       companyName: companyName,
       name: name,
       answers: answers,
+      quizzes: quizzes,
     },
     success: function () {
       $(".main-form").empty();

@@ -6,13 +6,14 @@ const quizRoutes = require("./routes/quizRoutes");
 const answerRoutes = require("./routes/answerRoutes");
 
 const app = express();
+require("dotenv").config();
 
-const dbURI =
-  "mongodb+srv://toushiro:asagilove@cluster0.ssuiv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
 
 mongoose
-  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((result) => app.listen(3000))
+  .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((result) => app.listen(PORT))
   .catch((err) => console.log(err));
 
 app.set("view engine", "ejs");
