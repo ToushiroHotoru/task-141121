@@ -17,6 +17,8 @@ function outputResults(data) {
       $(".showBtn").remove();
       $(".company").removeAttr("disabled");
       $(".main-form").empty();
+      $(".second-form").empty();
+      $(".second").empty();
       $(".main-select-group, hr").show();
       $(".main-select-group-row").prepend(`
       <div class="col col-ui-widget">
@@ -57,6 +59,8 @@ function outputResults(data) {
       $(".col-ui-widget").remove();
       $(".showBtn").remove();
       $(".city").prop("selectedIndex", 0);
+      $(".second-form").empty();
+      $(".second").empty();
       $(".company").prop("selectedIndex", 0);
       $(".main-form").empty();
       $(".company").prop("disabled", true);

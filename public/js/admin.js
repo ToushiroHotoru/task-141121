@@ -2,6 +2,8 @@ $("#btnradio3").click(function () {
   if ($("#btnradio3").is(":checked")) {
     $(".quizNewDataParent").remove();
     $(".ui-widget").remove();
+    $(".second-form").empty();
+    $(".second").empty();
     $(".city").prop("selectedIndex", 0);
     $(".company").prop("selectedIndex", 0);
     $(".showBtn").remove();
@@ -16,6 +18,7 @@ $("#btnradio3").click(function () {
       cache: false,
       success: function (data) {
         let i = 1;
+        $(".main-form").append(`<hr/>`)
         for (key in data) {
           $(".main-form").append(`
           <div class="d-flex align-items-center quizItem">
@@ -32,15 +35,58 @@ $("#btnradio3").click(function () {
         <div class="d-flex align-items-center quizNewDataParent ms-3">
                 <div><input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData"></div>
                 <div>
-                    <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить</button>
+                    <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить вопрос</button>
                 </btn>
           </div>
        
         `);
       },
     });
+
+
+
+    $.ajax({
+      url: "/quiz/get-quiz",
+      type: "GET",
+      cache: false,
+      success: function (data) {
+        let i = 1;
+        for (key in data) {
+          $(".second-form").append(`
+          <div class="d-flex align-items-center quizItem">
+                <div><span class="quizId">${i}</span>. <input type="text" data-value="${data[key]["note"]}" value="${data[key]["note"]}" class="quizValue"></div>
+                <div class="btn-quiz-group">
+                    <button class="btn btn-dark my-1 btn-sm btn-group-edit">edit</button>
+                    <button class="btn btn-dark my-1 btn-sm btn-group-delete">delete</button>
+                </btn>
+          </div>
+                `);
+          i++;
+        }
+        $(".second").append(`
+        <div class="d-flex align-items-center quizNewDataParent ms-3">
+                <div><input type="text" placeholder="Напишите имя нового пользователя..."  class="quizNewData"></div>
+                <div>
+                    <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить пользователя</button>
+                </btn>
+          </div>
+       
+        `);
+      },
+    });
+
+
+
+
   }
 });
+
+
+
+
+
+
+
 
 $("body").on("click", ".create-quiz", function (e) {
   e.preventDefault();
