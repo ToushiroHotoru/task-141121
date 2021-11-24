@@ -9,7 +9,7 @@ $("#btnradio3").click(function () {
     $(".showBtn").remove();
     $(".company").removeAttr("disabled");
     $(".main-form").empty();
-    $(".main-select-group, hr").hide();
+    
     // $(".main-select-group").addClass("osnovnayaForma2");
 
     $.ajax({
@@ -35,55 +35,65 @@ $("#btnradio3").click(function () {
         <div class="d-flex align-items-center quizNewDataParent ms-3">
                 <div><input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData"></div>
                 <div>
-                    <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить вопрос</button>
+                    <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить</button>
                 </btn>
           </div>
        
         `);
       },
     });
-
-
-
-    $.ajax({
-      url: "/quiz/get-quiz",
-      type: "GET",
-      cache: false,
-      success: function (data) {
-        let i = 1;
-        for (key in data) {
-          $(".second-form").append(`
-          <div class="d-flex align-items-center quizItem">
-                <div><span class="quizId">${i}</span>. <input type="text" data-value="${data[key]["note"]}" value="${data[key]["note"]}" class="quizValue"></div>
-                <div class="btn-quiz-group">
-                    <button class="btn btn-dark my-1 btn-sm btn-group-edit">edit</button>
-                    <button class="btn btn-dark my-1 btn-sm btn-group-delete">delete</button>
-                </btn>
-          </div>
-                `);
-          i++;
-        }
-        $(".second").append(`
-        <div class="d-flex align-items-center quizNewDataParent ms-3">
-                <div><input type="text" placeholder="Напишите имя нового пользователя..."  class="quizNewData"></div>
-                <div>
-                    <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить пользователя</button>
-                </btn>
-          </div>
-       
-        `);
-      },
-    });
-
-
-
 
   }
 });
 
+function getWorkersNames(data) {
+        let companyName = $(".company").val();
+        for (key in data) {
+          for (let i = 0; i < data[key]["city"]["company"].length; i++) {
+            if (companyName == data[key]["city"]["company"][i]["companyName"]) {
+              return data[key]["city"]["company"][i]["workers"];
+            }
+          }
+        }
+      }
 
-
-
+$("body").on("change", ".company", function () {
+  if ($("#btnradio3").is(":checked")){
+  $(".second-form").empty();
+  $(".second").empty();
+  $(".second-form").append(`на половину работает`);
+  $.ajax({
+        url: "/get-data",
+        type: "GET",
+        cache: false,
+        success: function (data) {
+          const workNames = getWorkersNames(data);
+          let i = 1;
+          for (key in data) {
+            $(".second-form").append(`
+            <div class="d-flex align-items-center quizItem">
+                  <div><span class="quizId">${i}</span>. <input type="text" data-value="${workNames}" value="${workNames}" class="quizValue"></div>
+                  <div class="btn-quiz-group">
+                      <button class="btn btn-dark my-1 btn-sm btn-group-edit">edit</button>
+                      <button class="btn btn-dark my-1 btn-sm btn-group-delete">delete</button>
+                  </btn>
+            </div>
+                  `);
+            i++;
+          }
+          $(".second").append(`
+          <div class="d-flex align-items-center quizNewDataParent ms-3">
+                  <div><input type="text" placeholder="Напишите имя нового пользователя..."  class="quizNewData"></div>
+                  <div>
+                      <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить</button>
+                  </btn>
+            </div>
+        
+          `);
+        },
+      });
+    };
+    });
 
 
 
