@@ -22,8 +22,14 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
+let today = new Date();
+let dd = String(today.getDate()).padStart(2, "0");
+let mm = String(today.getMonth() + 1).padStart(2, "0");
+let yyyy = today.getFullYear();
+today = mm + "/" + dd + "/" + yyyy;
+
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("index", { date: today });
 });
 
 app.use("/quiz", quizRoutes);
