@@ -62,13 +62,14 @@ $("document").ready(function () {
           }
         }
       }
-      $("body").on("click", ".info .search", function () {
+      $("body").on("click", ".search", function () {
         $.ajax({
           url: "/quiz/get-quiz",
           type: "GET",
           cache: false,
           success: function (data) {
             const workNames = getWorkersNames();
+            console.log(workNames);
             $(".search").autocomplete({
               source: getWorkersNames(),
               select: function (event, ui) {
