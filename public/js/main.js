@@ -62,7 +62,7 @@ $("document").ready(function () {
           }
         }
       }
-      $("body").on("click", ".search", function () {
+      $("body").on("click", ".info .search", function () {
         $.ajax({
           url: "/quiz/get-quiz",
           type: "GET",
