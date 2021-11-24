@@ -43,7 +43,21 @@ $("#btnradio3").click(function () {
       },
     });
   }
+
+$(".second-form").append(`
+          <div class="d-flex align-items-center quizNewDataParent ms-3">
+                  <div><input type="text" placeholder="Напишите название нового города..."  class="getDepartment"></div>
+                  <div><input type="text" placeholder="Напишите названия новых салонов..."  class="getSalon"></div>
+                  <div><button class="btnGetGorod btn-dark btn-sm">Добавить</button>
+                  </btn>
+            </div>
+          `);
+
+
 });
+
+
+
 
 function getWorkersNames(data) {
   let companyName = $(".company").val();
@@ -60,7 +74,7 @@ $("body").on("change", ".company", function () {
   if ($("#btnradio3").is(":checked")) {
     $(".second-form").empty();
     $(".second").empty();
-    $(".second-form").append(`на половину работает`);
+    
     $.ajax({
       url: "/get-data",
       type: "GET",
@@ -174,4 +188,19 @@ $("body").on("click", ".btn-group-edit", function (e) {
       sendAlert.appendTo(".main").fadeIn();
     },
   });
+});
+
+$("body").on("click", ".btnGetGorod", function () {
+  let cityName = $(".getDepartment").val();
+  let companyString = $(".getSalon").val();
+  let company = companyString.split(",");
+  console.log(company);
+  $.ajax({
+      url: "/create-data",
+      type: "POST",
+      data: {
+        cityName: cityName,
+        company: company,
+      },
+});
 });

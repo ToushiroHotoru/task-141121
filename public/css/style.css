@@ -32,4 +32,16 @@ body {
 .quizValue,
 .quizNewData {
   min-width: 850px;
-}/*# sourceMappingURL=style.css.map */
+} /*# sourceMappingURL=style.css.map */
+
+.getDepartment {
+  height: 40px;
+  width: 96%;
+  margin-right: 110px;
+}
+
+.getSalon {
+  height: 40px;
+  width: 96%;
+  margin-right: 220px;
+}

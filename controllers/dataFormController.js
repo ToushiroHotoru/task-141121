@@ -63,6 +63,6 @@ const create_data = async (req, res) => {
 
 module.exports = {
   get_data,
-  //   create_data,
+  create_data,
   //   edit_data_name,
 };
