@@ -3,20 +3,18 @@ const Schema = mongoose.Schema;
 
 const dataForms = new Schema(
   {
-    city: {
-      cityName: {
-        type: String,
-        required: true,
-      },
-      company: [
-        {
-          companyName: {
-            type: String,
-          },
-          workers: [],
-        },
-      ],
+    cityName: {
+      type: String,
+      required: true,
     },
+    company: [
+      {
+        companyName: {
+          type: String,
+        },
+        workers: [],
+      },
+    ],
   },
   {
     timestamps: true,

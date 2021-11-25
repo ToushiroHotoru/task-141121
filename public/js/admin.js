@@ -1,6 +1,9 @@
 $("#btnradio3").click(function () {
   if ($("#btnradio3").is(":checked")) {
     $(".quizNewDataParent").remove();
+    $(".main-select-group").empty();
+    $(".main-form").empty();
+    $("hr").remove();
     $(".ui-widget").remove();
     $(".second-form").empty();
     $(".second").empty();
@@ -10,12 +13,9 @@ $("#btnradio3").click(function () {
     $(".company").removeAttr("disabled");
     $(".main-form").empty();
 
-    // $(".main-select-group").addClass("osnovnayaForma2");
-
     $.ajax({
       url: "/quiz/get-quiz",
       type: "GET",
-      cache: false,
       success: function (data) {
         let i = 1;
         $(".main-form").append(`<hr/>`);
@@ -40,69 +40,6 @@ $("#btnradio3").click(function () {
           </div>
        
         `);
-      },
-    });
-  }
-
-$(".second-form").append(`
-          <div class="d-flex align-items-center quizNewDataParent ms-3">
-                  <div><input type="text" placeholder="Напишите название нового города..."  class="getDepartment"></div>
-                  <div><input type="text" placeholder="Напишите названия новых салонов..."  class="getSalon"></div>
-                  <div><button class="btnGetGorod btn-dark btn-sm">Добавить</button>
-                  </btn>
-            </div>
-          `);
-
-
-});
-
-
-
-
-function getWorkersNames(data) {
-  let companyName = $(".company").val();
-  for (key in data) {
-    for (let i = 0; i < data[key]["city"]["company"].length; i++) {
-      if (companyName == data[key]["city"]["company"][i]["companyName"]) {
-        return data[key]["city"]["company"][i]["workers"];
-      }
-    }
-  }
-}
-
-$("body").on("change", ".company", function () {
-  if ($("#btnradio3").is(":checked")) {
-    $(".second-form").empty();
-    $(".second").empty();
-    
-    $.ajax({
-      url: "/get-data",
-      type: "GET",
-      cache: false,
-      success: function (data) {
-        const workNames = getWorkersNames(data);
-        let i = 1;
-        for (key in data) {
-          $(".second-form").append(`
-            <div class="d-flex align-items-center quizItem">
-                  <div><span class="quizId">${i}</span>. <input type="text" data-value="${workNames}" value="${workNames}" class="quizValue"></div>
-                  <div class="btn-quiz-group">
-                      <button class="btn btn-dark my-1 btn-sm btn-group-edit">edit</button>
-                      <button class="btn btn-dark my-1 btn-sm btn-group-delete">delete</button>
-                  </btn>
-            </div>
-                  `);
-          i++;
-        }
-        $(".second").append(`
-          <div class="d-flex align-items-center quizNewDataParent ms-3">
-                  <div><input type="text" placeholder="Напишите имя нового пользователя..."  class="quizNewData"></div>
-                  <div>
-                      <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить</button>
-                  </btn>
-            </div>
-        
-          `);
       },
     });
   }
@@ -190,17 +127,91 @@ $("body").on("click", ".btn-group-edit", function (e) {
   });
 });
 
-$("body").on("click", ".btnGetGorod", function () {
-  let cityName = $(".getDepartment").val();
-  let companyString = $(".getSalon").val();
-  let company = companyString.split(",");
-  console.log(company);
+$("body").on("click", "#btnradio3", function () {
   $.ajax({
-      url: "/create-data",
-      type: "POST",
-      data: {
-        cityName: cityName,
-        company: company,
-      },
+    url: "/get-data",
+    type: "GET",
+    success: function (data) {
+      let i = 1;
+      $(".main-form").prepend(`
+        <h3>Города</h3>
+        `);
+      for (key in data) {
+        $(".main-form").prepend(`
+          <div class="d-flex align-items-center cityItem">
+                <div><span class="cityId">${i}</span>. <input type="text" data-id="${data[key]["_id"]}" value="${data[key]["cityName"]}" class="cityValue"></div>
+                <div class="btn-city-group">
+                    <button class="btn btn-dark my-1 btn-sm btn-city-edit">edit</button>
+                    <button class="btn btn-dark my-1 btn-sm btn-city-delete">delete</button>
+                </btn>
+          </div>
+        `);
+        i++;
+      }
+      $(".main-form").prepend(`
+            <div class="d-flex align-items-center quizNewDataParent ms-3">
+                <div><input type="text" placeholder="Напишите новый вопрос..."  class="cityNewData"></div>
+                <div>
+                    <button class="btn btn-dark my-1 btn-sm add-data-city">Добавить</button>
+                </btn>
+          </div>
+        `);
+    },
+  });
 });
+
+$("body").on("click", ".add-data-city", function () {
+  let cityNewData = $(".cityNewData").val();
+  let company = [
+    { companyName: "компания1" },
+    { companyName: "компания2" },
+    { companyName: "компания3" },
+  ];
+
+  $.ajax({
+    url: "/add-data-city",
+    type: "POST",
+    data: {
+      cityName: cityNewData,
+      company: company,
+    },
+    success: function () {
+      console.log("запрос сработал");
+    },
+  });
+});
+
+$("body").on("click", ".btn-city-edit", function () {
+  const city = $(this).parent().parent();
+  let cityNewData = city.find(".cityValue").val();
+  let cityId = city.find(".cityValue").attr("data-id");
+
+  $.ajax({
+    url: "/edit-data-city",
+    type: "POST",
+    data: {
+      cityNewData: cityNewData,
+      cityId: cityId,
+    },
+    success: function () {
+      console.log("запрос сработал");
+    },
+  });
+});
+
+$("body").on("click", ".btn-city-delete", function () {
+  const city = $(this).parent().parent();
+  let cityId = city.find(".cityValue").attr("data-id");
+  console.log(cityId);
+
+  $.ajax({
+    url: "/delete-data-city",
+    type: "DELETE",
+    data: {
+      cityId: cityId,
+    },
+    success: function () {
+      console.log("запрос сработал");
+    },
+  });
 });

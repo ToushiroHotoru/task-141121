@@ -8,7 +8,7 @@ $("document").ready(function () {
 
       for (key in data) {
         $(".city").append(
-          `<option class="cityName">${getCityName(data[key]["city"])}</option>`
+          `<option class="cityName">${getCityName(data[key])}</option>`
         );
       }
 
@@ -16,10 +16,10 @@ $("document").ready(function () {
         const form = $(this);
         let output = form.val();
         for (key in data) {
-          if (data[key]["city"]["cityName"] == output) {
+          if (data[key]["cityName"] == output) {
             $(".main-select-group__selected").remove();
             $(".company").append(
-              `${getCompanyName(data[key]["city"]["company"])}`
+              `${getCompanyName(data[key]["company"])}`
             );
             $(".company").removeAttr("disabled");
           }
@@ -55,9 +55,9 @@ $("document").ready(function () {
       function getWorkersNames() {
         let companyName = $(".company").val();
         for (key in data) {
-          for (let i = 0; i < data[key]["city"]["company"].length; i++) {
-            if (companyName == data[key]["city"]["company"][i]["companyName"]) {
-              return data[key]["city"]["company"][i]["workers"];
+          for (let i = 0; i < data[key]["company"].length; i++) {
+            if (companyName == data[key]["company"][i]["companyName"]) {
+              return data[key]["company"][i]["workers"];
             }
           }
         }

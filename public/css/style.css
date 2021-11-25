@@ -30,18 +30,7 @@ body {
 }
 
 .quizValue,
-.quizNewData {
+.quizNewData,
+.cityValue {
   min-width: 850px;
-} /*# sourceMappingURL=style.css.map */
-
-.getDepartment {
-  height: 40px;
-  width: 96%;
-  margin-right: 110px;
-}
-
-.getSalon {
-  height: 40px;
-  width: 96%;
-  margin-right: 220px;
-}
+}/*# sourceMappingURL=style.css.map */
