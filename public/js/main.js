@@ -1,162 +1,627 @@
-$("document").ready(function () {
-  $.ajax({
-    url: "/get-data",
-    type: "GET",
-    cache: false,
-    success: function (data) {
-      outputResults(data);
-
-      for (key in data) {
-        $(".city").append(
-          `<option class="cityName">${getCityName(data[key])}</option>`
-        );
-      }
-
-      $(".city").change(function () {
-        const form = $(this);
-        let output = form.val();
+$(document).ready(function () {
+  $("document").ready(function () {
+    $.ajax({
+      url: "/get-data",
+      type: "GET",
+      success: function (data) {
         for (key in data) {
-          if (data[key]["cityName"] == output) {
-            $(".main-select-group__selected").remove();
-            $(".company").append(
-              `${getCompanyName(data[key]["company"])}`
-            );
-            $(".company").removeAttr("disabled");
-          }
-        }
-      });
-
-      $(".company").change(function () {
-        const form = $(this);
-        let output = form.val();
-        if (output !== "Выберите салон") {
-          $(".search").removeAttr("readonly");
-        }
-      });
-
-      function getCityName(object) {
-        let data = "";
-        data += object["cityName"];
-        return data;
-      }
-
-      function getCompanyName(data) {
-        let leak = [];
-        for (let i = 0; i < data.length; i++) {
-          leak.push(
-            '<option class="companyName main-select-group__selected">' +
-              data[i]["companyName"] +
-              "</option>"
+          $(".city").append(
+            `<option class="cityName">${getCityName(data[key])}</option>`
           );
         }
-        return leak;
-      }
 
-      function getWorkersNames() {
-        let companyName = $(".company").val();
-        for (key in data) {
-          for (let i = 0; i < data[key]["company"].length; i++) {
-            if (companyName == data[key]["company"][i]["companyName"]) {
-              return data[key]["company"][i]["workers"];
+        $(".city").change(function () {
+          const form = $(this);
+          let output = form.val();
+          for (key in data) {
+            if (data[key]["cityName"] == output) {
+              $(".main-select-group__selected").remove();
+              $(".company").append(`${getCompanyName(data[key]["company"])}`);
+              $(".company").removeAttr("disabled");
             }
           }
-        }
-      }
-      $("body").on("click", ".search", function () {
-        $.ajax({
-          url: "/quiz/get-quiz",
-          type: "GET",
-          cache: false,
-          success: function (data) {
-            const workNames = getWorkersNames();
-            console.log(workNames);
-            $(".search").autocomplete({
-              source: getWorkersNames(),
-              select: function (event, ui) {
-                $(".main-form").empty();
-                if (workNames.includes(ui.item.value)) {
-                  $(".main-form").append(
-                    `<div>Сотрудник: <span class="nameTo">${ui.item.value}</span></div>`
-                  );
+        });
 
-                  let i = 1;
-                  for (key in data) {
-                    $(".main-form").append(`
+        $(".company").change(function () {
+          const form = $(this);
+          let output = form.val();
+          if (output !== "Выберите салон") {
+            $(".search").removeAttr("readonly");
+          }
+        });
+
+        $("body").on("click", ".search", function () {
+          $.ajax({
+            url: "/quiz/get-quiz",
+            type: "GET",
+            cache: false,
+            success: function (data) {
+              const workNames = getWorkersNames();
+              console.log(workNames);
+              $(".search").autocomplete({
+                source: getWorkersNames(),
+                select: function (event, ui) {
+                  $(".main-form").empty();
+                  if (workNames.includes(ui.item.value)) {
+                    $(".main-form").append(
+                      `<div>Сотрудник: <span class="nameTo">${ui.item.value}</span></div>`
+                    );
+
+                    let i = 1;
+                    for (key in data) {
+                      $(".main-form").append(`
                       <div>${i}. <span class="quizMainValue">${data[key]["note"]}</span>
                       <div class="form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
                       </div></div>
                     `);
-                    i++;
-                  }
-                  $(".main-form").append(
-                    `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
-                  );
-                  $(".form-check-input").click(function () {
-                    let swid = $(this).attr("swich_id");
-                    if (this.checked) {
-                      $(".pala" + swid).text("yes");
-                    } else {
-                      $(".pala" + swid).text("no");
+                      i++;
                     }
-                  });
-                }
-              },
-            });
-          },
+                    $(".main-form").append(
+                      `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
+                    );
+                    $(".form-check-input").click(function () {
+                      let swid = $(this).attr("swich_id");
+                      if (this.checked) {
+                        $(".pala" + swid).text("yes");
+                      } else {
+                        $(".pala" + swid).text("no");
+                      }
+                    });
+                  }
+                },
+              });
+            },
+          });
         });
-      });
+
+        $("#btnradio1").click(function () {
+          if ($("#btnradio1").is(":checked")) {
+            $("hr").css("display", "block");
+            $(".main-select-group").css("display", "flex");
+            $(".quizNewDataParent").remove();
+            $(".col-ui-widget").remove();
+            $(".showBtn").remove();
+            $(".city").prop("selectedIndex", 0);
+            $(".second-form").empty();
+            $(".second").empty();
+            $(".company").prop("selectedIndex", 0);
+            $(".main-form").empty();
+            $(".company").prop("disabled", true);
+            $(".main-select-group, hr").show();
+            $(".main-select-group-row").append(`
+    <div class="col col-ui-widget">
+      <div class="ui-widget">
+        <input type="text" class="form-control search" placeholder="Введите ФИО менеджера"
+        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly>
+      </div>
+    </div>`);
+          }
+        });
+
+        $("#btnradio2").click(function () {
+          if ($("#btnradio2").is(":checked")) {
+            $("hr").css("display", "block");
+            $(".main-select-group").css("display", "flex");
+            $(".quizNewDataParent").remove();
+            $(".col-ui-widget").remove();
+            $(".city").prop("selectedIndex", 0);
+            $(".company").prop("selectedIndex", 0);
+            $(".showBtn").remove();
+            $(".company").removeAttr("disabled");
+            $(".main-form").empty();
+            $(".second-form").empty();
+            $(".second").empty();
+            $(".main-select-group, hr").show();
+            $(".main-select-group-row").prepend(`
+      <div class="col col-ui-widget">
+        <div class="ui-widget">
+          <input type="text" class="form-control" id="datepicker" placeholder="Выберите дату">
+        </div>
+      </div>`);
+            $(".main-select-group").append(`
+        <div class="col">
+          <button class="btn btn-dark showBtn">Показать</button>
+        </div>
+      `);
+            $("#datepicker").datepicker({
+              dateFormat: "yy-mm-dd",
+              minDate: new Date($("#hiddendelivdate").val()),
+              monthNames: [
+                "Январь",
+                "Февраль",
+                "Март",
+                "Апрель",
+                "Май",
+                "Июнь",
+                "Июль",
+                "Август",
+                "Сентябрь",
+                "Октябрь",
+                "Ноябрь",
+                "Декабрь",
+              ],
+              dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+            });
+          }
+        });
+
+        $(".showBtn").click(function () {
+          let dateForSend = $("#datepicker").val();
+          let departmentForSend = $(".city").val();
+          let salonForSend = $(".company").val();
+          if (
+            dateForSend == "" ||
+            salonForSend == "Выберите салон" ||
+            departmentForSend == "Выберите подразделение"
+          ) {
+            const sendAlert =
+              $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+                  <strong>Не все поля заполнены!</strong> Пожалуйста заполните все поля.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`).hide();
+
+            sendAlert.appendTo(".main").fadeIn();
+          }
+        });
+
+        function getCompanyName(data) {
+          let leak = [];
+          for (let i = 0; i < data.length; i++) {
+            leak.push(
+              '<option class="companyName main-select-group__selected">' +
+                data[i]["companyName"] +
+                "</option>"
+            );
+          }
+          return leak;
+        }
+
+        function getCityName(object) {
+          let data = "";
+          data += object["cityName"];
+          return data;
+        }
+
+        function getWorkersNames() {
+          let companyName = $(".company").val();
+          for (key in data) {
+            for (let i = 0; i < data[key]["company"].length; i++) {
+              if (companyName == data[key]["company"][i]["companyName"]) {
+                return data[key]["company"][i]["workers"];
+              }
+            }
+          }
+        }
+      },
+    });
+  });
+
+  // START POST send user answer
+  $("body").on("click", ".send-form", async function (e) {
+    e.preventDefault();
+    let name = $(".nameTo").text();
+    let companyName = $(".company").val();
+    let cityName = $(".city").val();
+    let answers = [];
+    let quizzes = [];
+    $(".quizMainValue").each(function (i) {
+      let something = i + 1 + ". " + $(this).text() + "/";
+      quizzes.push(something);
+    });
+
+    quizzes = quizzes.splice("/");
+    quizzes.forEach((item, i, arr) => {
+      item = item.slice(0, -1);
+      arr.splice(i, 1, item);
+    });
+
+    $(".quiz:checkbox").each(function () {
+      if ($(this).is(":checked")) {
+        answers.push("yes");
+      } else {
+        answers.push("no");
+      }
+    });
+
+    $.ajax({
+      url: "/answer/save-answer",
+      type: "POST",
+      data: {
+        cityName: cityName,
+        companyName: companyName,
+        name: name,
+        answers: answers,
+        quizzes: quizzes,
+      },
+      success: function () {
+        $(".main-form").empty();
+
+        const sendAlert =
+          $(`<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Форма отправлена!</strong> Благодарим вас, за обратную связь!.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`).hide();
+
+        sendAlert.appendTo(".main").fadeIn();
+      },
+    });
+  });
+});
+// END POST send user answer
+
+// START GET all users answers
+$("body").on("click", ".showBtn", function () {
+  $(".main-form").empty();
+  let departmentForSend = $(".city").val();
+  let salonForSend = $(".company").val();
+  let dateTime = $("#datepicker").val().split("-");
+  let gte = new Date(dateTime[0], parseInt(dateTime[1]) - 1, dateTime[2]);
+  let lt = new Date(
+    dateTime[0],
+    parseInt(dateTime[1]) - 1,
+    parseInt(dateTime[2]) + 1
+  );
+  let alertFlag = true;
+  if (
+    dateTime == "" ||
+    salonForSend == "Выберите салон" ||
+    departmentForSend == "Выберите подразделение"
+  ) {
+    const sendAlert =
+      $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+                  <strong>Не все поля заполнены!</strong> Пожалуйста заполните все поля.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`).hide();
+
+    sendAlert.appendTo(".main").fadeIn();
+    alertFlag = false;
+  }
+
+  $.ajax({
+    url: "/answer/get-answer",
+    type: "POST",
+    data: {
+      gte: gte,
+      lt: lt,
+      cityName: departmentForSend,
+      companyName: salonForSend,
+    },
+    success: function (data) {
+      let i = 1;
+      if (data.length === 0 && alertFlag) {
+        $(".main-form").empty();
+
+        const sendAlert =
+          $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+                  <strong>Ничего не найдено!</strong> В этот день, в данной компании, отправок форм не было.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`).hide();
+
+        sendAlert.appendTo(".main").fadeIn();
+      } else {
+        let names = [];
+        names.push(data[0]["name"]);
+
+        for (key in data) {
+          names.forEach(() => {
+            if (!names.includes(data[key]["name"])) {
+              names.push(data[key]["name"]);
+            }
+          });
+        }
+
+        $(".main-form").append(`
+          <div class="accordion" id="accordionExample"></div>
+        `);
+
+        names.forEach((item, i) => {
+          $(".accordion").append(`
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="flush-heading${i}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${i}" aria-controls="flush-collapse${i}">
+                  ${item}
+                </button>
+              </h2>
+              <div id="flush-collapse${i}" class="accordion-collapse collapse" aria-labelledby="flush-heading${i}">
+                <div class="accordion-body">
+                     ${outputTables(item)}
+                </div>
+              </div>
+            </div>
+          `);
+          i++;
+        });
+
+        function outputAnswers(arrQuiz, arrAnswer) {
+          console.log(arrQuiz);
+          console.log(arrAnswer);
+          let result = "";
+          for (let j = 0; j < arrAnswer.length; j++) {
+            console.log("quizzes");
+            result += `<tr><th scope="row">${j + 1}</th><td>${
+              arrQuiz[j]
+            }</td> <td>${arrAnswer[j]}</td></tr>`;
+          }
+          console.log(result);
+          return result;
+        }
+
+        function outputTables(name) {
+          let table = "";
+          console.log(data);
+          for (key in data) {
+            console.log(data[key]["name"]);
+            console.log(name);
+            if (data[key]["name"] == name) {
+              table += `<table class="table table-striped my-4">
+                   <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Вопрос</th>
+                        <th scope="col">Ответ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                     ${outputAnswers(
+                       data[key]["quizzes"],
+                       data[key]["answers"]
+                     )}
+                    </tbody>
+                        
+                  </table><hr style="height: 12px; color: red;" />`;
+              console.log(table);
+            }
+          }
+          return table;
+        }
+      }
+    },
+  });
+});
+// END GET all users answers
+
+// START GET all data for admin panel
+$("#btnradio3").click(function () {
+  if ($("#btnradio3").is(":checked")) {
+    $(".quizNewDataParent").remove();
+    $(".main-select-group").css("display", "none");
+    $("hr").css("display", "none");
+    $(".main-form").empty();
+    $(".ui-widget").remove();
+    $(".second-form").empty();
+    $(".second").empty();
+    $(".city").prop("selectedIndex", 0);
+    $(".company").prop("selectedIndex", 0);
+    $(".showBtn").remove();
+    $(".company").removeAttr("disabled");
+    $(".main-form").empty();
+
+    $.ajax({
+      url: "/get-data",
+      type: "GET",
+      beforeSend: function () {
+        $(".main-form").append(`
+        <div class="text-center my-5 loadSpinner">
+          <div class="spinner-grow" style="width: 5rem; height: 5rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        `);
+      },
+      success: function (data) {
+        $(".loadSpinner").remove();
+        let i = 1;
+        $(".main-form").append(`
+        <h3>Города</h3>
+        `);
+        for (key in data) {
+          $(".main-form").append(`
+          <div class="d-flex align-items-center cityItem">
+                <div><span class="cityId">${i}</span>. <input type="text" data-id="${data[key]["_id"]}" value="${data[key]["cityName"]}" class="cityValue"></div>
+                <div class="btn-city-group">
+                    <button class="btn btn-dark my-1 btn-sm btn-city-edit">edit</button>
+                    <button class="btn btn-dark my-1 btn-sm btn-city-delete">delete</button>
+                </btn>
+          </div>
+        `);
+          i++;
+        }
+        $(".main-form").append(`
+            <div class="d-flex align-items-center quizNewDataParent ms-3">
+                <div><input type="text" placeholder="Напишите новый вопрос..."  class="cityNewData"></div>
+                <div>
+                    <button class="btn btn-dark my-1 btn-sm add-data-city">Добавить</button>
+                </btn>
+          </div>
+        `);
+
+        $(".main-form").append(`
+            <select name="select" class="cityAdmin form-select main-select-group__item">
+                        <option selected>Выберите подразделение</option>
+            </select>
+        `);
+        if (key in data) {
+          console.log(data[key]["cityName"]);
+          $(".cityAdmin").append(`<option>${data[key]["cityName"]}</option>`);
+        }
+      },
+    });
+  }
+});
+// END GET all data for admin panel
+
+// START add, update, delete cities
+$("body").on("click", ".add-data-city", function () {
+  let cityNewData = $(".cityNewData").val();
+  let company = [
+    { companyName: "компания1" },
+    { companyName: "компания2" },
+    { companyName: "компания3" },
+  ];
+
+  $.ajax({
+    url: "/add-data-city",
+    type: "POST",
+    data: {
+      cityName: cityNewData,
+      company: company,
+    },
+    success: function () {
+      console.log("запрос сработал");
     },
   });
 });
 
-$("body").on("click", ".send-form", async function (e) {
-  e.preventDefault();
-  let name = $(".nameTo").text();
-  let companyName = $(".company").val();
-  let cityName = $(".city").val();
-  let answers = [];
-  let quizzes = [];
-  $(".quizMainValue").each(function (i) {
-    let something = i + 1 + ". " + $(this).text() + "/";
-    quizzes.push(something);
-  });
-
-  quizzes = quizzes.splice("/");
-  quizzes.forEach((item, i, arr) => {
-    item = item.slice(0, -1);
-    arr.splice(i, 1, item);
-  });
-
-  $(".quiz:checkbox").each(function () {
-    if ($(this).is(":checked")) {
-      answers.push("yes");
-    } else {
-      answers.push("no");
-    }
-  });
+$("body").on("click", ".btn-city-edit", function () {
+  const city = $(this).parent().parent();
+  let cityNewData = city.find(".cityValue").val();
+  let cityId = city.find(".cityValue").attr("data-id");
 
   $.ajax({
-    url: "/answer/save-answer",
+    url: "/edit-data-city",
     type: "POST",
     data: {
-      cityName: cityName,
-      companyName: companyName,
-      name: name,
-      answers: answers,
-      quizzes: quizzes,
+      cityNewData: cityNewData,
+      cityId: cityId,
     },
     success: function () {
-      $(".main-form").empty();
+      console.log("запрос сработал");
+    },
+  });
+});
 
+$("body").on("click", ".btn-city-delete", function () {
+  const city = $(this).parent().parent();
+  let cityId = city.find(".cityValue").attr("data-id");
+  console.log(cityId);
+
+  $.ajax({
+    url: "/delete-data-city",
+    type: "DELETE",
+    data: {
+      cityId: cityId,
+    },
+    success: function () {
+      console.log("запрос сработал");
+    },
+  });
+});
+// END add, update, delete cities
+
+// START add, update, delete quizzes
+$("body").on("click", "#btnradio3", function () {
+  $.ajax({
+    url: "/quiz/get-quiz",
+    type: "GET",
+    success: function (data) {
+      let i = 1;
+      $(".main-form").append(`<hr/>`);
+      for (key in data) {
+        $(".main-form").append(`
+          <div class="d-flex align-items-center quizItem">
+                <div><span class="quizId">${i}</span>. <input type="text" data-value="${data[key]["note"]}" value="${data[key]["note"]}" class="quizValue"></div>
+                <div class="btn-quiz-group">
+                    <button class="btn btn-dark my-1 btn-sm btn-group-edit">edit</button>
+                    <button class="btn btn-dark my-1 btn-sm btn-group-delete">delete</button>
+                </btn>
+          </div>
+                `);
+        i++;
+      }
+      $(".main-form").append(`
+        <div class="d-flex align-items-center quizNewDataParent ms-3">
+                <div><input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData"></div>
+                <div>
+                    <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить</button>
+                </btn>
+          </div>
+       
+        `);
+    },
+  });
+});
+
+$("body").on("click", ".create-quiz", function (e) {
+  e.preventDefault();
+  let quizNewData = $(".quizNewData").val();
+  let quizId = parseInt($(".quizId").last().text()) + 1;
+  console.log(quizId);
+  if (!quizNewData) {
+    const sendAlert =
+      $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+            <strong>Поле вопроса не заполнено!</strong> Пожалуйста заполните поле запроса.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+    sendAlert.appendTo(".main").fadeIn();
+  } else {
+    $.ajax({
+      url: "/quiz/create-quiz",
+      type: "POST",
+      data: {
+        note: quizNewData,
+      },
+      success: function () {
+        const sendAlert =
+          $(`<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Вопрос добавлен!</strong> Вопрос был добавлен в список вопросов.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+        sendAlert.appendTo(".main").fadeIn();
+
+        $(".main-form").append(`
+          <div class="d-flex align-items-center quizItem">
+                <div class="quizData"><span class="quizId">${quizId}</span>. <input type="text" data-value="${quizNewData}" value="${quizNewData}" class="quizValue"></div>
+                <div class="btn-quiz-group">
+                    <button class="btn btn-dark my-1 btn-sm btn-group-edit">edit</button>
+                    <button class="btn btn-dark my-1 btn-sm btn-group-delete">delete</button>
+                </btn>
+          </div>
+                `);
+      },
+    });
+  }
+});
+
+$("body").on("click", ".btn-group-delete", function (e) {
+  const quiz = $(this).parent().parent();
+  let quizOldData = quiz.find(".quizValue").val();
+  $.ajax({
+    url: "/quiz/delete-quiz",
+    type: "DELETE",
+    data: {
+      quizOldData: quizOldData,
+    },
+    success: function () {
+      quiz.remove();
+    },
+  });
+});
+
+$("body").on("click", ".btn-group-edit", function (e) {
+  const quiz = $(this).parent().parent();
+  let quizOldData = quiz.find(".quizValue").attr("data-value");
+  let quizNewData = quiz.find(".quizValue").val();
+
+  $.ajax({
+    url: "/quiz/edit-quiz",
+    type: "POST",
+    data: {
+      quizOldData: quizOldData,
+      quizNewData: quizNewData,
+    },
+    success: function () {
       const sendAlert =
         $(`<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
-            <strong>Форма отправлена!</strong> Благодарим вас, за обратную связь!.
+            <strong>Вопрос изменен!</strong> Вопрос был изменен и добавлен.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>`).hide();
+         </div>`).hide();
 
       sendAlert.appendTo(".main").fadeIn();
     },
   });
 });
+// END add, update, delete quizzes
