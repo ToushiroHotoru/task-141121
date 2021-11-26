@@ -63,10 +63,18 @@ const edit_data_company = async (req, res) => {
     const companyId = req.body.companyId;
     const companyMass = req.body.companyMass;
     const paladin = [{"companyName":"компания1","workers":[],"_id":"619f5eeac7a017b60b13690e"},{"companyName":"компания2","workers":[],"_id":"619f5eeac7a017b60b13690f"}];
-    const result = await DataForm.updateOne(
-      { _id: "619f9dfc1bd80e6f9cc35a90"},
-      { company:{ "companyName":"paladin3"}}
+    const result = await DataForm.findOne(
+      // { _id: "619f9dfc1bd80e6f9cc35a90",},
+      // { 0:{ "companyName":"paladin"}}
+      { companyName: "paladin3"}
      );
+    result.company.forEach(element => {
+      if(element.companyName == "paladin3"){
+      element.companyName = "gfk1";
+      };
+      console.log(element);
+    });
+    await result.save();
     res.status(200).json({ success: result });
     console.log("работает почти");
   } catch (err) {
