@@ -465,7 +465,7 @@ $("#btnradio3").click(function () {
                       <div><span class="companyId">${
                         i + 1
                       }</span>. <input type="text" data-id="${
-                  item["_id"]
+                  item["companyName"]
                 }" value="${item["companyName"]}" class="companyValue"></div>
                       <div class="btn-company-group">
                           <button class="btn btn-dark my-1 btn-sm btn-company-edit">edit</button>
@@ -579,15 +579,16 @@ $("body").on("click", ".add-data-company", function () {
 
 $("body").on("click", ".btn-company-edit", function () {
   const company = $(this).parent().parent();
-  let companyNewData = company.find(".companyValue").val();
-  let companyId = company.find(".companyValue").attr("data-id");
-  
+  let companyNewName = company.find(".companyValue").val();
+  let companyOldName = company.find(".companyValue").attr("data-id");
+  console.log(companyNewName);
+  console.log(companyOldName);
   $.ajax({
     url: "/edit-data-company",
     type: "POST",
     data: {
-      companyNewData: companyNewData,
-      companyId: companyId,
+      companyNewName: companyNewName,
+      companyOldName: companyOldName,
     },
     success: function () {
     },

@@ -60,17 +60,15 @@ const add_data_company = async (req, res) => {
 const edit_data_company = async (req, res) => {
 
   try {
-    const companyId = req.body.companyId;
-    const companyMass = req.body.companyMass;
-    const paladin = [{"companyName":"компания1","workers":[],"_id":"619f5eeac7a017b60b13690e"},{"companyName":"компания2","workers":[],"_id":"619f5eeac7a017b60b13690f"}];
+    const companyNewName = req.body.companyNewName;
+    const companyOldName = req.body.companyOldName;
+    console.log(companyNewName);
     const result = await DataForm.findOne(
-      // { _id: "619f9dfc1bd80e6f9cc35a90",},
-      // { 0:{ "companyName":"paladin"}}
-      { companyName: "paladin3"}
+      { companyName: companyOldName}
      );
     result.company.forEach(element => {
-      if(element.companyName == "paladin3"){
-      element.companyName = "gfk1";
+      if(element.companyName == companyOldName){
+      element.companyName = companyNewName;
       };
       console.log(element);
     });
