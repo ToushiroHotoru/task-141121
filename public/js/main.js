@@ -414,10 +414,19 @@ $("#btnradio3").click(function () {
         $(".loadSpinner").remove();
         let i = 1;
         $(".main-form").append(`
-        <h3>Города</h3>
+        <div class="main-form-city"><hr /><h3>Города</h3><hr /></div>
+        <div class="main-form-company"><hr />
+            <div>
+            <h3>Салоны</h3>
+            <select name="select" class="cityAdmin form-select main-select-group__item">
+                <option selected>Выберите подразделение</option>
+            </select>
+            </div>
+          <hr /></div>
+        <div class="main-form-worker"></div>
         `);
         for (key in data) {
-          $(".main-form").append(`
+          $(".main-form-city").append(`
           <div class="d-flex align-items-center cityItem">
                 <div><span class="cityId">${i}</span>. <input type="text" data-id="${data[key]["_id"]}" value="${data[key]["cityName"]}" class="cityValue"></div>
                 <div class="btn-city-group">
@@ -428,8 +437,8 @@ $("#btnradio3").click(function () {
         `);
           i++;
         }
-        $(".main-form").append(`
-            <div class="d-flex align-items-center quizNewDataParent ms-3">
+        $(".main-form-city").append(`
+            <div class="d-flex align-items-center ms-3">
                 <div><input type="text" placeholder="Напишите новый вопрос..."  class="cityNewData"></div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm add-data-city">Добавить</button>
@@ -437,15 +446,45 @@ $("#btnradio3").click(function () {
           </div>
         `);
 
-        $(".main-form").append(`
-            <select name="select" class="cityAdmin form-select main-select-group__item">
-                        <option selected>Выберите подразделение</option>
-            </select>
-        `);
-        if (key in data) {
+        for (key in data) {
           console.log(data[key]["cityName"]);
           $(".cityAdmin").append(`<option>${data[key]["cityName"]}</option>`);
         }
+
+        $(".cityAdmin").change(function () {
+          $(".companyItem").remove();
+          $(".addNewCompany").remove();
+          let cityName = $(this).val();
+          for (key in data) {
+            if (data[key]["cityName"] == cityName) {
+              data[key]["company"].forEach((item, i, arr) => {
+                $(".main-form-company").append(`
+                    <div class="d-flex align-items-center companyItem" data-id="${
+                      data[key]["_id"]
+                    }">
+                      <div><span class="companyId">${
+                        i + 1
+                      }</span>. <input type="text" data-id="${
+                  item["_id"]
+                }" value="${item["companyName"]}" class="companyValue"></div>
+                      <div class="btn-company-group">
+                          <button class="btn btn-dark my-1 btn-sm btn-company-edit">edit</button>
+                          <button class="btn btn-dark my-1 btn-sm btn-company-delete">delete</button>
+                      </btn>
+                    </div>
+              `);
+              });
+            }
+          }
+          $(".main-form-company").append(`
+           <div class="d-flex align-items-center addNewCompany ms-3">
+                <div><input type="text" placeholder="Напишите новый вопрос..."  class="companyNewData"></div>
+                <div>
+                    <button class="btn btn-dark my-1 btn-sm add-data-company">Добавить</button>
+                </btn>
+          </div>
+          `);
+        });
       },
     });
   }
@@ -469,7 +508,19 @@ $("body").on("click", ".add-data-city", function () {
       company: company,
     },
     success: function () {
-      console.log("запрос сработал");
+      //  $(".main-form-company").append(`
+      //               <div class="d-flex align-items-center companyItem">
+      //                 <div><span class="companyId">${
+      //                   i + 1
+      //                 }</span>. <input type="text" data-id="${
+      //    data[key]["_id"]
+      //  }" value="${cityNewData}" class="companyValue"></div>
+      //                 <div class="btn-company-group">
+      //                     <button class="btn btn-dark my-1 btn-sm btn-company-edit">edit</button>
+      //                     <button class="btn btn-dark my-1 btn-sm btn-company-delete">delete</button>
+      //                 </btn>
+      //               </div>
+      //         `);
     },
   });
 });
@@ -495,7 +546,6 @@ $("body").on("click", ".btn-city-edit", function () {
 $("body").on("click", ".btn-city-delete", function () {
   const city = $(this).parent().parent();
   let cityId = city.find(".cityValue").attr("data-id");
-  console.log(cityId);
 
   $.ajax({
     url: "/delete-data-city",
@@ -504,11 +554,67 @@ $("body").on("click", ".btn-city-delete", function () {
       cityId: cityId,
     },
     success: function () {
-      console.log("запрос сработал");
+      city.remove();
     },
   });
 });
 // END add, update, delete cities
+
+// START add, update, delete company
+$("body").on("click", ".add-data-company", function () {
+  let cityId = $(".companyItem").attr("data-id");
+  let companyNewData = $(".companyNewData").val();
+
+  $.ajax({
+    url: "/add-data-company",
+    type: "POST",
+    data: {
+      companyNewData: companyNewData,
+      cityId: cityId,
+    },
+    success: function () {
+      console.log("запрос сработал");
+    },
+  });
+});
+
+$("body").on("click", ".btn-company-edit", function () {
+  const company = $(this).parent().parent();
+  let companyNewData = company.find(".companyValue").val();
+  let companyId = company.find(".companyValue").attr("data-id");
+  console.log(companyNewData);
+  console.log(companyId);
+  $.ajax({
+    url: "/edit-data-city",
+    type: "POST",
+    data: {
+      companyNewData: companyNewData,
+      companyId: companyId,
+    },
+    success: function () {
+      console.log("запрос сработал");
+    },
+  });
+});
+
+$("body").on("click", ".btn-company-delete", function () {
+  const company = $(this).parent().parent();
+  let companyId = company.find(".companyValue").attr("data-id");
+  let id = $(".companyItem").attr("data-id");
+
+  $.ajax({
+    url: "/delete-data-company",
+    type: "DELETE",
+    data: {
+      companyId: companyId,
+      id: id,
+    },
+    success: function () {
+      company.remove();
+    },
+  });
+});
+// END add, update, delete company
 
 // START add, update, delete quizzes
 $("body").on("click", "#btnradio3", function () {
