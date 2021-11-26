@@ -58,12 +58,17 @@ const add_data_company = async (req, res) => {
 };
 
 const edit_data_company = async (req, res) => {
+
   try {
-    const company = await DataForm.findById(req.body.companyId);
-    console.log(company.companyName);
-    company.companyName = req.body.companyNewData;
-    const result = await DataForm.save();
+    const companyId = req.body.companyId;
+    const companyMass = req.body.companyMass;
+    const paladin = [{"companyName":"компания1","workers":[],"_id":"619f5eeac7a017b60b13690e"},{"companyName":"компания2","workers":[],"_id":"619f5eeac7a017b60b13690f"}];
+    const result = await DataForm.updateOne(
+      { _id: "619f9dfc1bd80e6f9cc35a90"},
+      { company:{ "companyName":"paladin3"}}
+     );
     res.status(200).json({ success: result });
+    console.log("работает почти");
   } catch (err) {
     console.log(err.meassage);
   }
