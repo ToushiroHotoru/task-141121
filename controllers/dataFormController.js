@@ -58,18 +58,18 @@ const add_data_company = async (req, res) => {
 };
 
 const edit_data_company = async (req, res) => {
-
   try {
-    const companyNewName = req.body.companyNewName;
-    const companyOldName = req.body.companyOldName;
-    console.log(companyNewName);
-    const result = await DataForm.findOne(
-      { companyName: companyOldName}
-     );
-    result.company.forEach(element => {
-      if(element.companyName == companyOldName){
-      element.companyName = companyNewName;
-      };
+    let companyOldName = req.body.companyOldName;
+    let companyNewName = req.body.companyNewName;
+    let id = req.body.id;
+    let result = await DataForm.findOne({
+      _id: id,
+      companyName: companyOldName,
+    });
+    result.company.forEach((element) => {
+      if (element.companyName == companyOldName) {
+        element.companyName = companyNewName;
+      }
       console.log(element);
     });
     await result.save();

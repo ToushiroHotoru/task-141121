@@ -572,8 +572,7 @@ $("body").on("click", ".add-data-company", function () {
       companyNewData: companyNewData,
       cityId: cityId,
     },
-    success: function () {
-    },
+    success: function () {},
   });
 });
 
@@ -581,17 +580,19 @@ $("body").on("click", ".btn-company-edit", function () {
   const company = $(this).parent().parent();
   let companyNewName = company.find(".companyValue").val();
   let companyOldName = company.find(".companyValue").attr("data-id");
+  let id = company.attr("data-id");
+  console.log(id);
   console.log(companyNewName);
   console.log(companyOldName);
   $.ajax({
     url: "/edit-data-company",
     type: "POST",
     data: {
+      id: id,
       companyNewName: companyNewName,
       companyOldName: companyOldName,
     },
-    success: function () {
-    },
+    success: function () {},
   });
 });
 
