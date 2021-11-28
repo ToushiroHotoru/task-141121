@@ -53,7 +53,7 @@ const add_data_company = async (req, res) => {
       if (company["_id"] == companyId) {
         console.log(company["_id"]);
         console.log(companyId);
-        result.company.push({ companyName: companyNewData });
+        result.company.push({ companyName: companyNewData, workers: [] });
       }
     });
     result.save();
