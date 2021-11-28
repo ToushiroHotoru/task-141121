@@ -4,6 +4,9 @@ $(document).ready(function () {
       url: "/get-data",
       type: "GET",
       success: function (data) {
+        $(".checkboxLoader").remove();
+        $(".btnCheck").removeAttr("disabled");
+        $(".search").val("");
         for (key in data) {
           $(".city").append(
             `<option class="cityName">${getCityName(data[key])}</option>`
@@ -163,6 +166,7 @@ $(document).ready(function () {
                 </div>`).hide();
 
             sendAlert.appendTo(".main").fadeIn();
+            deleteAlert();
           }
         });
 
@@ -245,11 +249,20 @@ $(document).ready(function () {
           </div>`).hide();
 
         sendAlert.appendTo(".main").fadeIn();
+        deleteAlert();
       },
     });
   });
 });
 // END POST send user answer
+
+// START delete alert notification
+function deleteAlert() {
+  setTimeout(() => {
+    $(".alert").remove();
+  }, 6000);
+}
+// END delete alert notification
 
 // START GET all users answers
 $("body").on("click", ".showBtn", function () {
@@ -276,6 +289,7 @@ $("body").on("click", ".showBtn", function () {
                 </div>`).hide();
 
     sendAlert.appendTo(".main").fadeIn();
+    deleteAlert();
     alertFlag = false;
   }
 
@@ -300,6 +314,7 @@ $("body").on("click", ".showBtn", function () {
                 </div>`).hide();
 
         sendAlert.appendTo(".main").fadeIn();
+        deleteAlert();
       } else {
         let names = [];
         names.push(data[0]["name"]);
@@ -513,7 +528,6 @@ $("#btnradio3").click(function () {
         });
 
         $(".cityAdminWorker").change(function () {
-          // $(".workerAdmin").remove();
           $(".addNewWorker").remove();
           let cityName = $(this).val();
           for (key in data) {
@@ -788,6 +802,7 @@ $("body").on("click", ".create-quiz", function (e) {
          </div>`).hide();
 
     sendAlert.appendTo(".main").fadeIn();
+    deleteAlert();
   } else {
     $.ajax({
       url: "/quiz/create-quiz",
@@ -803,6 +818,7 @@ $("body").on("click", ".create-quiz", function (e) {
          </div>`).hide();
 
         sendAlert.appendTo(".main").fadeIn();
+        deleteAlert();
 
         $(".main-form").append(`
           <div class="d-flex align-items-center quizItem">
@@ -853,6 +869,7 @@ $("body").on("click", ".btn-group-edit", function (e) {
          </div>`).hide();
 
       sendAlert.appendTo(".main").fadeIn();
+      deleteAlert();
     },
   });
 });
