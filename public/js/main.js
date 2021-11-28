@@ -477,7 +477,7 @@ $("#btnradio3").click(function () {
         }
         $(".main-form-city").append(`
             <div class="d-flex align-items-center ms-3">
-                <div><input type="text" placeholder="Напишите новый вопрос..."  class="cityNewData"></div>
+                <div class="width102"><input type="text" placeholder="Напишите название нового города..."  class="cityNewData width101"></div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm add-data-city">Добавить</button>
                 </btn>
@@ -501,13 +501,13 @@ $("#btnradio3").click(function () {
                     <div class="d-flex align-items-center companyItem" data-id="${
                       data[key]["_id"]
                     }">
-                      <div><span class="companyId">${
+                      <div class="width102"><span class="companyId">${
                         i + 1
                       }</span>. <input type="text" data-name="${
                   item["companyName"]
                 }" data-id="${item["_id"]}" value="${
                   item["companyName"]
-                }" class="companyValue"></div>
+                }" class="companyValue width103"></div>
                       <div class="btn-company-group">
                           <button class="btn btn-dark my-1 btn-sm btn-company-edit">edit</button>
                           <button class="btn btn-dark my-1 btn-sm btn-company-delete">delete</button>
@@ -519,7 +519,7 @@ $("#btnradio3").click(function () {
           }
           $(".main-form-company").append(`
            <div class="d-flex align-items-center addNewCompany ms-3">
-                <div><input type="text" placeholder="Напишите новый вопрос..."  class="companyNewData"></div>
+                <div class="width102"><input type="text" placeholder="Напишите название нового салона..."  class="companyNewData width101"></div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm add-data-company">Добавить</button>
                 </btn>
@@ -556,11 +556,11 @@ $("#btnradio3").click(function () {
                     <div class="d-flex align-items-center workerItem" data-id="${
                       data[key]["_id"]
                     }">
-                      <div><span class="workerId">${
+                      <div class="width102"><span class="workerId">${
                         i + 1
                       }</span>. <input type="text" data-name="${worker}" data-id="${
                     company["_id"]
-                  }" value="${worker}" class="workerValue"></div>
+                  }" value="${worker}" class="workerValue width103"></div>
                       <div class="btn-worker-group">
                           <button class="btn btn-dark my-1 btn-sm btn-worker-edit">edit</button>
                           <button class="btn btn-dark my-1 btn-sm btn-worker-delete">delete</button>
@@ -573,7 +573,7 @@ $("#btnradio3").click(function () {
           }
           $(".main-form-worker").append(`
            <div class="d-flex align-items-center addNewWorker ms-3">
-                <div><input type="text" placeholder="Напишите имя нового сотрудника..."  class="workerNewData"></div>
+                <div class="width102"><input type="text" placeholder="Напишите имя нового сотрудника..."  class="workerNewData width101"></div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm add-data-worker">Добавить</button>
                 </btn>
