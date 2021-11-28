@@ -432,7 +432,6 @@ $("#btnradio3").click(function () {
         <div class="main-form-city">
           <hr />
             <h3>Города</h3>
-          <hr />
         </div>
         <div class="main-form-company">
           <hr />
@@ -458,9 +457,8 @@ $("#btnradio3").click(function () {
             </div>
         </div>
           <div class="main-form-quiz">
-            <hr />
+          <hr /><br><br><br><br><br>
               <h3>Вопросы</h3>
-            <hr />
           </div>
         `);
         for (key in data) {
