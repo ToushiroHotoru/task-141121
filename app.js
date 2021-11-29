@@ -1,7 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const cors = require("cors");
+
 const dataFormRoutes = require("./routes/dataFormRoutes");
 const quizRoutes = require("./routes/quizRoutes");
 const answerRoutes = require("./routes/answerRoutes");
@@ -30,12 +30,30 @@ let yyyy = today.getFullYear();
 today = mm + "/" + dd + "/" + yyyy;
 
 app.get("/", (req, res) => {
-  res.render("index", { date: today });
+  res.render("index", { date: today, isAdmin: true });
+});
+
+const isAdmin = (req, res, next) => {
+  const adminFlag = true;
+  if (adminFlag) {
+    next();
+  } else {
+    throw new Error("You don't have permission to these actions");
+  }
+};
+
+app.get("/get-data", async (req, res) => {
+  try {
+    const data = await DataForm.find();
+    res.send(data);
+  } catch (err) {
+    console.log(err.meassage);
+  }
 });
 
 app.use("/quiz", quizRoutes);
 app.use("/answer", answerRoutes);
-app.use(dataFormRoutes);
+app.use(isAdmin, dataFormRoutes);
 
 app.use((req, res) => {
   res.status(404).redirect("/");

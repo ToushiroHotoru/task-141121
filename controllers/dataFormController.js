@@ -46,16 +46,11 @@ const delete_data_city = async (req, res) => {
 const add_data_company = async (req, res) => {
   try {
     const id = req.body.id;
-    const companyId = req.body.companyId;
     const companyNewData = req.body.companyNewData;
+    console.log(id);
+    console.log(companyNewData);
     const result = await DataForm.findOne({ _id: id });
-    result.company.forEach((company) => {
-      if (company["_id"] == companyId) {
-        console.log(company["_id"]);
-        console.log(companyId);
-        result.company.push({ companyName: companyNewData, workers: [] });
-      }
-    });
+    result.company.push({ companyName: companyNewData, workers: [] });
     result.save();
     res.status(200).json({ success: result });
   } catch (err) {

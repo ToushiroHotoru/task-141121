@@ -3,7 +3,7 @@ const dataFormController = require("../controllers/dataFormController");
 
 const router = express.Router();
 
-router.get("/get-data", dataFormController.get_data);
+// router.get("/get-data", dataFormController.get_data);
 router.post("/add-data-city", dataFormController.add_data_city);
 router.post("/edit-data-city", dataFormController.edit_data_city);
 router.delete("/delete-data-city", dataFormController.delete_data_city);

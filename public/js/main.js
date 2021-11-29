@@ -457,7 +457,7 @@ $("#btnradio3").click(function () {
             </div>
         </div>
           <div class="main-form-quiz">
-          <hr /><br><br><br><br><br>
+          <hr />
               <h3>Вопросы</h3>
           </div>
         `);
@@ -484,7 +484,7 @@ $("#btnradio3").click(function () {
 
         for (key in data) {
           $(".cityAdmin, .cityAdminWorker").append(
-            `<option>${data[key]["cityName"]}</option>`
+            `<option data-id="${data[key]["_id"]}">${data[key]["cityName"]}</option>`
           );
         }
 
@@ -492,6 +492,10 @@ $("#btnradio3").click(function () {
           $(".companyItem").remove();
           $(".addNewCompany").remove();
           let cityName = $(this).val();
+          let dataId = $(this).find("option:selected").attr("data-id");
+          let dataCompanyId = $(this)
+            .find("option:selected")
+            .attr("data-id-company");
           for (key in data) {
             if (data[key]["cityName"] == cityName) {
               data[key]["company"].forEach((item, i, arr) => {
@@ -517,7 +521,7 @@ $("#btnradio3").click(function () {
           }
           $(".main-form-company").append(`
            <div class="d-flex align-items-center addNewCompany ms-3">
-                <div class="width102"><input type="text" placeholder="Напишите название нового салона..."  class="companyNewData width101"></div>
+                <div class="width102"><input type="text" placeholder="Напишите название нового салона..." data-id="${dataId}" data-id-company="${dataCompanyId}" class="companyNewData width101"></div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm add-data-company">Добавить</button>
                 </btn>
@@ -526,13 +530,14 @@ $("#btnradio3").click(function () {
         });
 
         $(".cityAdminWorker").change(function () {
+          $(".workerAdmin").empty();
           $(".addNewWorker").remove();
           let cityName = $(this).val();
           for (key in data) {
             if (data[key]["cityName"] == cityName) {
               data[key]["company"].forEach((item, i) => {
                 $(".workerAdmin").append(
-                  `<option>${item.companyName}</option>`
+                  `<option data-id="${data[key]["_id"]}" data-id-array="${item["_id"]}">${item.companyName}</option>`
                 );
               });
             }
@@ -543,11 +548,12 @@ $("#btnradio3").click(function () {
           $(".workerItem").remove();
           $(".addNewWorker").remove();
           let companyName = $(this).val();
-
+          let dataIdArray = $(this)
+            .find("option:selected")
+            .attr("data-id-array");
+          let dataId = $(this).find("option:selected").attr("data-id");
           for (key in data) {
-            console.log(data[key]["company"]);
             data[key]["company"].forEach((company, i) => {
-              console.log(company["companyName"]);
               if (company["companyName"] == companyName) {
                 company.workers.forEach((worker, i) => {
                   $(".main-form-worker").append(`
@@ -569,14 +575,15 @@ $("#btnradio3").click(function () {
               }
             });
           }
+
           $(".main-form-worker").append(`
-           <div class="d-flex align-items-center addNewWorker ms-3">
-                <div class="width102"><input type="text" placeholder="Напишите имя нового сотрудника..."  class="workerNewData width101"></div>
-                <div>
-                    <button class="btn btn-dark my-1 btn-sm add-data-worker">Добавить</button>
-                </btn>
-          </div>
-          `);
+                <div class="d-flex align-items-center addNewWorker ms-3">
+                      <div class="width102"><input type="text" placeholder="Напишите имя нового сотрудника..." data-id="${dataId}" data-id-array="${dataIdArray}"  class="workerNewData width101"></div>
+                      <div>
+                          <button class="btn btn-dark my-1 btn-sm add-data-worker">Добавить</button>
+                      </btn>
+                </div>
+                `);
         });
       },
     });
@@ -641,9 +648,9 @@ $("body").on("click", ".btn-city-delete", function () {
 
 // START add, update, delete company
 $("body").on("click", ".add-data-company", function () {
-  let id = $(".companyItem").attr("data-id");
+  let id = $(".companyNewData").attr("data-id");
   let companyNewData = $(".companyNewData").val();
-  let companyId = $(".companyValue").attr("data-id");
+  // let companyId = $(".companyNewData").attr("data-id-company");
 
   $.ajax({
     url: "/add-data-company",
@@ -651,7 +658,6 @@ $("body").on("click", ".add-data-company", function () {
     data: {
       companyNewData: companyNewData,
       id: id,
-      companyId: companyId,
     },
     success: function () {},
   });
@@ -696,9 +702,13 @@ $("body").on("click", ".btn-company-delete", function () {
 
 // START add, update, delete worker
 $("body").on("click", ".add-data-worker", function () {
-  let workerArrayId = $(".workerValue").attr("data-id");
+  let workerArrayId = $(".workerNewData").attr("data-id-array");
   let workerNewName = $(".workerNewData").val();
-  let id = $(".workerItem").attr("data-id");
+  let id = $(".workerNewData").attr("data-id");
+  console.log(workerArrayId);
+  console.log(workerNewName);
+  console.log(id);
+
   $.ajax({
     url: "/add-data-worker",
     type: "POST",
