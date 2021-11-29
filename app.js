@@ -30,7 +30,7 @@ let yyyy = today.getFullYear();
 today = mm + "/" + dd + "/" + yyyy;
 
 app.get("/", (req, res) => {
-  res.render("index", { date: today });
+  res.render("index", { date: today, isAdmin: true });
 });
 
 app.use("/quiz", quizRoutes);
