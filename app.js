@@ -1,7 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const cors = require("cors");
 const dataFormRoutes = require("./routes/dataFormRoutes");
 const quizRoutes = require("./routes/quizRoutes");
 const answerRoutes = require("./routes/answerRoutes");
@@ -33,9 +32,18 @@ app.get("/", (req, res) => {
   res.render("index", { date: today, isAdmin: true });
 });
 
+const isAdmin = (req, res, next) => {
+  const adminFlag = true;
+  if (adminFlag) {
+    next();
+  } else {
+    throw new Error("You don't have permission to these actions");
+  }
+};
+
 app.use("/quiz", quizRoutes);
 app.use("/answer", answerRoutes);
-app.use(dataFormRoutes);
+app.use(isAdmin, dataFormRoutes);
 
 app.use((req, res) => {
   res.status(404).redirect("/");
