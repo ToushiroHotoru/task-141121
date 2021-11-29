@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+
 const dataFormRoutes = require("./routes/dataFormRoutes");
 const quizRoutes = require("./routes/quizRoutes");
 const answerRoutes = require("./routes/answerRoutes");
@@ -40,6 +41,15 @@ const isAdmin = (req, res, next) => {
     throw new Error("You don't have permission to these actions");
   }
 };
+
+app.get("/get-data", async (req, res) => {
+  try {
+    const data = await DataForm.find();
+    res.send(data);
+  } catch (err) {
+    console.log(err.meassage);
+  }
+});
 
 app.use("/quiz", quizRoutes);
 app.use("/answer", answerRoutes);
