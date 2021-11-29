@@ -1,7 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-
+const DataCheck = require("./models/DataForms");
 const dataFormRoutes = require("./routes/dataFormRoutes");
 const quizRoutes = require("./routes/quizRoutes");
 const answerRoutes = require("./routes/answerRoutes");
@@ -44,7 +44,7 @@ const isAdmin = (req, res, next) => {
 
 app.get("/get-data", async (req, res) => {
   try {
-    const data = await DataForm.find();
+    const data = await DataCheck.find();
     res.send(data);
   } catch (err) {
     console.log(err.meassage);

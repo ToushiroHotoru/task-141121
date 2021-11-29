@@ -435,7 +435,7 @@ $("#btnradio3").click(function () {
         </div>
         <div class="main-form-company">
           <hr />
-            <div>
+            <div class="pb-2">
               <h3>Салоны</h3>
               <select name="select" class="cityAdmin form-select main-select-group__item">
                   <option selected>Выберите подразделение</option>
@@ -446,7 +446,7 @@ $("#btnradio3").click(function () {
           <hr />
             <div>
               <h3>Сотрудники</h3>
-              <div class="d-flex">
+              <div class="d-flex pb-2">
                 <select name="select" class="cityAdminWorker form-select main-select-group__item">
                     <option selected>Выберите подразделение</option>
                 </select>
@@ -464,7 +464,7 @@ $("#btnradio3").click(function () {
         for (key in data) {
           $(".main-form-city").append(`
           <div class="d-flex align-items-center cityItem">
-                <div><span class="cityId">${i}</span>. <input type="text" data-id="${data[key]["_id"]}" value="${data[key]["cityName"]}" class="cityValue"></div>
+                <div><div class="widthpx20"><span class="cityId">${i}.</span></div> <input type="text" data-id="${data[key]["_id"]}" value="${data[key]["cityName"]}" class="cityValue"></div>
                 <div class="btn-city-group">
                     <button class="btn btn-dark my-1 btn-sm btn-city-edit">edit</button>
                     <button class="btn btn-dark my-1 btn-sm btn-city-delete">delete</button>
@@ -475,7 +475,7 @@ $("#btnradio3").click(function () {
         }
         $(".main-form-city").append(`
             <div class="d-flex align-items-center ms-3">
-                <div class="width102"><input type="text" placeholder="Напишите название нового города..."  class="cityNewData width101"></div>
+                <div class="width102 marginpx9"><input type="text" placeholder="Напишите название нового города..."  class="cityNewData width101"></div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm add-data-city">Добавить</button>
                 </btn>
@@ -503,9 +503,9 @@ $("#btnradio3").click(function () {
                     <div class="d-flex align-items-center companyItem" data-id="${
                       data[key]["_id"]
                     }">
-                      <div class="width102"><span class="companyId">${
+                      <div class="width102"><div class="widthpx20"><span class="companyId">${
                         i + 1
-                      }</span>. <input type="text" data-name="${
+                      }</span>.</div> <input type="text" data-name="${
                   item["companyName"]
                 }" data-id="${item["_id"]}" value="${
                   item["companyName"]
@@ -521,7 +521,7 @@ $("#btnradio3").click(function () {
           }
           $(".main-form-company").append(`
            <div class="d-flex align-items-center addNewCompany ms-3">
-                <div class="width102"><input type="text" placeholder="Напишите название нового салона..." data-id="${dataId}" data-id-company="${dataCompanyId}" class="companyNewData width101"></div>
+                <div class="marginpx9 width102"><input type="text" placeholder="Напишите название нового салона..." data-id="${dataId}" data-id-company="${dataCompanyId}" class="companyNewData width101"></div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm add-data-company">Добавить</button>
                 </btn>
@@ -560,9 +560,9 @@ $("#btnradio3").click(function () {
                     <div class="d-flex align-items-center workerItem" data-id="${
                       data[key]["_id"]
                     }">
-                      <div class="width102"><span class="workerId">${
+                      <div class="width102"><div class="widthpx20"><span class="workerId">${
                         i + 1
-                      }</span>. <input type="text" data-name="${worker}" data-id="${
+                      }</span>.</div> <input type="text" data-name="${worker}" data-id="${
                     company["_id"]
                   }" value="${worker}" class="workerValue width103"></div>
                       <div class="btn-worker-group">
@@ -578,7 +578,7 @@ $("#btnradio3").click(function () {
 
           $(".main-form-worker").append(`
                 <div class="d-flex align-items-center addNewWorker ms-3">
-                      <div class="width102"><input type="text" placeholder="Напишите имя нового сотрудника..." data-id="${dataId}" data-id-array="${dataIdArray}"  class="workerNewData width101"></div>
+                      <div class="marginpx9 width102"><input type="text" placeholder="Напишите имя нового сотрудника..." data-id="${dataId}" data-id-array="${dataIdArray}"  class="workerNewData width101"></div>
                       <div>
                           <button class="btn btn-dark my-1 btn-sm add-data-worker">Добавить</button>
                       </btn>
@@ -774,7 +774,7 @@ $("body").on("click", "#btnradio3", function () {
         for (key in data) {
           $(".main-form-quiz").append(`
           <div class="d-flex align-items-center quizItem">
-                <div><span class="quizId">${i}</span>. <input type="text" data-value="${data[key]["note"]}" value="${data[key]["note"]}" class="quizValue"></div>
+                <div><div class="widthpx20"><span class="quizId">${i}</span>.</div> <input type="text" data-value="${data[key]["note"]}" value="${data[key]["note"]}" class="quizValue"></div>
                 <div class="btn-quiz-group">
                     <button class="btn btn-dark my-1 btn-sm btn-group-edit">edit</button>
                     <button class="btn btn-dark my-1 btn-sm btn-group-delete">delete</button>
@@ -785,7 +785,7 @@ $("body").on("click", "#btnradio3", function () {
         }
         $(".main-form-quiz").append(`
         <div class="d-flex align-items-center quizNewDataParent ms-3">
-                <div><input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData"></div>
+                <div class="marginpx9"><input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData"></div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить</button>
                 </btn>

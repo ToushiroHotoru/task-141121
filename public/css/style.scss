@@ -34,20 +34,34 @@ body {
 
 .quizValue,
 .quizNewData,
+.companyValue,
+.workerValue,
+.workerNewData,
+.companyNewData,
+.addNewCity,
+.cityNewData,
 .cityValue {
   min-width: 850px;
+  max-width: 900px;
 }
 
-.width101 {
-  width: 100%;
+.add-data-city,
+.add-data-company,
+.create-quiz,
+.add-data-worker {
+  width: 101.6px;
 }
-.width102 {
-  width: 88%;
-  margin-left: 9px;
-}
-.width103 {
-  width: 97%;
-}
+
+// .width101 {
+//   width: 100%;
+// }
+// .width102 {
+//   width: 88%;
+//   margin-left: 9px;
+// }
+// .width103 {
+//   width: 97%;
+// }
 .widthpx20 {
   width: 20px;
   display: inline-block;
