@@ -84,8 +84,10 @@ $(document).ready(function () {
             $(".main-select-group").css("display", "flex");
             $(".quizNewDataParent").remove();
             $(".col-ui-widget").remove();
-            $(".showBtn").remove();
+            $(".showBtnShow").remove();
             $(".city").prop("selectedIndex", 0);
+            $(".companyDiv").removeClass("col-md-3").addClass("col-md-4");
+            $(".cityDiv").removeClass("col-md-3").addClass("col-md-4");
             $(".second-form").empty();
             $(".second").empty();
             $(".company").prop("selectedIndex", 0);
@@ -93,12 +95,12 @@ $(document).ready(function () {
             $(".company").prop("disabled", true);
             $(".main-select-group, hr").show();
             $(".main-select-group-row").append(`
-    <div class="col col-ui-widget">
-      <div class="ui-widget">
-        <input type="text" class="form-control search" placeholder="Введите ФИО менеджера"
-        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly>
-      </div>
-    </div>`);
+                <div class="col-md-4 col-12 my-1 col-ui-widget">
+                    <div class="main-autocomplete ui-widget">
+                        <input type="text" class="form-control search" placeholder="Введите ФИО менеджера"
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly>
+                    </div>
+                </div>`);
           }
         });
 
@@ -110,22 +112,25 @@ $(document).ready(function () {
             $(".col-ui-widget").remove();
             $(".city").prop("selectedIndex", 0);
             $(".company").prop("selectedIndex", 0);
-            $(".showBtn").remove();
+            $(".companyDiv").removeClass("col-md-4").addClass("col-md-3");
+            $(".cityDiv").removeClass("col-md-4").addClass("col-md-3");
+            $(".showBtnShow").remove();
             $(".company").removeAttr("disabled");
             $(".main-form").empty();
             $(".second-form").empty();
             $(".second").empty();
             $(".main-select-group, hr").show();
+
             $(".main-select-group-row").prepend(`
-      <div class="col my-1Fg col-ui-widget">
-        <div class="ui-widget">
-          <input type="text" class="form-control" id="datepicker" placeholder="Дата">
-        </div>
-      </div>`);
+            <div class="col-md-3 col-12 my-1 col-ui-widget">
+              <div class="ui-widget">
+                <input type="text" class="form-control" id="datepicker" placeholder="Дата">
+              </div>
+            </div>`);
             $(".main-select-group-row").append(`
-        <div class="col my-1">
-          <button class="btn btn-dark showBtn">Показать</button>
-        </div>
+            <div class="col-md-3 col-12 my-1 d-grid gap-2 showBtnShow">
+              <button class="btn btn-dark showBtn">Показать</button>
+            </div>
       `);
             $("#datepicker").datepicker({
               dateFormat: "yy-mm-dd",
