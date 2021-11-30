@@ -352,6 +352,16 @@ $("body").on("click", ".showBtn", function () {
           `);
           i++;
         });
+        function getAnswerData(date) {
+          let answerDate = new Date(date);
+          return (
+            answerDate.getHours() +
+            ":" +
+            answerDate.getMinutes() +
+            ":" +
+            answerDate.getSeconds()
+          );
+        }
 
         function outputAnswers(arrQuiz, arrAnswer) {
           let result = "";
@@ -365,7 +375,7 @@ $("body").on("click", ".showBtn", function () {
           let table = "";
           for (key in data) {
             if (data[key]["name"] == name) {
-              table += `<table class="table table-striped my-4">
+              table += `<table class="table table-striped mt-0 mb-4">
                    <thead>
                       <tr>
                         <th scope="col">Вопрос</th>
@@ -378,7 +388,9 @@ $("body").on("click", ".showBtn", function () {
                        data[key]["answers"]
                      )}
                     </tbody>
-                        
+                      <div>Время ответа: ${getAnswerData(
+                        data[key]["createdAt"]
+                      )}</div>
                   </table><hr class="seperateHr"/>`;
             }
           }
@@ -394,7 +406,6 @@ $("body").on("click", ".showBtn", function () {
 $("#btnradio3").click(function () {
   if ($("#btnradio3").is(":checked")) {
     $(".quizNewDataParent").remove();
-    $(".main-select-group").css("display", "none");
     $("hr").css("display", "none");
     $(".main-form").empty();
     $(".ui-widget").remove();
@@ -402,9 +413,12 @@ $("#btnradio3").click(function () {
     $(".second").empty();
     $(".city").prop("selectedIndex", 0);
     $(".company").prop("selectedIndex", 0);
-    $(".showBtn").remove();
+    $(".showBtnShow").remove();
     $(".company").removeAttr("disabled");
     $(".main-form").empty();
+    $(".main-select-group").css("display", "none");
+    // $(".companyDiv").remove();
+    // $(".cityDiv").remove();
 
     $.ajax({
       url: "/get-data",
@@ -425,6 +439,7 @@ $("#btnradio3").click(function () {
         <div class="main-form-city">
           <hr />
             <h3>Города</h3>
+          <hr />
         </div>
         <div class="main-form-company">
           <hr />
