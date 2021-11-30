@@ -29,6 +29,7 @@ body {
 .quizData {
   width: 100%;
 }
+@media (min-width: 890px) {
 
 .quizValue,
 .quizNewData,
@@ -41,6 +42,8 @@ body {
 .cityValue {
   min-width: 850px;
   max-width: 900px;
+}
+
 }
 
 .add-data-city,
