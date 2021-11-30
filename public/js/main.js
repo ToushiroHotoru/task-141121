@@ -40,7 +40,6 @@ $(document).ready(function () {
             cache: false,
             success: function (data) {
               const workNames = getWorkersNames();
-              console.log(workNames);
               $(".search").autocomplete({
                 source: getWorkersNames(),
                 select: function (event, ui) {
@@ -118,13 +117,13 @@ $(document).ready(function () {
             $(".second").empty();
             $(".main-select-group, hr").show();
             $(".main-select-group-row").prepend(`
-      <div class="col col-ui-widget">
+      <div class="col my-1Fg col-ui-widget">
         <div class="ui-widget">
-          <input type="text" class="form-control" id="datepicker" placeholder="Выберите дату">
+          <input type="text" class="form-control" id="datepicker" placeholder="Дата">
         </div>
       </div>`);
-            $(".main-select-group").append(`
-        <div class="col">
+            $(".main-select-group-row").append(`
+        <div class="col my-1">
           <button class="btn btn-dark showBtn">Показать</button>
         </div>
       `);
@@ -350,30 +349,20 @@ $("body").on("click", ".showBtn", function () {
         });
 
         function outputAnswers(arrQuiz, arrAnswer) {
-          console.log(arrQuiz);
-          console.log(arrAnswer);
           let result = "";
           for (let j = 0; j < arrAnswer.length; j++) {
-            console.log("quizzes");
-            result += `<tr><th scope="row">${j + 1}</th><td>${
-              arrQuiz[j]
-            }</td> <td>${arrAnswer[j]}</td></tr>`;
+            result += `<tr><td>${arrQuiz[j]}</td> <td>${arrAnswer[j]}</td></tr>`;
           }
-          console.log(result);
           return result;
         }
 
         function outputTables(name) {
           let table = "";
-          console.log(data);
           for (key in data) {
-            console.log(data[key]["name"]);
-            console.log(name);
             if (data[key]["name"] == name) {
               table += `<table class="table table-striped my-4">
                    <thead>
                       <tr>
-                        <th scope="col">#</th>
                         <th scope="col">Вопрос</th>
                         <th scope="col">Ответ</th>
                       </tr>
@@ -386,7 +375,6 @@ $("body").on("click", ".showBtn", function () {
                     </tbody>
                         
                   </table><hr class="seperateHr"/>`;
-              console.log(table);
             }
           }
           return table;
@@ -631,9 +619,7 @@ $("body").on("click", ".btn-city-edit", function () {
       cityNewData: cityNewData,
       cityId: cityId,
     },
-    success: function () {
-      console.log("запрос сработал");
-    },
+    success: function () {},
   });
 });
 
@@ -692,8 +678,6 @@ $("body").on("click", ".btn-company-delete", function () {
   const company = $(this).parent().parent();
   let companyId = company.find(".companyValue").attr("data-id");
   let companyOldName = company.find(".companyValue").val();
-  console.log(companyId);
-  console.log(companyOldName);
   $.ajax({
     url: "/delete-data-company",
     type: "DELETE",
@@ -713,10 +697,6 @@ $("body").on("click", ".add-data-worker", function () {
   let workerArrayId = $(".workerNewData").attr("data-id-array");
   let workerNewName = $(".workerNewData").val();
   let id = $(".workerNewData").attr("data-id");
-  console.log(workerArrayId);
-  console.log(workerNewName);
-  console.log(id);
-
   $.ajax({
     url: "/add-data-worker",
     type: "POST",
@@ -753,8 +733,6 @@ $("body").on("click", ".btn-worker-delete", function () {
   let workerArrayId = worker.find(".workerValue").attr("data-id");
   let workerOldName = worker.find(".workerValue").val();
   let id = $(".workerItem").attr("data-id");
-  console.log(workerArrayId);
-  console.log(workerOldName);
   $.ajax({
     url: "/delete-data-worker",
     type: "DELETE",
@@ -809,7 +787,6 @@ $("body").on("click", ".create-quiz", function (e) {
   e.preventDefault();
   let quizNewData = $(".quizNewData").val();
   let quizId = parseInt($(".quizId").last().text()) + 1;
-  console.log(quizId);
   if (!quizNewData) {
     const sendAlert =
       $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">

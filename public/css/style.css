@@ -13,7 +13,8 @@ body {
   padding: 10px;
   width: 20vw;
   height: auto;
-  min-width: 1000px;
+  width: 100%;
+  max-width: 1000px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   background-color: #fff;
 }
@@ -22,7 +23,7 @@ body {
   width: 100%;
 }
 .main-autocomplete {
-  min-width: 220px;
+  width: 100%;
 }
 
 .quizData {
