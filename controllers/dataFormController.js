@@ -47,8 +47,6 @@ const add_data_company = async (req, res) => {
   try {
     const id = req.body.id;
     const companyNewData = req.body.companyNewData;
-    console.log(id);
-    console.log(companyNewData);
     const result = await DataForm.findOne({ _id: id });
     result.company.push({ companyName: companyNewData, workers: [] });
     result.save();
@@ -71,11 +69,9 @@ const edit_data_company = async (req, res) => {
       if (element.companyName == companyOldName) {
         element.companyName = companyNewName;
       }
-      console.log(element);
     });
     await result.save();
     res.status(200).json({ success: result });
-    console.log("работает почти");
   } catch (err) {
     console.log(err.meassage);
   }
@@ -84,8 +80,6 @@ const edit_data_company = async (req, res) => {
 const delete_data_company = async (req, res) => {
   const companyId = req.body.companyId;
   const companyOldName = req.body.companyOldName;
-  console.log(companyId);
-  console.log(companyOldName);
   try {
     const result = await DataForm.findOne({ "company._id": companyId });
     result.company.forEach((item, i) => {

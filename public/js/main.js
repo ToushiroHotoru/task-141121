@@ -385,7 +385,7 @@ $("body").on("click", ".showBtn", function () {
                      )}
                     </tbody>
                         
-                  </table><hr style="height: 12px; color: red;" />`;
+                  </table><hr class="seperateHr"/>`;
               console.log(table);
             }
           }
@@ -438,7 +438,7 @@ $("#btnradio3").click(function () {
             <div class="pb-2">
               <h3>Салоны</h3>
               <select name="select" class="cityAdmin form-select main-select-group__item">
-                  <option selected>Выберите подразделение</option>
+                  <option selected>Выберите город</option>
               </select>
             </div>
         </div>
@@ -448,10 +448,10 @@ $("#btnradio3").click(function () {
               <h3>Сотрудники</h3>
               <div class="d-flex pb-2">
                 <select name="select" class="cityAdminWorker form-select main-select-group__item">
-                    <option selected>Выберите подразделение</option>
+                    <option selected>Выберите город</option>
                 </select>
                 <select name="select" class="workerAdmin form-select main-select-group__item">
-                    <option selected>Выберите подразделение</option>
+                    <option selected>Выберите салон</option>
                 </select>
               </div>
             </div>
@@ -519,7 +519,8 @@ $("#btnradio3").click(function () {
               });
             }
           }
-          $(".main-form-company").append(`
+          if (cityName != "Выберите город") {
+            $(".main-form-company").append(`
            <div class="d-flex align-items-center addNewCompany ms-3">
                 <div class="marginpx9 width102"><input type="text" placeholder="Напишите название нового салона..." data-id="${dataId}" data-id-company="${dataCompanyId}" class="companyNewData width101"></div>
                 <div>
@@ -527,17 +528,20 @@ $("#btnradio3").click(function () {
                 </btn>
           </div>
           `);
+          } else {
+            $(".addNewCompany").remove();
+          }
         });
 
         $(".cityAdminWorker").change(function () {
-          $(".workerAdmin").empty();
+          $(".workerAdmin__selected").remove();
           $(".addNewWorker").remove();
           let cityName = $(this).val();
           for (key in data) {
             if (data[key]["cityName"] == cityName) {
               data[key]["company"].forEach((item, i) => {
                 $(".workerAdmin").append(
-                  `<option data-id="${data[key]["_id"]}" data-id-array="${item["_id"]}">${item.companyName}</option>`
+                  `<option class="workerAdmin__selected" data-id="${data[key]["_id"]}" data-id-array="${item["_id"]}">${item.companyName}</option>`
                 );
               });
             }
@@ -576,7 +580,8 @@ $("#btnradio3").click(function () {
             });
           }
 
-          $(".main-form-worker").append(`
+          if (companyName != "Выберите салон") {
+            $(".main-form-worker").append(`
                 <div class="d-flex align-items-center addNewWorker ms-3">
                       <div class="marginpx9 width102"><input type="text" placeholder="Напишите имя нового сотрудника..." data-id="${dataId}" data-id-array="${dataIdArray}"  class="workerNewData width101"></div>
                       <div>
@@ -584,6 +589,9 @@ $("#btnradio3").click(function () {
                       </btn>
                 </div>
                 `);
+          } else {
+            $(".addNewWorker").remove();
+          }
         });
       },
     });
