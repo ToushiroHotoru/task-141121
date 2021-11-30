@@ -29,6 +29,7 @@ body {
 .quizData {
   width: 100%;
 }
+@media (min-width: 890px) {
 
 .quizValue,
 .quizNewData,
@@ -42,7 +43,9 @@ body {
   min-width: 850px;
   max-width: 900px;
 }
-
+  
+}
+  
 .add-data-city,
 .add-data-company,
 .create-quiz,
