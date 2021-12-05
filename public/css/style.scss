@@ -30,22 +30,20 @@ body {
   width: 100%;
 }
 @media (min-width: 890px) {
+  .quizValue,
+  .quizNewData,
+  .companyValue,
+  .workerValue,
+  .workerNewData,
+  .companyNewData,
+  .addNewCity,
+  .cityNewData,
+  .cityValue {
+    min-width: 850px;
+    max-width: 900px;
+  }
+}
 
-.quizValue,
-.quizNewData,
-.companyValue,
-.workerValue,
-.workerNewData,
-.companyNewData,
-.addNewCity,
-.cityNewData,
-.cityValue {
-  min-width: 850px;
-  max-width: 900px;
-}
-  
-}
-  
 .add-data-city,
 .add-data-company,
 .create-quiz,
@@ -69,4 +67,17 @@ body {
 .main-select-group {
   display: flex;
   justify-content: center;
+}
+
+.checkAlert {
+  cursor: pointer;
+}
+
+.alert-fixed {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  z-index: 9999;
+  border-radius: 0px;
 }

@@ -164,7 +164,7 @@ $(document).ready(function () {
             departmentForSend == "Выберите подразделение"
           ) {
             const sendAlert =
-              $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+              $(`<div class="alert fixed-top alert-warning alert-dismissible fade show my-3" role="alert">
                   <strong>Не все поля заполнены!</strong> Пожалуйста заполните все поля.
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`).hide();
@@ -247,7 +247,7 @@ $(document).ready(function () {
         $(".main-form").empty();
 
         const sendAlert =
-          $(`<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+          $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
             <strong>Форма отправлена!</strong> Благодарим вас, за обратную связь!.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>`).hide();
@@ -264,7 +264,7 @@ $(document).ready(function () {
 function deleteAlert() {
   setTimeout(() => {
     $(".alert").remove();
-  }, 6000);
+  }, 9000);
 }
 // END delete alert notification
 
@@ -287,7 +287,7 @@ $("body").on("click", ".showBtn", function () {
     departmentForSend == "Выберите подразделение"
   ) {
     const sendAlert =
-      $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+      $(`<div class="alert fixed-top alert-warning alert-dismissible fade show my-3" role="alert">
                   <strong>Не все поля заполнены!</strong> Пожалуйста заполните все поля.
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`).hide();
@@ -312,7 +312,7 @@ $("body").on("click", ".showBtn", function () {
         $(".main-form").empty();
 
         const sendAlert =
-          $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+          $(`<div class="alert fixed-top alert-warning alert-dismissible fade show my-3" role="alert">
                   <strong>Ничего не найдено!</strong> В этот день, в данной компании, отправок форм не было.
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`).hide();
@@ -417,8 +417,6 @@ $("#btnradio3").click(function () {
     $(".company").removeAttr("disabled");
     $(".main-form").empty();
     $(".main-select-group").css("display", "none");
-    // $(".companyDiv").remove();
-    // $(".cityDiv").remove();
 
     $.ajax({
       url: "/get-data",
@@ -770,8 +768,11 @@ $("body").on("click", ".btn-worker-delete", function () {
 // END add, update, delete worker
 
 // START add, update, delete quizzes
-$("body").on("click", "#btnradio3", function () {
+$("body").on("click", "#btnradio3, .checkAlert", function () {
   setTimeout(function () {
+    $(".quizItem").remove();
+    $(".quizNewData").remove();
+    $(".create-quiz").remove();
     $.ajax({
       url: "/quiz/get-quiz",
       type: "GET",
@@ -809,12 +810,12 @@ $("body").on("click", ".create-quiz", function (e) {
   let quizId = parseInt($(".quizId").last().text()) + 1;
   if (!quizNewData) {
     const sendAlert =
-      $(`<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">
+      $(`<div class="alert fixed-top alert-warning alert-dismissible fade show my-3" role="alert">
             <strong>Поле вопроса не заполнено!</strong> Пожалуйста заполните поле запроса.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
          </div>`).hide();
 
-    sendAlert.appendTo(".main").fadeIn();
+    sendAlert.prependTo(".main-form-quiz").fadeIn();
     deleteAlert();
   } else {
     $.ajax({
@@ -825,23 +826,13 @@ $("body").on("click", ".create-quiz", function (e) {
       },
       success: function () {
         const sendAlert =
-          $(`<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
-            <strong>Вопрос добавлен!</strong> Вопрос был добавлен в список вопросов.
+          $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Вопрос добавлен!</strong> Нажмите на <strong><span class="checkAlert">сюда</span></strong>, чтобы обновить днные.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
          </div>`).hide();
 
-        sendAlert.appendTo(".main").fadeIn();
+        sendAlert.prependTo(".main-form-quiz").fadeIn();
         deleteAlert();
-
-        $(".main-form").append(`
-          <div class="d-flex align-items-center quizItem">
-                <div class="quizData"><span class="quizId">${quizId}</span>. <input type="text" data-value="${quizNewData}" value="${quizNewData}" class="quizValue"></div>
-                <div class="btn-quiz-group">
-                    <button class="btn btn-dark my-1 btn-sm btn-group-edit">edit</button>
-                    <button class="btn btn-dark my-1 btn-sm btn-group-delete">delete</button>
-                </btn>
-          </div>
-                `);
       },
     });
   }
@@ -876,12 +867,12 @@ $("body").on("click", ".btn-group-edit", function (e) {
     },
     success: function () {
       const sendAlert =
-        $(`<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+        $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
             <strong>Вопрос изменен!</strong> Вопрос был изменен и добавлен.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
          </div>`).hide();
 
-      sendAlert.appendTo(".main").fadeIn();
+      sendAlert.prependTo(".main").fadeIn();
       deleteAlert();
     },
   });
