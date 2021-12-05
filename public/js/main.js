@@ -1,3 +1,6 @@
+BX24.init(function(){
+  console.log('Инициализация завершена!', BX24.isAdmin());
+});
 $(document).ready(function () {
   $("document").ready(function () {
     $.ajax({
