@@ -29,18 +29,20 @@ let mm = String(today.getMonth() + 1).padStart(2, "0");
 let yyyy = today.getFullYear();
 today = mm + "/" + dd + "/" + yyyy;
 
-app.get("/", (req, res) => {
-  res.render("index", { date: today, isAdmin: true });
-});
-
-const isAdmin = (req, res, next) => {
-  const adminFlag = true;
-  if (adminFlag) {
+app.post("/isAdmin", (req, res, next) => {
+  if (req.body.isAdmin == "true") {
+    res.status(200).json({
+      admin: true,
+      button: `<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+                <label class="btn btn-outline-dark btnCheck" for="btnradio3" disabled><span class="spinner-grow spinner-grow-sm me-2 checkboxLoader" role="status" aria-hidden="true"></span>Панель администратора</label>`,
+    });
     next();
   } else {
-    throw new Error("You don't have permission to these actions");
+    res.status(200).json({
+      admin: false,
+    });
   }
-};
+});
 
 app.get("/get-data", async (req, res) => {
   try {
@@ -51,9 +53,21 @@ app.get("/get-data", async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.render("index", { date: today });
+});
+
+const isAdminFunc = (req, res, next) => {
+  if (req.body.isAdmin == "true") {
+    next();
+  } else {
+    throw new Error("You don't have permission to these actions");
+  }
+};
+
 app.use("/quiz", quizRoutes);
 app.use("/answer", answerRoutes);
-app.use(isAdmin, dataFormRoutes);
+app.use(isAdminFunc, dataFormRoutes);
 
 app.use((req, res) => {
   res.status(404).redirect("/");
