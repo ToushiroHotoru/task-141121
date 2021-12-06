@@ -30,7 +30,7 @@ let yyyy = today.getFullYear();
 today = mm + "/" + dd + "/" + yyyy;
 
 app.post("/isAdmin", (req, res, next) => {
-  if (true) {
+  if (req.body.isAdmin == "text") {
     res.status(200).json({
       admin: true,
       button: `<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
