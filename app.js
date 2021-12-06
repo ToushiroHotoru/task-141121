@@ -30,7 +30,7 @@ let yyyy = today.getFullYear();
 today = mm + "/" + dd + "/" + yyyy;
 
 app.post("/isAdmin", (req, res, next) => {
-  if (req.body.isAdmin == "true") {
+  if (true) {
     res.status(200).json({
       admin: true,
       button: `<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
@@ -57,17 +57,9 @@ app.get("/", (req, res) => {
   res.render("index", { date: today });
 });
 
-const isAdminFunc = (req, res, next) => {
-  if (req.body.isAdmin == "true") {
-    next();
-  } else {
-    throw new Error("You don't have permission to these actions");
-  }
-};
-
 app.use("/quiz", quizRoutes);
 app.use("/answer", answerRoutes);
-app.use(isAdminFunc, dataFormRoutes);
+app.use(dataFormRoutes);
 
 app.use((req, res) => {
   res.status(404).redirect("/");

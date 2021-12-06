@@ -1,5 +1,6 @@
 const Quiz = require("../models/quiz");
 
+
 const get_quiz = async (req, res) => {
   try {
     const result = await Quiz.find().lean();
