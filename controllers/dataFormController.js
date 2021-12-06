@@ -1,4 +1,4 @@
-const DataForm = require("../models/DataForms");
+const DataForm = require("../models/dataForms");
 
 const get_data = async (req, res) => {
   try {
