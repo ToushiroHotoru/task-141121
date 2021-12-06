@@ -4,7 +4,7 @@ $(document).ready(function () {
   //   return BX24.isAdmin();
   // };
 
-  var isUserAdmin = false; // Пусть возрощает ответ в эту переменную, обязательно
+  var isUserAdmin = true; // Пусть возрощает ответ в эту переменную, обязательно
 
   $.ajax({
     url: "/isAdmin",
@@ -13,9 +13,11 @@ $(document).ready(function () {
       isAdmin: isUserAdmin,
     },
     success: function (data) {
+      console.log(isUserAdmin);
       if (data.admin) {
         $(".panel-top").append(data.button);
       }
+      console.log(data.admin);
     },
   });
 
