@@ -79,7 +79,6 @@ const edit_data_company = async (req, res) => {
 
 const delete_data_company = async (req, res) => {
   const companyId = req.body.companyId;
-  const companyOldName = req.body.companyOldName;
   try {
     const result = await DataForm.findOne({ "company._id": companyId });
     result.company.forEach((item, i) => {

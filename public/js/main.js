@@ -153,9 +153,10 @@ $(document).ready(function () {
                 <select name="select" class="cityAdminWorker form-select main-select-group__item">
                     <option selected>Выберите город</option>
                 </select>
-                <select name="select" class="workerAdmin form-select main-select-group__item">
+                <select name="select" class="companyAdmin form-select main-select-group__item">
                     <option selected>Выберите салон</option>
                 </select>
+                <input class="workerAdmin  main-select-group__item" placeholder="ФИО">
               </div>
             </div>
         </div>
@@ -237,54 +238,42 @@ $(document).ready(function () {
               });
 
               $(".cityAdminWorker").change(function () {
-                $(".workerAdmin__selected").remove();
+                $(".companyAdmin__selected").remove();
                 $(".addNewWorker").remove();
                 let cityName = $(this).val();
                 for (key in data) {
                   if (data[key]["cityName"] == cityName) {
                     data[key]["company"].forEach((item, i) => {
-                      $(".workerAdmin").append(
-                        `<option class="workerAdmin__selected" data-id="${data[key]["_id"]}" data-id-array="${item["_id"]}">${item.companyName}</option>`
+                      $(".companyAdmin").append(
+                        `<option class="companyAdmin__selected" data-id="${data[key]["_id"]}" data-id-array="${item["_id"]}">${item.companyName}</option>`
                       );
                     });
                   }
                 }
               });
 
-              $(".workerAdmin").change(function () {
+              $(".companyAdmin").change(function () {
                 $(".workerItem").remove();
                 $(".addNewWorker").remove();
-                let companyName = $(this).val();
-                let dataIdArray = $(this)
-                  .find("option:selected")
-                  .attr("data-id-array");
-                let dataId = $(this).find("option:selected").attr("data-id");
-                for (key in data) {
-                  data[key]["company"].forEach((company, i) => {
-                    if (company["companyName"] == companyName) {
-                      company.workers.forEach((worker, i) => {
-                        $(".main-form-worker").append(`
-                    <div class="d-flex align-items-center workerItem" data-id="${
-                      data[key]["_id"]
-                    }">
-                      <div class="width102"><div class="widthpx20"><span class="workerId">${
-                        i + 1
-                      }</span>.</div> <input type="text" data-name="${worker}" data-id="${
-                          company["_id"]
-                        }" value="${worker}" class="workerValue width103"></div>
-                      <div class="btn-worker-group">
-                          <button class="btn btn-dark my-1 btn-sm btn-worker-edit">edit</button>
-                          <button class="btn btn-dark my-1 btn-sm btn-worker-delete">delete</button>
-                      </btn>
-                    </div>
-              `);
-                      });
-                    }
-                  });
-                }
+              });
 
-                if (companyName != "Выберите салон") {
-                  $(".main-form-worker").append(`
+              $("body").on("click", ".workerAdmin", function () {
+                const workNamesAdmin = getWorkersNames();
+
+                $(".workerAdmin").autocomplete({
+                  source: workNamesAdmin[2],
+                  select: function (event, ui) {
+                    if (workNamesAdmin[2].includes(ui.item.value)) {
+                      let companyName = $(this).val();
+                      let dataIdArray = $(this)
+                        .find("option:selected")
+                        .attr("data-id-array");
+                      let dataId = $(this)
+                        .find("option:selected")
+                        .attr("data-id");
+
+                      if (companyName != "Выберите салон") {
+                        $(".main-form-worker").append(`
                 <div class="d-flex align-items-center addNewWorker ms-3">
                       <div class="marginpx9 width102"><input type="text" placeholder="Напишите имя нового сотрудника..." data-id="${dataId}" data-id-array="${dataIdArray}"  class="workerNewData width101"></div>
                       <div>
@@ -292,8 +281,57 @@ $(document).ready(function () {
                       </btn>
                 </div>
                 `);
-                } else {
-                  $(".addNewWorker").remove();
+                      } else {
+                        $(".addNewWorker").remove();
+                      }
+
+                      $(".main-form-worker").append(`
+                                    <div class="d-flex align-items-center ms-4 workerItem" data-id="${workNamesAdmin[0]}">
+                                      <div class="width102"><input type="text" data-name="${ui.item.value}" data-id="${workNamesAdmin[1]}" value="${ui.item.value}" class="workerValue width103"></div>
+                                      <div class="btn-worker-group">
+                                          <button class="btn btn-dark my-1 btn-sm btn-worker-edit">edit</button>
+                                          <button class="btn btn-dark my-1 btn-sm btn-worker-delete">delete</button>
+                                      </btn>
+                                    </div>
+                              `);
+                    }
+                  },
+                });
+
+                // let companyName = $(this).val();
+                // let dataIdArray = $(this)
+                //   .find("option:selected")
+                //   .attr("data-id-array");
+                // let dataId = $(this).find("option:selected").attr("data-id");
+
+                // if (companyName != "Выберите салон") {
+                //   $(".main-form-worker").append(`
+                // <div class="d-flex align-items-center addNewWorker ms-3">
+                //       <div class="marginpx9 width102"><input type="text" placeholder="Напишите имя нового сотрудника..." data-id="${dataId}" data-id-array="${dataIdArray}"  class="workerNewData width101"></div>
+                //       <div>
+                //           <button class="btn btn-dark my-1 btn-sm add-data-worker">Добавить</button>
+                //       </btn>
+                // </div>
+                // `);
+                // } else {
+                //   $(".addNewWorker").remove();
+                // }
+
+                function getWorkersNames() {
+                  let companyName = $(".companyAdmin").val();
+                  for (key in data) {
+                    for (let i = 0; i < data[key]["company"].length; i++) {
+                      if (
+                        companyName == data[key]["company"][i]["companyName"]
+                      ) {
+                        return [
+                          data[key]["_id"],
+                          data[key]["company"][i]["_id"],
+                          data[key]["company"][i]["workers"],
+                        ];
+                      }
+                    }
+                  }
                 }
               });
             },
