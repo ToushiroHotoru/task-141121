@@ -1,7 +1,6 @@
 const Answer = require("../models/answer");
 
 const save_answer = async (req, res) => {
-  console.log(req.body);
   const data = new Answer(req.body);
   try {
     await data.save();

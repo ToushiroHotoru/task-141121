@@ -74,10 +74,12 @@ $(document).ready(function () {
                   for (key in data) {
                     $(".main-form").append(`
                       <div>${i}. <span class="quizMainValue">${data[key]["note"]}</span>
-                      <div class="form-check form-switch formatVoprosovChek">
+                      <div class="d-flex align-items-center form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
-                        <label class="form-check-label pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
-                      </div></div>
+                        <label class="form-check-label mx-1 pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
+                        <input type="text" placeholder="Пожалуйста напишите почему" data-reason="${i}" class="reason reasonForNo${i}">
+                      </div>
+                      <hr class="quiz-hr"/></div>
                     `);
                     i++;
                   }
@@ -85,11 +87,14 @@ $(document).ready(function () {
                     `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
                   );
                   $(".form-check-input").click(function () {
-                    let swid = $(this).attr("swich_id");
+                    let switchId = $(this).attr("swich_id");
                     if (this.checked) {
-                      $(".pala" + swid).text("yes");
+                      $(".pala" + switchId).text("yes");
+                      $(".reasonForNo" + switchId).val("");
+                      $(".reasonForNo" + switchId).css("display", "none");
                     } else {
-                      $(".pala" + swid).text("no");
+                      $(".pala" + switchId).text("no");
+                      $(".reasonForNo" + switchId).css("display", "block");
                     }
                   });
                 }
@@ -298,25 +303,6 @@ $(document).ready(function () {
                   },
                 });
 
-                // let companyName = $(this).val();
-                // let dataIdArray = $(this)
-                //   .find("option:selected")
-                //   .attr("data-id-array");
-                // let dataId = $(this).find("option:selected").attr("data-id");
-
-                // if (companyName != "Выберите салон") {
-                //   $(".main-form-worker").append(`
-                // <div class="d-flex align-items-center addNewWorker ms-3">
-                //       <div class="marginpx9 width102"><input type="text" placeholder="Напишите имя нового сотрудника..." data-id="${dataId}" data-id-array="${dataIdArray}"  class="workerNewData width101"></div>
-                //       <div>
-                //           <button class="btn btn-dark my-1 btn-sm add-data-worker">Добавить</button>
-                //       </btn>
-                // </div>
-                // `);
-                // } else {
-                //   $(".addNewWorker").remove();
-                // }
-
                 function getWorkersNames() {
                   let companyName = $(".companyAdmin").val();
                   for (key in data) {
@@ -473,11 +459,24 @@ $(document).ready(function () {
     let name = $(".nameTo").text();
     let companyName = $(".company").val();
     let cityName = $(".city").val();
+    $(".search").val("");
+    let reasons = [];
     let answers = [];
     let quizzes = [];
     $(".quizMainValue").each(function (i) {
       let something = i + 1 + ". " + $(this).text() + "/";
       quizzes.push(something);
+    });
+
+    $(".reason").each(function (i) {
+      let something = $(this).val() + "/";
+      reasons.push(something);
+    });
+
+    reasons = reasons.splice("/");
+    reasons.forEach((item, i, arr) => {
+      item = item.slice(0, -1);
+      arr.splice(i, 1, item);
     });
 
     quizzes = quizzes.splice("/");
@@ -494,6 +493,8 @@ $(document).ready(function () {
       }
     });
 
+    console.log(reasons);
+
     $.ajax({
       url: "/answer/save-answer",
       type: "POST",
@@ -503,6 +504,7 @@ $(document).ready(function () {
         name: name,
         answers: answers,
         quizzes: quizzes,
+        reasons: reasons,
       },
       success: function () {
         $(".main-form").empty();
@@ -606,7 +608,7 @@ $(document).ready(function () {
               </h2>
               <div id="flush-collapse${i}" class="accordion-collapse collapse" aria-labelledby="flush-heading${i}">
                 <div class="accordion-body">
-                     ${outputTables(item)}
+                      ${outputTables(item)}
                 </div>
               </div>
             </div>
@@ -624,10 +626,10 @@ $(document).ready(function () {
             );
           }
 
-          function outputAnswers(arrQuiz, arrAnswer) {
+          function outputAnswers(arrQuiz, arrAnswer, arrReason) {
             let result = "";
             for (let j = 0; j < arrAnswer.length; j++) {
-              result += `<tr><td>${arrQuiz[j]}</td> <td>${arrAnswer[j]}</td></tr>`;
+              result += `<tr><td>${arrQuiz[j]}</td> <td>${arrAnswer[j]}</td> <td>${arrReason[j]}</td></tr>`;
             }
             return result;
           }
@@ -636,23 +638,25 @@ $(document).ready(function () {
             let table = "";
             for (key in data) {
               if (data[key]["name"] == name) {
-                table += `<table class="table table-striped mt-0 mb-4">
+                table += `<div class="table-responsive"><table class="table table-striped mt-0 mb-4">
                    <thead>
                       <tr>
                         <th scope="col">Вопрос</th>
                         <th scope="col">Ответ</th>
+                        <th scope="col">Причина</th>
                       </tr>
                     </thead>
                     <tbody>
                      ${outputAnswers(
                        data[key]["quizzes"],
-                       data[key]["answers"]
+                       data[key]["answers"],
+                       data[key]["reasons"]
                      )}
                     </tbody>
                       <div>Время ответа: ${getAnswerData(
                         data[key]["createdAt"]
                       )}</div>
-                  </table><hr class="seperateHr"/>`;
+                  </table></div><hr class="seperateHr"/>`;
               }
             }
             return table;
