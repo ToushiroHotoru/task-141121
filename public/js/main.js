@@ -532,7 +532,7 @@ $(document).ready(function () {
   // END delete alert notification
 
   // START GET all users answers
-  $("body").on("click", ".showBtn", function () {
+  $("body").on("click", ".timepickerReset, .showBtn", function () {
     $(".main-form").empty();
     let departmentForSend = $(".city").val();
     let salonForSend = $(".company").val();
@@ -595,6 +595,59 @@ $(document).ready(function () {
           }
 
           $(".main-form").append(`
+          <div class="d-flex align-items-center timepicker pb-3">
+            от<input type="time" class="datepickerStart">
+            : до<input type="time" class="datepickerEnd">
+            <button type="button" class="btn btn-dark ms-2 timepickerBtn">Сортировать</button>
+          </div>
+          `);
+
+          $("body").on("click", ".timepickerBtn", function () {
+            let startDate = $(".datepickerStart").val();
+            let endDate = $(".datepickerEnd").val();
+            let day = $(".hasDatepicker").val();
+
+            if (startDate && endDate) {
+              $(".timepickerReset").remove();
+              $(".timepickerBtn").remove();
+              $(".timepicker").append(`
+              <button type="button" class="btn btn-dark ms-2 timepickerReset">Сбросить</button>
+            `);
+
+              let dateOne = new Date(`${day} ${startDate}`);
+              let dateTwo = new Date(`${day} ${endDate}`);
+
+              $(".createdAt").each(function () {
+                let dateRecord = new Date(`${day} ${$(this).text()}`);
+                if (
+                  dateOne.getTime() < dateRecord.getTime() &&
+                  dateRecord.getTime() < dateTwo.getTime()
+                ) {
+                } else {
+                  $(this).parent().remove();
+                  console.log("запись удалена");
+                }
+              });
+
+              $(".accordion-body").each(function () {
+                console.log($(this).children().length == 0);
+                if ($(this).children().length == 0) {
+                  $(this).parent().parent().remove();
+                }
+              });
+            } else {
+              const sendAlert =
+                $(`<div class="alert fixed-top alert-warning alert-dismissible fade show my-3" role="alert">
+                  <strong>Заполните все поля!</strong> Для сортировки данных заполните все поля.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`).hide();
+
+              sendAlert.appendTo(".main").fadeIn();
+              deleteAlert();
+            }
+          });
+
+          $(".main-form").append(`
           <div class="accordion" id="accordionExample"></div>
         `);
 
@@ -653,10 +706,10 @@ $(document).ready(function () {
                        data[key]["reasons"]
                      )}
                     </tbody>
-                      <div>Время ответа: ${getAnswerData(
+                      <div class="createdAt">${getAnswerData(
                         data[key]["createdAt"]
                       )}</div>
-                  </table></div><hr class="seperateHr"/>`;
+                  </table><hr class="seperateHr"/></div>`;
               }
             }
             return table;
