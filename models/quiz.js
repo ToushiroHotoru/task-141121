@@ -6,6 +6,8 @@ const Quizs = new Schema({
     type: String,
     required: true,
   },
+  responsePerson: String,
+  spectatePerson: String,
 });
 
 const quiz = mongoose.model("quiz", Quizs);

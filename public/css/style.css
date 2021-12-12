@@ -31,9 +31,7 @@ body {
 }
 
 @media (min-width: 890px) {
-  .quizValue,
-.quizNewData,
-.companyValue,
+  .companyValue,
 .workerValue,
 .workerNewData,
 .companyNewData,

@@ -493,7 +493,22 @@ $(document).ready(function () {
       }
     });
 
-    console.log(reasons);
+    // Запрос для отправки данных на битрикс
+    // $.ajax({
+    //   url: "<путь на битрикс api>",
+    //   type: "POST",
+    //   data: {
+    //     cityName: cityName,
+    //     companyName: companyName,
+    //     name: name,
+    //     answers: answers,
+    //     quizzes: quizzes,
+    //     reasons: reasons,
+    //   },
+    //   success: function () {
+    //     console.log("Данные ушли в bitrix24");
+    //   },
+    // });
 
     $.ajax({
       url: "/answer/save-answer",
@@ -781,7 +796,6 @@ $(document).ready(function () {
   $("body").on("click", ".add-data-company", function () {
     let id = $(".companyNewData").attr("data-id");
     let companyNewData = $(".companyNewData").val();
-    // let companyId = $(".companyNewData").attr("data-id-company");
 
     $.ajax({
       url: "/add-data-company",
@@ -898,6 +912,7 @@ $(document).ready(function () {
       $(".quizItem").remove();
       $(".quizNewData").remove();
       $(".create-quiz").remove();
+      $(".quizNewDataParent").remove();
       $.ajax({
         url: "/quiz/get-quiz",
         type: "GET",
@@ -905,25 +920,36 @@ $(document).ready(function () {
           let i = 1;
           for (key in data) {
             $(".main-form-quiz").append(`
-          <div class="d-flex align-items-center quizItem">
-                <div><div class="widthpx20"><span class="quizId">${i}</span>.</div> <input type="text" data-value="${data[key]["note"]}" value="${data[key]["note"]}" class="quizValue"></div>
-                <div class="btn-quiz-group">
-                    <button class="btn btn-dark my-1 btn-sm btn-group-edit">edit</button>
-                    <button class="btn btn-dark my-1 btn-sm btn-group-delete">delete</button>
-                </btn>
+          <div class="d-flex mb-3 quizItem">
+            <div class="widthpx20 mx-1"> <span class="quizId">${i}</span>.</div>
+              <div class="d-flex flex-column w-100">
+                <input type="text" data-id="${data[key]["_id"]}" data-value="${data[key]["note"]}" value="${data[key]["note"]}" class="quizValue w-100">
+                <input type="text" placeholder="Ответственный" value="${data[key]["responsePerson"]}"  class="quizResponsePerson w-100">
+                <input type="text" placeholder="Наблюдатель" value="${data[key]["spectatePerson"]}" class="quizSpectatePerson w-100">
+                <div class="btn-quiz-group d-flex">
+                  <button class="btn btn-dark w-100 btn-group-edit">edit</button>
+                  <button class="btn btn-dark w-100 btn-group-delete">delete</button>
+                </div>
+              </div>  
+            </div>
           </div>
                 `);
             i++;
           }
-          $(".main-form-quiz").append(`
-        <div class="d-flex align-items-center quizNewDataParent ms-3">
-                <div class="marginpx9"><input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData"></div>
-                <div>
-                    <button class="btn btn-dark my-1 btn-sm create-quiz">Добавить</button>
-                </btn>
-          </div>
-       
+          setTimeout(() => {
+            $(".main-form-quiz").append(`
+              <div class="d-flex align-items-center quizNewDataParent ms-3">
+                <div class="marginpx9 d-flex flex-column w-100">
+                  <input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData w-100">
+                  <input type="text" placeholder="Ответственный"  class="quizNewResponsePerson w-100">
+                  <input type="text" placeholder="Наблюдатель"  class="quizNewSpectatePerson w-100">
+                    <div>
+                      <button class="btn btn-dark my-1 w-100 create-quiz">Добавить</button>
+                    </div>
+                </div>
+              </div>
         `);
+          }, 500);
         },
       });
     }, 500);
@@ -932,6 +958,8 @@ $(document).ready(function () {
   $("body").on("click", ".create-quiz", function (e) {
     e.preventDefault();
     let quizNewData = $(".quizNewData").val();
+    let spectatePerson = $(".quizNewSpectatePerson").val();
+    let responsePerson = $(".quizNewResponsePerson").val();
     if (!quizNewData) {
       const sendAlert =
         $(`<div class="alert fixed-top alert-warning alert-dismissible fade show my-3" role="alert">
@@ -947,6 +975,8 @@ $(document).ready(function () {
         type: "POST",
         data: {
           note: quizNewData,
+          spectatePerson: spectatePerson,
+          responsePerson: responsePerson,
           isAdmin: isUserAdmin,
         },
         success: function () {
@@ -965,31 +995,37 @@ $(document).ready(function () {
 
   $("body").on("click", ".btn-group-delete", function (e) {
     const quiz = $(this).parent().parent();
-    let quizOldData = quiz.find(".quizValue").val();
+    let id = quiz.find(".quizValue").attr("data-id");
     $.ajax({
       url: "/quiz/delete-quiz",
       type: "DELETE",
       data: {
-        quizOldData: quizOldData,
+        id: id,
         isAdmin: isUserAdmin,
       },
       success: function () {
-        quiz.remove();
+        quiz.parent().remove();
       },
     });
   });
 
   $("body").on("click", ".btn-group-edit", function (e) {
     const quiz = $(this).parent().parent();
-    let quizOldData = quiz.find(".quizValue").attr("data-value");
+    let quizId = quiz.find(".quizValue").attr("data-id");
     let quizNewData = quiz.find(".quizValue").val();
+    let responsePerson = quiz.find(".quizResponsePerson").val();
+    let spectatePerson = quiz.find(".quizSpectatePerson").val();
+    console.log(responsePerson);
+    console.log(spectatePerson);
 
     $.ajax({
       url: "/quiz/edit-quiz",
       type: "POST",
       data: {
-        quizOldData: quizOldData,
+        id: quizId,
         quizNewData: quizNewData,
+        responsePerson: responsePerson,
+        spectatePerson: spectatePerson,
         isAdmin: isUserAdmin,
       },
       success: function () {
