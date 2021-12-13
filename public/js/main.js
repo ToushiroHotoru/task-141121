@@ -51,45 +51,52 @@ $(document).ready(function () {
         let output = form.val();
         if (output !== "Выберите салон") {
           $(".search").removeAttr("readonly");
+        } else {
+          $(".main-form").empty();
         }
       });
 
       $("body").on("change", ".checkListToggler", function () {
-        $.ajax({
-          url: "/quiz/get-quiz",
-          type: "GET",
-          cache: false,
-          success: function (data) {
-            $(".main-form").empty();
-            let i = 1;
-            for (key in data) {
-              $(".main-form").append(`
+        if ($(".company").val() != "Выберите салон") {
+          $.ajax({
+            url: "/quiz/get-quiz",
+            type: "GET",
+            cache: false,
+            success: function (data) {
+              $(".main-form").empty();
+              let i = 1;
+              for (key in data) {
+                $(".main-form").append(`
                       <div>${i}. <span class="quizMainValue">${data[key]["note"]}</span>
                       <div class="d-flex align-items-center form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label mx-1 pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
                         <input type="text" placeholder="Пожалуйста напишите почему" data-reason="${i}" class="reason reasonForNo${i}">
                       </div>
+                      <input type="hidden" class="answerResponsePerson" value="${data[key]["responsePerson"]}"></input>
+                      <input type="hidden" class="answerSpectatePerson" value="${data[key]["spectatePerson"]}"></input>
                       <hr class="quiz-hr"/></div>
                     `);
-              i++;
-            }
-            $(".main-form").append(
-              `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
-            );
-            $(".form-check-input").click(function () {
-              let switchId = $(this).attr("swich_id");
-              if (this.checked) {
-                $(".pala" + switchId).text("yes");
-                $(".reasonForNo" + switchId).val("");
-                $(".reasonForNo" + switchId).css("display", "none");
-              } else {
-                $(".pala" + switchId).text("no");
-                $(".reasonForNo" + switchId).css("display", "block");
+                i++;
               }
-            });
-          },
-        });
+              $(".main-form").append(``);
+              $(".main-form").append(
+                `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
+              );
+              $(".form-check-input").click(function () {
+                let switchId = $(this).attr("swich_id");
+                if (this.checked) {
+                  $(".pala" + switchId).text("yes");
+                  $(".reasonForNo" + switchId).val("");
+                  $(".reasonForNo" + switchId).css("display", "none");
+                } else {
+                  $(".pala" + switchId).text("no");
+                  $(".reasonForNo" + switchId).css("display", "block");
+                }
+              });
+            },
+          });
+        }
       });
 
       // START GET all data for admin panel
@@ -420,84 +427,114 @@ $(document).ready(function () {
   // START POST send user answer
   $("body").on("click", ".send-form", async function (e) {
     e.preventDefault();
+
     let name = $(".search").val();
-    let companyName = $(".company").val();
-    let cityName = $(".city").val();
-    $(".search").val("");
-    let reasons = [];
-    let answers = [];
-    let quizzes = [];
-    $(".quizMainValue").each(function (i) {
-      let something = i + 1 + ". " + $(this).text() + "/";
-      quizzes.push(something);
-    });
+    if (name != "") {
+      let companyName = $(".company").val();
+      let cityName = $(".city").val();
 
-    $(".reason").each(function (i) {
-      let something = $(this).val() + "/";
-      reasons.push(something);
-    });
+      $(".search").val("");
+      let reasons = [];
+      let answers = [];
+      let quizzes = [];
+      let spectateAndResponsePersons = [];
+      $(".quizMainValue").each(function (i) {
+        let something = i + 1 + ". " + $(this).text() + "/";
+        quizzes.push(something);
+      });
 
-    reasons = reasons.splice("/");
-    reasons.forEach((item, i, arr) => {
-      item = item.slice(0, -1);
-      arr.splice(i, 1, item);
-    });
+      $(".reason").each(function (i) {
+        let something = $(this).val() + "/";
+        reasons.push(something);
+      });
 
-    quizzes = quizzes.splice("/");
-    quizzes.forEach((item, i, arr) => {
-      item = item.slice(0, -1);
-      arr.splice(i, 1, item);
-    });
+      reasons = reasons.splice("/");
+      reasons.forEach((item, i, arr) => {
+        item = item.slice(0, -1);
+        arr.splice(i, 1, item);
+      });
 
-    $(".quiz:checkbox").each(function () {
-      if ($(this).is(":checked")) {
-        answers.push("yes");
-      } else {
-        answers.push("no");
-      }
-    });
+      quizzes = quizzes.splice("/");
+      quizzes.forEach((item, i, arr) => {
+        item = item.slice(0, -1);
+        arr.splice(i, 1, item);
+      });
 
-    // Запрос для отправки данных на битрикс
-    // $.ajax({
-    //   url: "<путь на битрикс api>",
-    //   type: "POST",
-    //   data: {
-    //     cityName: cityName,
-    //     companyName: companyName,
-    //     name: name,
-    //     answers: answers,
-    //     quizzes: quizzes,
-    //     reasons: reasons,
-    //   },
-    //   success: function () {
-    //     console.log("Данные ушли в bitrix24");
-    //   },
-    // });
+      $(".quiz:checkbox").each(function () {
+        if ($(this).is(":checked")) {
+          answers.push("yes");
+        } else {
+          answers.push("no");
+        }
+      });
 
-    $.ajax({
-      url: "/answer/save-answer",
-      type: "POST",
-      data: {
-        cityName: cityName,
-        companyName: companyName,
-        name: name,
-        answers: answers,
-        quizzes: quizzes,
-        reasons: reasons,
-      },
-      success: function () {
-        $(".main-form").empty();
+      $(".answerResponsePerson").each(function () {
+        const root = $(this).parent();
+        spectateAndResponsePersons.push(
+          `${root.find(".answerResponsePerson").val()}, ${root
+            .find(".answerSpectatePerson")
+            .val()}`
+        );
+      });
 
-        const sendAlert =
-          $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
+      spectateAndResponsePersons.forEach((item, i) => {
+        item = item.split(",");
+        spectateAndResponsePersons.splice(i, 1, item);
+      });
+
+      // Запрос для отправки данных на битрикс
+      // $.ajax({
+      //   url: "<путь на битрикс api>",
+      //   type: "POST",
+      //   data: {
+      //     cityName: cityName,
+      //     companyName: companyName,
+      //     name: name,
+      //     answers: answers,
+      //     quizzes: quizzes,
+      //     reasons: reasons,
+      //   },
+      //   success: function () {
+      //     console.log("Данные ушли в bitrix24");
+      //   },
+      // });
+
+      $.ajax({
+        url: "/answer/save-answer",
+        type: "POST",
+        data: {
+          cityName: cityName,
+          companyName: companyName,
+          name: name,
+          spectateAndResponsePersons: spectateAndResponsePersons,
+          answers: answers,
+          quizzes: quizzes,
+          reasons: reasons,
+        },
+        success: function () {
+          $(".main-form").empty();
+
+          const sendAlert =
+            $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
             <strong>Форма отправлена!</strong> Благодарим вас, за обратную связь!.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>`).hide();
 
-        sendAlert.appendTo(".main").fadeIn();
-        deleteAlert();
-      },
-    });
+          sendAlert.appendTo(".main").fadeIn();
+          deleteAlert();
+        },
+      });
+      $(".company").prop("selectedIndex", 0);
+    } else {
+      const sendAlert =
+        $(`<div class="alert fixed-top alert-danger alert-dismissible fade show my-3" role="alert">
+            <strong>Форма не заполнена до конца!</strong> Пожалуйста заполните ФИО менеджера!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`).hide();
+
+      sendAlert.appendTo(".main").fadeIn();
+      deleteAlert();
+    }
   });
 
   // END POST send user answer
