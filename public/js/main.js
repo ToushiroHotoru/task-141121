@@ -54,25 +54,16 @@ $(document).ready(function () {
         }
       });
 
-      $("body").on("click", ".search", function () {
+      $("body").on("change", ".checkListToggler", function () {
         $.ajax({
           url: "/quiz/get-quiz",
           type: "GET",
           cache: false,
           success: function (data) {
-            const workNames = getWorkersNames();
-            $(".search").autocomplete({
-              source: getWorkersNames(),
-              select: function (event, ui) {
-                $(".main-form").empty();
-                if (workNames.includes(ui.item.value)) {
-                  $(".main-form").append(
-                    `<div>Сотрудник: <span class="nameTo">${ui.item.value}</span></div>`
-                  );
-
-                  let i = 1;
-                  for (key in data) {
-                    $(".main-form").append(`
+            $(".main-form").empty();
+            let i = 1;
+            for (key in data) {
+              $(".main-form").append(`
                       <div>${i}. <span class="quizMainValue">${data[key]["note"]}</span>
                       <div class="d-flex align-items-center form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
@@ -81,24 +72,21 @@ $(document).ready(function () {
                       </div>
                       <hr class="quiz-hr"/></div>
                     `);
-                    i++;
-                  }
-                  $(".main-form").append(
-                    `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
-                  );
-                  $(".form-check-input").click(function () {
-                    let switchId = $(this).attr("swich_id");
-                    if (this.checked) {
-                      $(".pala" + switchId).text("yes");
-                      $(".reasonForNo" + switchId).val("");
-                      $(".reasonForNo" + switchId).css("display", "none");
-                    } else {
-                      $(".pala" + switchId).text("no");
-                      $(".reasonForNo" + switchId).css("display", "block");
-                    }
-                  });
-                }
-              },
+              i++;
+            }
+            $(".main-form").append(
+              `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
+            );
+            $(".form-check-input").click(function () {
+              let switchId = $(this).attr("swich_id");
+              if (this.checked) {
+                $(".pala" + switchId).text("yes");
+                $(".reasonForNo" + switchId).val("");
+                $(".reasonForNo" + switchId).css("display", "none");
+              } else {
+                $(".pala" + switchId).text("no");
+                $(".reasonForNo" + switchId).css("display", "block");
+              }
             });
           },
         });
@@ -313,6 +301,7 @@ $(document).ready(function () {
 
       $("#btnradio1").click(function () {
         if ($("#btnradio1").is(":checked")) {
+          $(".company").addClass("checkListToggler");
           $("hr").css("display", "block");
           $(".main-select-group").css("display", "flex");
           $(".quizNewDataParent").remove();
@@ -340,6 +329,7 @@ $(document).ready(function () {
       $("#btnradio2").click(function () {
         if ($("#btnradio2").is(":checked")) {
           $("hr").css("display", "block");
+          $(".company").removeClass("checkListToggler");
           $(".main-select-group").css("display", "flex");
           $(".quizNewDataParent").remove();
           $(".col-ui-widget").remove();
@@ -424,24 +414,13 @@ $(document).ready(function () {
         data += object["cityName"];
         return data;
       }
-
-      function getWorkersNames() {
-        let companyName = $(".company").val();
-        for (key in data) {
-          for (let i = 0; i < data[key]["company"].length; i++) {
-            if (companyName == data[key]["company"][i]["companyName"]) {
-              return data[key]["company"][i]["workers"];
-            }
-          }
-        }
-      }
     },
   });
 
   // START POST send user answer
   $("body").on("click", ".send-form", async function (e) {
     e.preventDefault();
-    let name = $(".nameTo").text();
+    let name = $(".search").val();
     let companyName = $(".company").val();
     let cityName = $(".city").val();
     $(".search").val("");
