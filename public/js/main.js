@@ -763,6 +763,7 @@ $(document).ready(function () {
       type: "POST",
       data: {
         name: name,
+        isAdmin: isUserAdmin,
       },
       success: function () {
         const sendAlert =

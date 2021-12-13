@@ -12,6 +12,8 @@ const isAdminFunc = (req, res, next) => {
   }
 };
 
+router.get("/get-watcher", dataFormController.get_watcher);
+router.post("/change-watcher", isAdminFunc, dataFormController.change_watcher);
 router.post("/add-data-city", isAdminFunc, dataFormController.add_data_city);
 router.post("/edit-data-city", isAdminFunc, dataFormController.edit_data_city);
 router.delete(

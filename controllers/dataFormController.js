@@ -1,4 +1,26 @@
 const DataForm = require("../models/dataForms");
+const Watcher = require("../models/mainWatcher");
+
+const get_watcher = async (req, res) => {
+  try {
+    const data = await Watcher.findOne();
+    res.send(data);
+  } catch (err) {
+    console.log(err._message);
+  }
+};
+
+const change_watcher = async (req, res) => {
+  let name = req.body.name;
+  try {
+    const result = await Watcher.findOne({});
+    result.name = name;
+    result.save();
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err._message);
+  }
+};
 
 const get_data = async (req, res) => {
   try {
@@ -101,4 +123,6 @@ module.exports = {
   add_data_company,
   edit_data_company,
   delete_data_company,
+  get_watcher,
+  change_watcher,
 };
