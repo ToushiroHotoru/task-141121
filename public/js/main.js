@@ -13,11 +13,9 @@ $(document).ready(function () {
       isAdmin: isUserAdmin,
     },
     success: function (data) {
-      console.log(isUserAdmin);
       if (data.admin) {
         $(".panel-top").append(data.button);
       }
-      console.log(data.admin);
     },
   });
 
@@ -131,10 +129,13 @@ $(document).ready(function () {
               $(".loadSpinner").remove();
               let i = 1;
               $(".main-form").append(`
+              <div class="main-form-watcher">
+          <hr />
+            <h3>Главный наблюдатель</h3>
+        </div>
         <div class="main-form-city">
-          <hr />
+        <hr />
             <h3>Города</h3>
-          <hr />
         </div>
         <div class="main-form-company">
           <hr />
@@ -736,6 +737,47 @@ $(document).ready(function () {
   });
   // END GET all users answers
 
+  // START change, get watcher
+  $("body").on("click", "#btnradio3, .checkAlert", function (e) {
+    $(".mainWatcherClass").empty();
+    setTimeout(function () {
+      $.ajax({
+        url: "/get-watcher",
+        type: "GET",
+        success: function (data) {
+          $(".main-form-watcher").append(
+            `<div class="d-flex mainWatcherClass">
+          <input type="text" class="watcherName" value="${data.name}">
+          <button class="btn btn-dark w-100 change-watcher">Изменить</button> 
+          </div>`
+          );
+        },
+      });
+    }, 100);
+  });
+
+  $("body").on("click", ".change-watcher", function (e) {
+    let name = $(".watcherName").val();
+    $.ajax({
+      url: "/change-watcher",
+      type: "POST",
+      data: {
+        name: name,
+      },
+      success: function () {
+        const sendAlert =
+          $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Вопрос добавлен!</strong> Нажмите на <strong><span class="checkAlert">сюда</span></strong>, чтобы обновить днные.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+        sendAlert.prependTo(".main-form-quiz").fadeIn();
+        deleteAlert();
+      },
+    });
+  });
+  // END change, get watcher
+
   // START add, update, delete cities
   $("body").on("click", ".add-data-city", function () {
     let cityNewData = $(".cityNewData").val();
@@ -848,7 +890,7 @@ $(document).ready(function () {
   // END add, update, delete company
 
   // START add, update, delete quizzes
-  $("body").on("click", "#btnradio3, .checkAlert", function () {
+  $("body").on("click", "#btnradio3", function () {
     setTimeout(function () {
       $(".quizItem").remove();
       $(".quizNewData").remove();

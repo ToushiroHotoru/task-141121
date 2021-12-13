@@ -31,7 +31,8 @@ body {
 }
 
 @media (min-width: 890px) {
-  .companyValue,
+  .watcherName,
+.companyValue,
 .workerValue,
 .workerNewData,
 .companyNewData,

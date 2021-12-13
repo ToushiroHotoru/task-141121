@@ -2,9 +2,11 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const DataCheck = require("./models/dataForms");
+const Watcher = require("./models/mainWatcher");
 const dataFormRoutes = require("./routes/dataFormRoutes");
 const quizRoutes = require("./routes/quizRoutes");
 const answerRoutes = require("./routes/answerRoutes");
+const watcher = require("./models/mainWatcher");
 
 const app = express();
 require("dotenv").config();
@@ -56,6 +58,27 @@ app.get("/get-data", async (req, res) => {
 
 app.get("/", (req, res) => {
   res.render("index", { date: today });
+});
+
+app.get("/get-watcher", async (req, res) => {
+  try {
+    const data = await Watcher.findOne();
+    res.send(data);
+  } catch (err) {
+    console.log(err._message);
+  }
+});
+
+app.post("/change-watcher", async (req, res) => {
+  let name = req.body.name;
+  try {
+    const result = await Watcher.findOne({});
+    result.name = name;
+    result.save();
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err._message);
+  }
 });
 
 app.use("/quiz", quizRoutes);
