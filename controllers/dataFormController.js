@@ -93,69 +93,6 @@ const delete_data_company = async (req, res) => {
   }
 };
 
-const add_data_worker = async (req, res) => {
-  try {
-    const id = req.body.id;
-    const workerArrayId = req.body.workerArrayId;
-    const workerNewName = req.body.workerNewName;
-    const result = await DataForm.findOne({ _id: id });
-    result.company.forEach((company, i) => {
-      if (company["_id"] == workerArrayId) {
-        company["workers"].push(workerNewName);
-      }
-    });
-    result.save();
-    res.status(200).json({ success: result });
-  } catch (err) {
-    console.log(err.meassage);
-  }
-};
-
-const edit_data_worker = async (req, res) => {
-  try {
-    const id = req.body.id;
-    const workerArrayId = req.body.workerArrayId;
-    const workerOldName = req.body.workerOldName;
-    const workerNewName = req.body.workerNewName;
-    const result = await DataForm.findOne({ _id: id });
-    result.company.forEach((company, i) => {
-      if (company["_id"] == workerArrayId) {
-        company["workers"].forEach((worker, i) => {
-          if (worker == workerOldName) {
-            company["workers"].splice(i, 1, workerNewName);
-          }
-        });
-      }
-    });
-    result.save();
-    res.status(200).json({ success: result });
-  } catch (err) {
-    console.log(err.meassage);
-  }
-};
-
-const delete_data_worker = async (req, res) => {
-  try {
-    const id = req.body.id;
-    const workerArrayId = req.body.workerArrayId;
-    const workerOldName = req.body.workerOldName;
-    const result = await DataForm.findOne({ _id: id });
-    result.company.forEach((company, i) => {
-      if (company["_id"] == workerArrayId) {
-        company["workers"].forEach((worker, i) => {
-          if (worker == workerOldName) {
-            company["workers"].splice(i, 1);
-          }
-        });
-      }
-    });
-    result.save();
-    res.status(200).json({ success: result });
-  } catch (err) {
-    console.log(err.meassage);
-  }
-};
-
 module.exports = {
   get_data,
   add_data_city,
@@ -164,7 +101,4 @@ module.exports = {
   add_data_company,
   edit_data_company,
   delete_data_company,
-  add_data_worker,
-  edit_data_worker,
-  delete_data_worker,
 };

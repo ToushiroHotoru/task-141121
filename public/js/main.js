@@ -150,21 +150,6 @@ $(document).ready(function () {
               </select>
             </div>
         </div>
-        <div class="main-form-worker">
-          <hr />
-            <div>
-              <h3>Сотрудники</h3>
-              <div class="d-flex pb-2">
-                <select name="select" class="cityAdminWorker form-select main-select-group__item">
-                    <option selected>Выберите город</option>
-                </select>
-                <select name="select" class="companyAdmin form-select main-select-group__item">
-                    <option selected>Выберите салон</option>
-                </select>
-                <input class="workerAdmin  main-select-group__item" placeholder="ФИО">
-              </div>
-            </div>
-        </div>
           <div class="main-form-quiz">
           <hr />
               <h3>Вопросы</h3>
@@ -845,66 +830,6 @@ $(document).ready(function () {
     });
   });
   // END add, update, delete company
-
-  // START add, update, delete worker
-  $("body").on("click", ".add-data-worker", function () {
-    let workerArrayId = $(".workerNewData").attr("data-id-array");
-    let workerNewName = $(".workerNewData").val();
-    let id = $(".workerNewData").attr("data-id");
-    $.ajax({
-      url: "/add-data-worker",
-      type: "POST",
-      data: {
-        id: id,
-        workerNewName: workerNewName,
-        workerArrayId: workerArrayId,
-        isAdmin: isUserAdmin,
-      },
-      success: function () {},
-    });
-  });
-
-  $("body").on("click", ".btn-worker-edit", function () {
-    const worker = $(this).parent().parent();
-    let workerNewName = worker.find(".workerValue").val();
-    let workerOldName = worker.find(".workerValue").attr("data-name");
-    let workerArrayId = worker.find(".workerValue").attr("data-id");
-    let id = $(".workerItem").attr("data-id");
-    $.ajax({
-      url: "/edit-data-worker",
-      type: "POST",
-      data: {
-        id: id,
-        workerNewName: workerNewName,
-        workerOldName: workerOldName,
-        workerArrayId: workerArrayId,
-        isAdmin: isUserAdmin,
-      },
-      success: function () {},
-    });
-  });
-
-  $("body").on("click", ".btn-worker-delete", function () {
-    const worker = $(this).parent().parent();
-    let workerArrayId = worker.find(".workerValue").attr("data-id");
-    let workerOldName = worker.find(".workerValue").val();
-    let id = $(".workerItem").attr("data-id");
-    $.ajax({
-      url: "/delete-data-worker",
-      type: "DELETE",
-      data: {
-        id: id,
-        workerArrayId: workerArrayId,
-        workerOldName: workerOldName,
-        isAdmin: isUserAdmin,
-      },
-      success: function () {
-        worker.remove();
-      },
-    });
-  });
-
-  // END add, update, delete worker
 
   // START add, update, delete quizzes
   $("body").on("click", "#btnradio3, .checkAlert", function () {

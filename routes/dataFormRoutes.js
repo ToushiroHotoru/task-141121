@@ -12,7 +12,6 @@ const isAdminFunc = (req, res, next) => {
   }
 };
 
-// router.get("/get-data", dataFormController.get_data);
 router.post("/add-data-city", isAdminFunc, dataFormController.add_data_city);
 router.post("/edit-data-city", isAdminFunc, dataFormController.edit_data_city);
 router.delete(
@@ -34,21 +33,6 @@ router.delete(
   "/delete-data-company",
   isAdminFunc,
   dataFormController.delete_data_company
-);
-router.post(
-  "/add-data-worker",
-  isAdminFunc,
-  dataFormController.add_data_worker
-);
-router.post(
-  "/edit-data-worker",
-  isAdminFunc,
-  dataFormController.edit_data_worker
-);
-router.delete(
-  "/delete-data-worker",
-  isAdminFunc,
-  dataFormController.delete_data_worker
 );
 
 module.exports = router;
