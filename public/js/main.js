@@ -56,16 +56,17 @@ $(document).ready(function () {
 
       $("body").on("change", ".checkListToggler", function () {
         if ($(".company").val() != "Выберите салон") {
-          $.ajax({
-            url: "/quiz/get-quiz",
-            type: "GET",
-            cache: false,
-            success: function (data) {
-              $(".main-form").empty();
-              let i = 1;
-              for (key in data) {
-                $(".main-form").append(`
-                      <div>${i}. <span class="quizMainValue">${data[key]["note"]}</span>
+          checkFetch().then((result) => {
+            $.ajax({
+              url: "/quiz/get-quiz",
+              type: "GET",
+              cache: false,
+              success: function (data) {
+                $(".main-form").empty();
+                let i = 1;
+                for (key in data) {
+                  $(".main-form").append(`
+                      <div>${i}. <span class="quizMainValue" main-watcher="${result.name}">${data[key]["note"]}</span>
                       <div class="d-flex align-items-center form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label mx-1 pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
@@ -75,24 +76,25 @@ $(document).ready(function () {
                       <input type="hidden" class="answerSpectatePerson" value="${data[key]["spectatePerson"]}"></input>
                       <hr class="quiz-hr"/></div>
                     `);
-                i++;
-              }
-              $(".main-form").append(``);
-              $(".main-form").append(
-                `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
-              );
-              $(".form-check-input").click(function () {
-                let switchId = $(this).attr("swich_id");
-                if (this.checked) {
-                  $(".pala" + switchId).text("yes");
-                  $(".reasonForNo" + switchId).val("");
-                  $(".reasonForNo" + switchId).css("display", "none");
-                } else {
-                  $(".pala" + switchId).text("no");
-                  $(".reasonForNo" + switchId).css("display", "block");
+                  i++;
                 }
-              });
-            },
+                $(".main-form").append(``);
+                $(".main-form").append(
+                  `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
+                );
+                $(".form-check-input").click(function () {
+                  let switchId = $(this).attr("swich_id");
+                  if (this.checked) {
+                    $(".pala" + switchId).text("yes");
+                    $(".reasonForNo" + switchId).val("");
+                    $(".reasonForNo" + switchId).css("display", "none");
+                  } else {
+                    $(".pala" + switchId).text("no");
+                    $(".reasonForNo" + switchId).css("display", "block");
+                  }
+                });
+              },
+            });
           });
         }
       });
@@ -242,65 +244,6 @@ $(document).ready(function () {
                 $(".workerItem").remove();
                 $(".addNewWorker").remove();
               });
-
-              $("body").on("click", ".workerAdmin", function () {
-                const workNamesAdmin = getWorkersNames();
-
-                $(".workerAdmin").autocomplete({
-                  source: workNamesAdmin[2],
-                  select: function (event, ui) {
-                    if (workNamesAdmin[2].includes(ui.item.value)) {
-                      let companyName = $(this).val();
-                      let dataIdArray = $(this)
-                        .find("option:selected")
-                        .attr("data-id-array");
-                      let dataId = $(this)
-                        .find("option:selected")
-                        .attr("data-id");
-
-                      if (companyName != "Выберите салон") {
-                        $(".main-form-worker").append(`
-                <div class="d-flex align-items-center addNewWorker ms-3">
-                      <div class="marginpx9 width102"><input type="text" placeholder="Напишите имя нового сотрудника..." data-id="${dataId}" data-id-array="${dataIdArray}"  class="workerNewData width101"></div>
-                      <div>
-                          <button class="btn btn-dark my-1 btn-sm add-data-worker">Добавить</button>
-                      </btn>
-                </div>
-                `);
-                      } else {
-                        $(".addNewWorker").remove();
-                      }
-
-                      $(".main-form-worker").append(`
-                                    <div class="d-flex align-items-center ms-4 workerItem" data-id="${workNamesAdmin[0]}">
-                                      <div class="width102"><input type="text" data-name="${ui.item.value}" data-id="${workNamesAdmin[1]}" value="${ui.item.value}" class="workerValue width103"></div>
-                                      <div class="btn-worker-group">
-                                          <button class="btn btn-dark my-1 btn-sm btn-worker-edit">edit</button>
-                                          <button class="btn btn-dark my-1 btn-sm btn-worker-delete">delete</button>
-                                      </btn>
-                                    </div>
-                              `);
-                    }
-                  },
-                });
-
-                function getWorkersNames() {
-                  let companyName = $(".companyAdmin").val();
-                  for (key in data) {
-                    for (let i = 0; i < data[key]["company"].length; i++) {
-                      if (
-                        companyName == data[key]["company"][i]["companyName"]
-                      ) {
-                        return [
-                          data[key]["_id"],
-                          data[key]["company"][i]["_id"],
-                          data[key]["company"][i]["workers"],
-                        ];
-                      }
-                    }
-                  }
-                }
-              });
             },
           });
         }
@@ -433,6 +376,8 @@ $(document).ready(function () {
     if (name != "") {
       let companyName = $(".company").val();
       let cityName = $(".city").val();
+      let mainWatcher = $(".quizMainValue").attr("main-watcher");
+      console.log(mainWatcher);
 
       $(".search").val("");
       let reasons = [];
@@ -484,21 +429,23 @@ $(document).ready(function () {
       });
 
       // Запрос для отправки данных на битрикс
-      // $.ajax({
-      //   url: "<путь на битрикс api>",
-      //   type: "POST",
-      //   data: {
-      //     cityName: cityName,
-      //     companyName: companyName,
-      //     name: name,
-      //     answers: answers,
-      //     quizzes: quizzes,
-      //     reasons: reasons,
-      //   },
-      //   success: function () {
-      //     console.log("Данные ушли в bitrix24");
-      //   },
-      // });
+      //  $.ajax({
+      //    url: "<ссылка на api bitrix>",
+      //    type: "POST",
+      //    data: {
+      //      cityName: cityName,
+      //      companyName: companyName,
+      //      name: name,
+      //      spectateAndResponsePersons: spectateAndResponsePersons,
+      //      mainWatcher: mainWatcher,
+      //      answers: answers,
+      //      quizzes: quizzes,
+      //      reasons: reasons,
+      //    },
+      //    success: function () {
+      //      console.log("Данные были отправленны успешно");
+      //    },
+      //  });
 
       $.ajax({
         url: "/answer/save-answer",
@@ -508,6 +455,7 @@ $(document).ready(function () {
           companyName: companyName,
           name: name,
           spectateAndResponsePersons: spectateAndResponsePersons,
+          mainWatcher: mainWatcher,
           answers: answers,
           quizzes: quizzes,
           reasons: reasons,
@@ -737,45 +685,79 @@ $(document).ready(function () {
   });
   // END GET all users answers
 
+  function checkFetch() {
+    return fetch("http://localhost:3000/get-watcher")
+      .then((response) => response.json())
+      .then((result) => {
+        return result;
+      });
+  }
+
   // START change, get watcher
+
   $("body").on("click", "#btnradio3, .checkAlert", function (e) {
     $(".mainWatcherClass").empty();
     setTimeout(function () {
-      $.ajax({
-        url: "/get-watcher",
-        type: "GET",
-        success: function (data) {
-          $(".main-form-watcher").append(
-            `<div class="d-flex mainWatcherClass">
-          <input type="text" class="watcherName" value="${data.name}">
+      checkFetch().then((data) => {
+        $(".main-form-watcher").append(
+          `<div class="d-flex mainWatcherClass">
+          <input type="text" class="watcherName" placeholder="Введите главного наблюдателя" value="${data.name}">
           <button class="btn btn-dark w-100 change-watcher">Изменить</button> 
           </div>`
-          );
-        },
+        );
       });
-    }, 100);
+    }, 300);
   });
+
+  // $("body").on("click", "#btnradio3, .checkAlert", function (e) {
+  //   $(".mainWatcherClass").empty();
+  //   setTimeout(function () {
+  //     $.ajax({
+  //       url: "/get-watcher",
+  //       type: "GET",
+  //       success: function (data) {
+  //         $(".main-form-watcher").append(
+  //           `<div class="d-flex mainWatcherClass">
+  //         <input type="text" class="watcherName" placeholder="Введите главного наблюдателя" value="${data.name}">
+  //         <button class="btn btn-dark w-100 change-watcher">Изменить</button>
+  //         </div>`
+  //         );
+  //       },
+  //     });
+  //   }, 300);
+  // });
 
   $("body").on("click", ".change-watcher", function (e) {
     let name = $(".watcherName").val();
-    $.ajax({
-      url: "/change-watcher",
-      type: "POST",
-      data: {
-        name: name,
-        isAdmin: isUserAdmin,
-      },
-      success: function () {
-        const sendAlert =
-          $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
-            <strong>Вопрос добавлен!</strong> Нажмите на <strong><span class="checkAlert">сюда</span></strong>, чтобы обновить днные.
+    if (name != "") {
+      $.ajax({
+        url: "/change-watcher",
+        type: "POST",
+        data: {
+          name: name,
+          isAdmin: isUserAdmin,
+        },
+        success: function () {
+          const sendAlert =
+            $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Изменение успешно!</strong> Имя главного наблюдателя было изменено!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
          </div>`).hide();
 
-        sendAlert.prependTo(".main-form-quiz").fadeIn();
-        deleteAlert();
-      },
-    });
+          sendAlert.prependTo(".main-form-quiz").fadeIn();
+          deleteAlert();
+        },
+      });
+    } else {
+      const sendAlert =
+        $(`<div class="alert fixed-top alert-danger alert-dismissible fade show my-3" role="alert">
+            <strong>Нужные поля не заполнены!</strong> Заполните поле главного наблюдателя!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+      sendAlert.prependTo(".main-form-quiz").fadeIn();
+      deleteAlert();
+    }
   });
   // END change, get watcher
 

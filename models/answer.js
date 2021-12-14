@@ -15,6 +15,10 @@ const Answers = new Schema(
       type: String,
       required: true,
     },
+    mainWatcher: {
+      type: String,
+      required: true,
+    },
     answers: [],
     quizzes: [],
     reasons: [],
