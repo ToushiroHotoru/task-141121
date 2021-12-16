@@ -427,6 +427,7 @@ $(document).ready(function () {
 
       spectateAndResponsePersons.forEach((item, i) => {
         item = item.split(",");
+        spectateAndResponsePersons.splice(i, 1, item);
         spectators.push(item[1]);
         responsible.push(item[0]);
       });
