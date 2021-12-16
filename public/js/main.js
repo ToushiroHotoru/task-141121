@@ -383,6 +383,8 @@ $(document).ready(function () {
       let reasons = [];
       let answers = [];
       let quizzes = [];
+      let spectators = [];
+      let responsible = [];
       let spectateAndResponsePersons = [];
       $(".quizMainValue").each(function (i) {
         let something = i + 1 + ". " + $(this).text() + "/";
@@ -425,7 +427,8 @@ $(document).ready(function () {
 
       spectateAndResponsePersons.forEach((item, i) => {
         item = item.split(",");
-        spectateAndResponsePersons.splice(i, 1, item);
+        spectators.push(item[1]);
+        responsible.push(item[0]);
       });
 
       // Запрос для отправки данных на битрикс
@@ -436,7 +439,8 @@ $(document).ready(function () {
       //      cityName: cityName,
       //      companyName: companyName,
       //      name: name,
-      //      spectateAndResponsePersons: spectateAndResponsePersons,
+      //      spectators: spectators,
+      //      responsible: responsible,
       //      mainWatcher: mainWatcher,
       //      answers: answers,
       //      quizzes: quizzes,
