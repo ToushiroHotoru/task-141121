@@ -35,6 +35,9 @@ $(document).ready(function () {
       $(".city").change(function () {
         const form = $(this);
         let output = form.val();
+        if (output === "Выберите подразделение") {
+          $(".main-form").empty();
+        }
         for (key in data) {
           if (data[key]["cityName"] == output) {
             $(".main-select-group__selected").remove();
@@ -704,12 +707,22 @@ $(document).ready(function () {
     $(".mainWatcherClass").empty();
     setTimeout(function () {
       checkFetch().then((data) => {
-        $(".main-form-watcher").append(
-          `<div class="d-flex mainWatcherClass">
+        console.log(typeof data.status);
+        if (data.status != "false") {
+          $(".main-form-watcher").append(
+            `<div class="d-flex mainWatcherClass">
           <input type="text" class="watcherName" placeholder="Введите главного наблюдателя" value="${data.name}">
           <button class="btn btn-dark w-100 change-watcher">Изменить</button> 
           </div>`
-        );
+          );
+        } else {
+          $(".main-form-watcher").append(
+            `<div class="d-flex mainWatcherClass">
+          <input type="text" class="watcherNameForCreation" placeholder="Введите главного наблюдателя">
+          <button class="btn btn-dark w-100 create-watcher">Создать</button> 
+          </div>`
+          );
+        }
       });
     }, 300);
   });
@@ -731,6 +744,39 @@ $(document).ready(function () {
   //     });
   //   }, 300);
   // });
+
+  $("body").on("click", ".create-watcher", function (e) {
+    let name = $(".watcherNameForCreation").val();
+    if (name != "") {
+      $.ajax({
+        url: "/create-watcher",
+        type: "POST",
+        data: {
+          name: name,
+          isAdmin: isUserAdmin,
+        },
+        success: function () {
+          const sendAlert =
+            $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Изменение успешно!</strong> Нажмите на <strong><span class="checkAlert">сюда</span></strong>, чтобы обновить данные!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+          sendAlert.prependTo(".main-form-quiz").fadeIn();
+          deleteAlert();
+        },
+      });
+    } else {
+      const sendAlert =
+        $(`<div class="alert fixed-top alert-danger alert-dismissible fade show my-3" role="alert">
+            <strong>Нужные поля не заполнены!</strong> Заполните поле главного наблюдателя!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+      sendAlert.prependTo(".main-form-quiz").fadeIn();
+      deleteAlert();
+    }
+  });
 
   $("body").on("click", ".change-watcher", function (e) {
     let name = $(".watcherName").val();
@@ -953,7 +999,7 @@ $(document).ready(function () {
         success: function () {
           const sendAlert =
             $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
-            <strong>Вопрос добавлен!</strong> Нажмите на <strong><span class="checkAlert">сюда</span></strong>, чтобы обновить днные.
+            <strong>Вопрос добавлен!</strong> Нажмите на <strong><span class="checkAlert">сюда</span></strong>, чтобы обновить данные.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
          </div>`).hide();
 

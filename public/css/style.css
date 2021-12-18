@@ -31,7 +31,8 @@ body {
 }
 
 @media (min-width: 890px) {
-  .watcherName,
+  .watcherNameForCreation,
+.watcherName,
 .companyValue,
 .workerValue,
 .workerNewData,

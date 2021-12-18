@@ -4,9 +4,25 @@ const Watcher = require("../models/mainWatcher");
 const get_watcher = async (req, res) => {
   try {
     const data = await Watcher.findOne();
-    res.send(data);
+    if (data) {
+      res.send(data);
+      console.log("Это не работает");
+    } else {
+      console.log("Это работает");
+      res.status(200).json({ status: "false" });
+    }
   } catch (err) {
     console.log(err._message);
+  }
+};
+
+const create_watcher = async (req, res) => {
+  const data = new Watcher(req.body);
+  try {
+    let result = await data.save();
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err.message);
   }
 };
 
@@ -16,9 +32,10 @@ const change_watcher = async (req, res) => {
     const result = await Watcher.findOne({});
     result.name = name;
     result.save();
+
     res.status(200).json(result);
   } catch (err) {
-    console.log(err._message);
+    console.log(err.message);
   }
 };
 
@@ -125,4 +142,5 @@ module.exports = {
   delete_data_company,
   get_watcher,
   change_watcher,
+  create_watcher,
 };
