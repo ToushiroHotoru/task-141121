@@ -6,9 +6,7 @@ const get_watcher = async (req, res) => {
     const data = await Watcher.findOne();
     if (data) {
       res.send(data);
-      console.log("Это не работает");
     } else {
-      console.log("Это работает");
       res.status(200).json({ status: "false" });
     }
   } catch (err) {
