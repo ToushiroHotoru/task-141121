@@ -724,7 +724,7 @@ $(document).ready(function () {
           );
         }
       });
-    }, 300);
+    }, 600);
   });
 
   // $("body").on("click", "#btnradio3, .checkAlert", function (e) {
