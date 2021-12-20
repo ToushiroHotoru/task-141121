@@ -376,65 +376,70 @@ $(document).ready(function () {
     e.preventDefault();
 
     let name = $(".search").val();
-    if (name != "") {
-      let companyName = $(".company").val();
-      let cityName = $(".city").val();
-      let mainWatcher = $(".quizMainValue").attr("main-watcher");
-      console.log(mainWatcher);
 
-      $(".search").val("");
-      let reasons = [];
-      let answers = [];
-      let quizzes = [];
-      let spectators = [];
-      let responsible = [];
-      let spectateAndResponsePersons = [];
-      $(".quizMainValue").each(function (i) {
-        let something = i + 1 + ". " + $(this).text() + "/";
-        quizzes.push(something);
-      });
+    let companyName = $(".company").val();
+    let cityName = $(".city").val();
+    let mainWatcher = $(".quizMainValue").attr("main-watcher");
 
-      $(".reason").each(function (i) {
-        let something = $(this).val() + "/";
+    $(".search").val("");
+    let reasons = [];
+    let answers = [];
+    let quizzes = [];
+    let spectators = [];
+    let responsible = [];
+    let spectateAndResponsePersons = [];
+
+    $(".quizMainValue").each(function (i) {
+      let something = i + 1 + ". " + $(this).text() + "/";
+      quizzes.push(something);
+    });
+
+    $(".reason").each(function () {
+      let something = $(this).val() + "/";
+      if ($(this).parent().find(".quiz").prop("checked")) {
+        reasons.push("нет");
+      } else {
         reasons.push(something);
-      });
+      }
+    });
 
-      reasons = reasons.splice("/");
-      reasons.forEach((item, i, arr) => {
-        item = item.slice(0, -1);
-        arr.splice(i, 1, item);
-      });
+    reasons = reasons.splice("/");
+    reasons.forEach((item, i, arr) => {
+      item = item.slice(0, -1);
+      arr.splice(i, 1, item);
+    });
 
-      quizzes = quizzes.splice("/");
-      quizzes.forEach((item, i, arr) => {
-        item = item.slice(0, -1);
-        arr.splice(i, 1, item);
-      });
+    quizzes = quizzes.splice("/");
+    quizzes.forEach((item, i, arr) => {
+      item = item.slice(0, -1);
+      arr.splice(i, 1, item);
+    });
 
-      $(".quiz:checkbox").each(function () {
-        if ($(this).is(":checked")) {
-          answers.push("yes");
-        } else {
-          answers.push("no");
-        }
-      });
+    $(".quiz:checkbox").each(function () {
+      if ($(this).is(":checked")) {
+        answers.push("yes");
+      } else {
+        answers.push("no");
+      }
+    });
 
-      $(".answerResponsePerson").each(function () {
-        const root = $(this).parent();
-        spectateAndResponsePersons.push(
-          `${root.find(".answerResponsePerson").val()}, ${root
-            .find(".answerSpectatePerson")
-            .val()}`
-        );
-      });
+    $(".answerResponsePerson").each(function () {
+      const root = $(this).parent();
+      spectateAndResponsePersons.push(
+        `${root.find(".answerResponsePerson").val()}, ${root
+          .find(".answerSpectatePerson")
+          .val()}`
+      );
+    });
 
-      spectateAndResponsePersons.forEach((item, i) => {
-        item = item.split(",");
-        spectateAndResponsePersons.splice(i, 1, item);
-        spectators.push(item[1]);
-        responsible.push(item[0]);
-      });
+    spectateAndResponsePersons.forEach((item, i) => {
+      item = item.split(",");
+      spectateAndResponsePersons.splice(i, 1, item);
+      spectators.push(item[1]);
+      responsible.push(item[0]);
+    });
 
+    if (name != "" && !reasons.includes("")) {
       // Запрос для отправки данных на битрикс
       //  $.ajax({
       //    url: "<ссылка на api bitrix>",
@@ -485,7 +490,7 @@ $(document).ready(function () {
     } else {
       const sendAlert =
         $(`<div class="alert fixed-top alert-danger alert-dismissible fade show my-3" role="alert">
-            <strong>Форма не заполнена до конца!</strong> Пожалуйста заполните ФИО менеджера!
+            <strong>Форма не заполнена до конца!</strong> Пожалуйста заполните ФИО менеджера и поля, где вы поставили "НЕТ"!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>`).hide();
 
@@ -694,7 +699,7 @@ $(document).ready(function () {
   // END GET all users answers
 
   function checkFetch() {
-    return fetch("http://localhost:3000/get-watcher")
+    return fetch("/get-watcher")
       .then((response) => response.json())
       .then((result) => {
         return result;
@@ -707,7 +712,6 @@ $(document).ready(function () {
     $(".mainWatcherClass").empty();
     setTimeout(function () {
       checkFetch().then((data) => {
-        console.log(typeof data.status);
         if (data.status != "false") {
           $(".main-form-watcher").append(
             `<div class="d-flex mainWatcherClass">
