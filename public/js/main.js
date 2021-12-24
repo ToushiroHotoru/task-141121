@@ -301,15 +301,22 @@ $(document).ready(function () {
           $(".main-select-group-row").prepend(`
             <div class="col-md-3 col-12 my-1 col-ui-widget">
               <div class="ui-widget">
-                <input type="text" class="form-control" id="datepicker" placeholder="Дата">
+                <input type="text" class="form-control" id="datepickerEnd" placeholder="До">
+              </div>
+            </div>`);
+
+          $(".main-select-group-row").prepend(`
+            <div class="col-md-3 col-12 my-1 col-ui-widget">
+              <div class="ui-widget">
+                <input type="text" class="form-control" id="datepickerStart" placeholder="От">
               </div>
             </div>`);
           $(".main-select-group-row").append(`
-            <div class="col-md-3 col-12 my-1 d-grid gap-2 showBtnShow">
+            <div class="col-12 mt-2 d-grid gap-2 showBtnShow">
               <button class="btn btn-dark showBtn">Показать</button>
             </div>
       `);
-          $("#datepicker").datepicker({
+          $("#datepickerEnd, #datepickerStart").datepicker({
             dateFormat: "yy-mm-dd",
             minDate: new Date($("#hiddendelivdate").val()),
             monthNames: [
@@ -332,12 +339,13 @@ $(document).ready(function () {
       });
 
       $(".showBtn").click(function () {
-        let dateForSend = $("#datepicker").val();
+        let dateForSendStart = $("#datepickerStart").val();
+        let dateForSendEnd = $("#datepickerEnd").val();
         let departmentForSend = $(".city").val();
-        let salonForSend = $(".company").val();
         if (
           dateForSend == "" ||
-          salonForSend == "Выберите салон" ||
+          dateForSendStart == "" ||
+          dateForSendEnd == "" ||
           departmentForSend == "Выберите подразделение"
         ) {
           const sendAlert =
@@ -514,15 +522,17 @@ $(document).ready(function () {
     $(".main-form").empty();
     let departmentForSend = $(".city").val();
     let salonForSend = $(".company").val();
-    let dateTime = $("#datepicker").val().split("-");
-    let gte = new Date(dateTime[0], parseInt(dateTime[1]) - 1, dateTime[2]);
-    let lt = new Date(
-      dateTime[0],
-      parseInt(dateTime[1]) - 1,
-      parseInt(dateTime[2]) + 1
-    );
+    let dateTimeStart = $("#datepickerStart").val();
+    let dateTimeEnd = $("#datepickerEnd").val();
+
+    let gte = new Date(dateTimeStart);
+    let lt = new Date(dateTimeEnd);
     let alertFlag = true;
-    if (dateTime == "" || departmentForSend == "Выберите подразделение") {
+    if (
+      dateTimeStart == "" ||
+      dateTimeEnd == "" ||
+      departmentForSend == "Выберите подразделение"
+    ) {
       const sendAlert =
         $(`<div class="alert fixed-top alert-warning alert-dismissible fade show my-3" role="alert">
                   <strong>Не все поля заполнены!</strong> Пожалуйста заполните все поля.
