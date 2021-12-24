@@ -11,14 +11,22 @@ const save_answer = async (req, res) => {
 };
 
 const get_answer = async (req, res) => {
-  console.log(req.body);
   try {
-    const result = await Answer.find({
-      companyName: req.body.companyName,
-      cityName: req.body.cityName,
-      createdAt: { $gte: req.body.gte, $lt: req.body.lt },
-    });
-    res.status(200).send(result);
+    console.log(req.body.companyName);
+    if (req.body.companyName != "Выберите салон") {
+      const result = await Answer.find({
+        companyName: req.body.companyName,
+        cityName: req.body.cityName,
+        createdAt: { $gte: req.body.gte, $lt: req.body.lt },
+      });
+      res.status(200).send(result);
+    } else {
+      const result = await Answer.find({
+        cityName: req.body.cityName,
+        createdAt: { $gte: req.body.gte, $lt: req.body.lt },
+      });
+      res.status(200).send(result);
+    }
   } catch (err) {
     console.log(err);
     res.status(502);

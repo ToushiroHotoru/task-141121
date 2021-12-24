@@ -522,11 +522,7 @@ $(document).ready(function () {
       parseInt(dateTime[2]) + 1
     );
     let alertFlag = true;
-    if (
-      dateTime == "" ||
-      salonForSend == "Выберите салон" ||
-      departmentForSend == "Выберите подразделение"
-    ) {
+    if (dateTime == "" || departmentForSend == "Выберите подразделение") {
       const sendAlert =
         $(`<div class="alert fixed-top alert-warning alert-dismissible fade show my-3" role="alert">
                   <strong>Не все поля заполнены!</strong> Пожалуйста заполните все поля.
@@ -548,7 +544,6 @@ $(document).ready(function () {
         companyName: salonForSend,
       },
       success: function (data) {
-        let i = 1;
         if (data.length === 0 && alertFlag) {
           $(".main-form").empty();
 
