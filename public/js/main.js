@@ -684,24 +684,6 @@ $(document).ready(function () {
     }, 600);
   });
 
-  // $("body").on("click", "#btnradio3, .checkAlert", function (e) {
-  //   $(".mainWatcherClass").empty();
-  //   setTimeout(function () {
-  //     $.ajax({
-  //       url: "/get-watcher",
-  //       type: "GET",
-  //       success: function (data) {
-  //         $(".main-form-watcher").append(
-  //           `<div class="d-flex mainWatcherClass">
-  //         <input type="text" class="watcherName" placeholder="Введите главного наблюдателя" value="${data.name}">
-  //         <button class="btn btn-dark w-100 change-watcher">Изменить</button>
-  //         </div>`
-  //         );
-  //       },
-  //     });
-  //   }, 300);
-  // });
-
   $("body").on("click", ".create-watcher", function (e) {
     let name = $(".watcherNameForCreation").val();
     if (name != "") {
