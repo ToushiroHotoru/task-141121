@@ -566,7 +566,24 @@ $(document).ready(function () {
           sendAlert.appendTo(".main").fadeIn();
           deleteAlert();
         } else {
+          console.log(data);
           let names = [];
+          names.push({
+            name: data[0]["name"],
+            companyName: data[0]["companyName"],
+            time: getAnswerTime(data[0]["createdAt"]),
+            date: data[0]["createdAt"],
+          });
+
+          function checkSameName(name) {
+            for (let i = 0; i < names.length; i++) {
+              console.log(names[i]["name"] != name);
+              if (names[i]["name"] == name) {
+                return false;
+              }
+            }
+            return true;
+          }
 
           for (key in data) {
             if (
@@ -574,7 +591,9 @@ $(document).ready(function () {
                 name: data[key]["name"],
                 companyName: data[key]["companyName"],
                 time: getAnswerTime(data[key]["createdAt"]),
-              })
+                date: data[key]["createdAt"],
+              }) &&
+              checkSameName(data[key]["name"])
             ) {
               names.push({
                 name: data[key]["name"],
