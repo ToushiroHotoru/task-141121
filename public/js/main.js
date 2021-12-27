@@ -445,7 +445,6 @@ $(document).ready(function () {
       responsible.push(item[0]);
     });
 
-    console.log(name, reasons);
     if (name != "" && !reasons.includes("")) {
       // Запрос для отправки данных на битрикс
       //  $.ajax({
@@ -566,7 +565,6 @@ $(document).ready(function () {
           sendAlert.appendTo(".main").fadeIn();
           deleteAlert();
         } else {
-          console.log(data);
           let names = [];
           names.push({
             name: data[0]["name"],
@@ -577,7 +575,6 @@ $(document).ready(function () {
 
           function checkSameName(name) {
             for (let i = 0; i < names.length; i++) {
-              console.log(names[i]["name"] != name);
               if (names[i]["name"] == name) {
                 return false;
               }
