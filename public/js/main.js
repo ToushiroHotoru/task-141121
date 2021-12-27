@@ -72,7 +72,7 @@ $(document).ready(function () {
                       <div>${i}. <span class="quizMainValue" main-watcher="${result.name}">${data[key]["note"]}</span>
                       <div class="d-flex align-items-center form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
-                        <label class="form-check-label mx-1 pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">no</label>
+                        <label class="form-check-label mx-1 pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">Нет</label>
                         <input type="text" placeholder="Пожалуйста напишите почему" data-reason="${i}" class="reason reasonForNo${i}">
                       </div>
                       <input type="hidden" class="answerResponsePerson" value="${data[key]["responsePerson"]}"></input>
@@ -88,11 +88,11 @@ $(document).ready(function () {
                 $(".form-check-input").click(function () {
                   let switchId = $(this).attr("swich_id");
                   if (this.checked) {
-                    $(".pala" + switchId).text("yes");
+                    $(".pala" + switchId).text("Да");
                     $(".reasonForNo" + switchId).val("");
                     $(".reasonForNo" + switchId).css("display", "none");
                   } else {
-                    $(".pala" + switchId).text("no");
+                    $(".pala" + switchId).text("Нет");
                     $(".reasonForNo" + switchId).css("display", "block");
                   }
                 });
@@ -405,7 +405,7 @@ $(document).ready(function () {
     $(".reason").each(function () {
       let something = $(this).val() + "/";
       if ($(this).parent().find(".quiz").prop("checked")) {
-        reasons.push("нет");
+        reasons.push("отсутствует");
       } else {
         reasons.push(something);
       }
@@ -413,7 +413,6 @@ $(document).ready(function () {
 
     reasons = reasons.splice("/");
     reasons.forEach((item, i, arr) => {
-      item = item.slice(0, -1);
       arr.splice(i, 1, item);
     });
 
@@ -425,9 +424,9 @@ $(document).ready(function () {
 
     $(".quiz:checkbox").each(function () {
       if ($(this).is(":checked")) {
-        answers.push("yes");
+        answers.push("Да");
       } else {
-        answers.push("no");
+        answers.push("Нет");
       }
     });
 
@@ -535,7 +534,7 @@ $(document).ready(function () {
     ) {
       const sendAlert =
         $(`<div class="alert fixed-top alert-warning alert-dismissible fade show my-3" role="alert">
-                  <strong>Не все поля заполнены!</strong> Пожалуйста заполните все поля.
+                  <strong>Не все параметры выбраны!</strong> Пожалуйста выберите все параметры.
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`).hide();
 
@@ -567,14 +566,22 @@ $(document).ready(function () {
           deleteAlert();
         } else {
           let names = [];
-          names.push(data[0]["name"]);
 
           for (key in data) {
-            names.forEach(() => {
-              if (!names.includes(data[key]["name"])) {
-                names.push(data[key]["name"]);
-              }
-            });
+            if (
+              !names.includes({
+                name: data[key]["name"],
+                companyName: data[key]["companyName"],
+                time: getAnswerTime(data[key]["createdAt"]),
+              })
+            ) {
+              names.push({
+                name: data[key]["name"],
+                companyName: data[key]["companyName"],
+                time: getAnswerTime(data[key]["createdAt"]),
+                date: data[key]["createdAt"],
+              });
+            }
           }
 
           $(".main-form").append(`
@@ -586,19 +593,22 @@ $(document).ready(function () {
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-heading${i}">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${i}" aria-controls="flush-collapse${i}">
-                  ${item}
+                  ${item["name"]} - ${item["companyName"]} - ${
+              item["time"]
+            } - ${new Date(item["date"]).toLocaleString().slice(0, -10)}
                 </button>
               </h2>
               <div id="flush-collapse${i}" class="accordion-collapse collapse" aria-labelledby="flush-heading${i}">
                 <div class="accordion-body">
-                      ${outputTables(item)}
+                      ${outputTables(item["name"])}
                 </div>
               </div>
             </div>
           `);
             i++;
           });
-          function getAnswerData(date) {
+
+          function getAnswerTime(date) {
             let answerDate = new Date(date);
             return (
               answerDate.getHours() +
@@ -636,10 +646,6 @@ $(document).ready(function () {
                        data[key]["reasons"]
                      )}
                     </tbody>
-                    <div>${data[key]["companyName"]}</div>
-                      <div class="createdAt">${getAnswerData(
-                        data[key]["createdAt"]
-                      )}</div>
                   </table><hr class="seperateHr"/></div>`;
               }
             }
@@ -784,9 +790,7 @@ $(document).ready(function () {
         cityId: cityId,
         isAdmin: isUserAdmin,
       },
-      success: function () {
-        console.log(isUserAdmin);
-      },
+      success: function () {},
     });
   });
 
@@ -971,8 +975,6 @@ $(document).ready(function () {
     let quizNewData = quiz.find(".quizValue").val();
     let responsePerson = quiz.find(".quizResponsePerson").val();
     let spectatePerson = quiz.find(".quizSpectatePerson").val();
-    console.log(responsePerson);
-    console.log(spectatePerson);
 
     $.ajax({
       url: "/quiz/edit-quiz",
