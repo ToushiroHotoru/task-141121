@@ -389,7 +389,6 @@ $(document).ready(function () {
     let cityName = $(".city").val();
     let mainWatcher = $(".quizMainValue").attr("main-watcher");
 
-    $(".search").val("");
     let reasons = [];
     let answers = [];
     let quizzes = [];
@@ -446,7 +445,8 @@ $(document).ready(function () {
       responsible.push(item[0]);
     });
 
-    if (name != "" && !reasons.includes("")) {
+    console.log(name, reasons);
+    if (name != "" && !reasons.includes("/")) {
       // Запрос для отправки данных на битрикс
       //  $.ajax({
       //    url: "<ссылка на api bitrix>",
@@ -482,6 +482,7 @@ $(document).ready(function () {
         },
         success: function () {
           $(".main-form").empty();
+          $(".search").val("");
 
           const sendAlert =
             $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
