@@ -402,7 +402,7 @@ $(document).ready(function () {
     });
 
     $(".reason").each(function () {
-      let something = $(this).val() + "/";
+      let something = $(this).val();
       if ($(this).parent().find(".quiz").prop("checked")) {
         reasons.push("отсутствует");
       } else {
@@ -446,7 +446,7 @@ $(document).ready(function () {
     });
 
     console.log(name, reasons);
-    if (name != "" && !reasons.includes("/")) {
+    if (name != "" && !reasons.includes("")) {
       // Запрос для отправки данных на битрикс
       //  $.ajax({
       //    url: "<ссылка на api bitrix>",
