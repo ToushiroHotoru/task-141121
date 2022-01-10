@@ -1,11 +1,11 @@
 $(document).ready(function () {
-  //твой код, у меня не работает, из за ssh
-  // let isUserAdmin = () => {
-  //   return BX24.isAdmin();
-  // };
 
-  var isUserAdmin = true; // Пусть возрощает ответ в эту переменную, обязательно
-
+  BX24.init(function(){
+    // console.log(BX24.isAdmin());
+    // isUserAdmin = BX24.isAdmin()
+  });
+  var isUserAdmin = BX24.isAdmin(); // Пусть возрощает ответ в эту переменную, обязательно
+  console.log(isUserAdmin);
   $.ajax({
     url: "/isAdmin",
     type: "POST",
@@ -445,7 +445,35 @@ $(document).ready(function () {
       responsible.push(item[0]);
     });
 
+    console.log(name, reasons);
     if (name != "" && !reasons.includes("")) {
+      $(".search").val("");
+
+      var i = 0;
+      console.log(answers);
+      var dateQuest = new Date();
+      dateQuest.setDate(dateQuest.getDate() + 7);
+
+      console.log(dateQuest);
+      for(var i = 0; i < answers.length; ++i) {
+        if (answers[i] == 'Нет'){
+          console.log(reasons[i]);
+          BX24.callMethod(
+              'tasks.task.add',
+              {
+                fields:{
+                  TITLE: cityName+' '+companyName+' '+name+' получил замечание!',
+                  RESPONSIBLE_ID: responsible[i],
+                  AUDITORS: Array(mainWatcher, spectators[i]),
+                  TASK_CONTROL: 'Y',
+                  DEADLINE: dateQuest,
+                  DESCRIPTION: 'Сотрудник: '+name+' из '+companyName+' получил замечание при ответе на вопрос: '+quizzes[i]+'. Комментарий пользователя: '+reasons[i],
+                }
+              },
+              function(res){console.log(res.answer.result);}
+          );
+        }
+      }
       // Запрос для отправки данных на битрикс
       //  $.ajax({
       //    url: "<ссылка на api bitrix>",
@@ -610,9 +638,7 @@ $(document).ready(function () {
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-heading${i}">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${i}" aria-controls="flush-collapse${i}">
-                  ${item["name"]} - ${item["companyName"]} - ${
-              item["time"]
-            } - ${new Date(item["date"]).toLocaleString().slice(0, -10)}
+                  ${item["name"]} - ${item["companyName"]} - ${new Date(item["date"]).toLocaleString().slice(0, -10)}
                 </button>
               </h2>
               <div id="flush-collapse${i}" class="accordion-collapse collapse" aria-labelledby="flush-heading${i}">
@@ -663,6 +689,7 @@ $(document).ready(function () {
                        data[key]["reasons"]
                      )}
                     </tbody>
+                    <div>${getAnswerTime(data[key]["createdAt"])}</div>
                   </table><hr class="seperateHr"/></div>`;
               }
             }
