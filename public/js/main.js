@@ -1,9 +1,9 @@
 $(document).ready(function () {
-  // BX24.init(function () {
-  //   // console.log(BX24.isAdmin());
-  //   // isUserAdmin = BX24.isAdmin()
-  // });
-  var isUserAdmin = true; // Пусть возрощает ответ в эту переменную, обязательно
+  BX24.init(function () {
+    console.log(BX24.isAdmin());
+    isUserAdmin = BX24.isAdmin();
+  });
+  // var isUserAdmin = true;
   $.ajax({
     url: "/isAdmin",
     type: "POST",
