@@ -11,6 +11,13 @@ const dataForms = new Schema(
       {
         id: Number,
         companyName: String,
+        quizzes: [
+          {
+            quiz: String,
+            spectatePerson: String,
+            responsePerson: String,
+          },
+        ],
       },
     ],
   },

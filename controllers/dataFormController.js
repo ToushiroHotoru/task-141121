@@ -130,6 +130,86 @@ const delete_data_company = async (req, res) => {
   }
 };
 
+const add_quiz = async (req, res) => {
+  const quiz = req.body.quiz;
+  const main_id = req.body.main_id;
+  const sub_id = req.body.sub_id;
+  const spectatePerson = req.body.spectatePerson;
+  const responsePerson = req.body.responsePerson;
+  console.log(main_id);
+  try {
+    const result = await DataForm.findOne({ _id: main_id });
+    console.log(result);
+    result["company"].forEach((item) => {
+      if (item["_id"] == sub_id) {
+        item["quizzes"].push({
+          quiz: quiz,
+          spectatePerson: spectatePerson,
+          responsePerson: responsePerson,
+        });
+      }
+    });
+
+    result.save();
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const edit_quiz = async (req, res) => {
+  const quiz = req.body.quiz;
+  const main_id = req.body.main_id;
+  const sub_id = req.body.sub_id;
+  const quiz_id = req.body.quiz_id;
+  const spectatePerson = req.body.spectatePerson;
+  const responsePerson = req.body.responsePerson;
+  try {
+    const result = await DataForm.findOne({ _id: main_id });
+    result["company"].forEach((item) => {
+      if (item["_id"] == sub_id) {
+        item["quizzes"].forEach((quizItem) => {
+          console.log(quizItem["_id"] == quiz_id);
+          console.log(quizItem["_id"], quiz_id);
+          if (quizItem["_id"] == quiz_id) {
+            quizItem["quiz"] = quiz;
+            quizItem["spectatePerson"] = spectatePerson;
+            quizItem["responsePerson"] = responsePerson;
+          }
+        });
+      }
+    });
+
+    result.save();
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const delete_quiz = async (req, res) => {
+  const main_id = req.body.main_id;
+  const sub_id = req.body.sub_id;
+  const quiz_id = req.body.quiz_id;
+  try {
+    const result = await DataForm.findOne({ _id: main_id });
+    result["company"].forEach((item) => {
+      if (item["_id"] == sub_id) {
+        item["quizzes"].forEach((quizItem, i) => {
+          if (quizItem["_id"] == quiz_id) {
+            item["quizzes"].splice(i, 1);
+          }
+        });
+      }
+    });
+
+    result.save();
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   get_data,
   add_data_city,
@@ -141,4 +221,7 @@ module.exports = {
   get_watcher,
   change_watcher,
   create_watcher,
+  add_quiz,
+  edit_quiz,
+  delete_quiz,
 };

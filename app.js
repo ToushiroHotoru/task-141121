@@ -3,9 +3,7 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const DataCheck = require("./models/dataForms");
 const dataFormRoutes = require("./routes/dataFormRoutes");
-const quizRoutes = require("./routes/quizRoutes");
 const answerRoutes = require("./routes/answerRoutes");
-
 
 const app = express();
 require("dotenv").config();
@@ -59,8 +57,6 @@ app.get("/", (req, res) => {
   res.render("index", { date: today });
 });
 
-
-app.use("/quiz", quizRoutes);
 app.use("/answer", answerRoutes);
 app.use(dataFormRoutes);
 
