@@ -136,10 +136,8 @@ const add_quiz = async (req, res) => {
   const sub_id = req.body.sub_id;
   const spectatePerson = req.body.spectatePerson;
   const responsePerson = req.body.responsePerson;
-  console.log(main_id);
   try {
     const result = await DataForm.findOne({ _id: main_id });
-    console.log(result);
     result["company"].forEach((item) => {
       if (item["_id"] == sub_id) {
         item["quizzes"].push({
@@ -169,8 +167,6 @@ const edit_quiz = async (req, res) => {
     result["company"].forEach((item) => {
       if (item["_id"] == sub_id) {
         item["quizzes"].forEach((quizItem) => {
-          console.log(quizItem["_id"] == quiz_id);
-          console.log(quizItem["_id"], quiz_id);
           if (quizItem["_id"] == quiz_id) {
             quizItem["quiz"] = quiz;
             quizItem["spectatePerson"] = spectatePerson;

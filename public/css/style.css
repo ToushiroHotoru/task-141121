@@ -40,17 +40,10 @@ body {
 .addNewCity,
 .cityNewData,
 .cityValue {
-    min-width: 850px;
+    min-width: 800px;
     max-width: 900px;
   }
 }
-.add-data-city,
-.add-data-company,
-.create-quiz,
-.add-data-worker {
-  width: 101.6px;
-}
-
 .widthpx20 {
   width: 20px;
   display: inline-block;

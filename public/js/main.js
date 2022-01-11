@@ -4,7 +4,6 @@ $(document).ready(function () {
   //   // isUserAdmin = BX24.isAdmin()
   // });
   var isUserAdmin = true; // Пусть возрощает ответ в эту переменную, обязательно
-  console.log(isUserAdmin);
   $.ajax({
     url: "/isAdmin",
     type: "POST",
@@ -50,14 +49,11 @@ $(document).ready(function () {
       });
 
       function getCompanyName(data, main_id) {
-        let leak = [];
+        let leak = "";
         for (let i = 0; i < data.length; i++) {
-          console.log(data[i]["companyName"]);
-          leak.push(
-            `<option data-main-id="${main_id}" data-sub-id="${data[i]["_id"]}" class="companyName main-select-group__selected">
+          leak += `<option data-main-id="${main_id}" data-sub-id="${data[i]["_id"]}" class="companyName main-select-group__selected">
               ${data[i]["companyName"]} 
-              </option>`
-          );
+              </option>`;
         }
         return leak;
       }
@@ -87,7 +83,7 @@ $(document).ready(function () {
         let sub_id = $(".company").find("option:selected").attr("data-sub-id");
         if (output !== "Выберите салон") {
           $(".search").removeAttr("readonly");
-          checkFetch().then((result) => {
+          getWatcher().then((result) => {
             $(".main-form").empty();
             for (key in data) {
               if (data[key]["_id"] == main_id) {
@@ -120,7 +116,7 @@ $(document).ready(function () {
             }
             $(".main-form").append(``);
             $(".main-form").append(
-              `<button class="btn btn-primary mx-1 my-2 send-form">Отправить</button>`
+              `<button class="btn btn-dark mx-1 my-2 send-form">Отправить</button>`
             );
             $(".form-check-input").click(function () {
               let switchId = $(this).attr("swich_id");
@@ -140,7 +136,7 @@ $(document).ready(function () {
       });
 
       // START GET all data for admin panel
-      $("#btnradio3").click(function () {
+      $("body").on("click", "#btnradio3, .checkAlert", function () {
         if ($("#btnradio3").is(":checked")) {
           $(".quizNewDataParent").remove();
           $("hr").css("display", "none");
@@ -168,7 +164,6 @@ $(document).ready(function () {
         `);
             },
             success: function (data) {
-              console.log(data);
               $(".loadSpinner").remove();
               let i = 1;
               $(".main-form").append(`
@@ -213,8 +208,8 @@ $(document).ready(function () {
           <div class="d-flex align-items-center cityItem">
                 <div><div class="widthpx20"><span class="cityId">${i}.</span></div> <input type="text" data-id="${data[key]["_id"]}" value="${data[key]["cityName"]}" class="cityValue"></div>
                 <div class="btn-city-group">
-                    <button class="btn btn-dark my-1 btn-sm btn-city-edit">edit</button>
-                    <button class="btn btn-dark my-1 btn-sm btn-city-delete">delete</button>
+                    <button class="btn btn-dark my-1 btn-sm btn-city-edit">изменить</button>
+                    <button class="btn btn-dark my-1 btn-sm btn-city-delete">удалить</button>
                 </btn>
           </div>
         `);
@@ -224,7 +219,7 @@ $(document).ready(function () {
             <div class="d-flex align-items-center ms-3">
                 <div class="width102 marginpx9"><input type="text" placeholder="Напишите название нового города..."  class="cityNewData width101"></div>
                 <div>
-                    <button class="btn btn-dark my-1 btn-sm add-data-city">Добавить</button>
+                    <button class="btn btn-dark my-1 btn-sm w-100 add-data-city">Добавить</button>
                 </btn>
           </div>
         `);
@@ -258,8 +253,8 @@ $(document).ready(function () {
                         item["companyName"]
                       }" class="companyValue width103"></div>
                       <div class="btn-company-group">
-                          <button class="btn btn-dark my-1 btn-sm btn-company-edit">edit</button>
-                          <button class="btn btn-dark my-1 btn-sm btn-company-delete">delete</button>
+                          <button class="btn btn-dark my-1 btn-sm btn-company-edit">изменить</button>
+                          <button class="btn btn-dark my-1 btn-sm btn-company-delete">удалить</button>
                       </btn>
                     </div>
               `);
@@ -271,7 +266,7 @@ $(document).ready(function () {
            <div class="d-flex align-items-center addNewCompany ms-3">
                 <div class="marginpx9 width102"><input type="text" placeholder="Напишите название нового салона..." data-id="${dataId}" data-id-company="${dataCompanyId}" class="companyNewData width101"></div>
                 <div>
-                    <button class="btn btn-dark my-1 btn-sm add-data-company">Добавить</button>
+                    <button class="btn btn-dark my-1 btn-sm w-100 add-data-company">Добавить</button>
                 </btn>
           </div>
           `);
@@ -304,11 +299,9 @@ $(document).ready(function () {
                   .find(".cityAdminQuiz")
                   .val();
                 let companyName = $(this).val();
-                console.log(companyName);
                 for (key in data) {
                   if (data[key]["cityName"] === cityName) {
                     data[key]["company"].forEach((company) => {
-                      console.log(company["companyName"] === companyName);
                       if (company["companyName"] === companyName) {
                         company["quizzes"].forEach((quiz, i) => {
                           $(".main-form-quiz").append(
@@ -329,8 +322,8 @@ $(document).ready(function () {
                                     quiz["spectatePerson"]
                                   }" class="quizSpectatePerson w-100">
                                   <div class="btn-quiz-group d-flex">
-                                    <button class="btn btn-dark w-100 btn-group-edit">edit</button>
-                                    <button class="btn btn-dark w-100 btn-group-delete">delete</button>
+                                    <button class="btn btn-dark me-1 w-100 btn-group-edit">изменить</button>
+                                    <button class="btn btn-dark ms-1 w-100 btn-group-delete">удалить</button>
                                   </div>
                                 </div>  
                               </div>
@@ -540,13 +533,11 @@ $(document).ready(function () {
       $(".search").val("");
 
       var i = 0;
-      console.log(answers);
       var dateQuest = new Date();
       dateQuest.setDate(dateQuest.getDate() + 7);
 
       for (var i = 0; i < answers.length; ++i) {
         if (answers[i] == "Нет") {
-          console.log(reasons[i]);
           BX24.callMethod(
             "tasks.task.add",
             {
@@ -791,7 +782,7 @@ $(document).ready(function () {
   });
   // END GET all users answers
 
-  function checkFetch() {
+  function getWatcher() {
     return fetch("/get-watcher")
       .then((response) => response.json())
       .then((result) => {
@@ -804,7 +795,7 @@ $(document).ready(function () {
   $("body").on("click", "#btnradio3, .checkAlert", function (e) {
     $(".mainWatcherClass").empty();
     setTimeout(function () {
-      checkFetch().then((data) => {
+      getWatcher().then((data) => {
         if (data.status != "false") {
           $(".main-form-watcher").append(
             `<div class="d-flex mainWatcherClass">
@@ -915,7 +906,16 @@ $(document).ready(function () {
         company: company,
         isAdmin: isUserAdmin,
       },
-      success: function () {},
+      success: function () {
+        const sendAlert =
+          $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Добавление прошло успешно!</strong> Нажмите на <strong><span class="checkAlert">сюда</span></strong>, чтобы обновить данные!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+        sendAlert.prependTo(".main-form-quiz").fadeIn();
+        deleteAlert();
+      },
     });
   });
 
@@ -966,7 +966,16 @@ $(document).ready(function () {
         id: id,
         isAdmin: isUserAdmin,
       },
-      success: function () {},
+      success: function () {
+        const sendAlert =
+          $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Добавление прошло успешно!</strong> Нажмите на <strong><span class="checkAlert">сюда</span></strong>, чтобы обновить данные!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+        sendAlert.prependTo(".main-form-quiz").fadeIn();
+        deleteAlert();
+      },
     });
   });
 
@@ -1008,12 +1017,14 @@ $(document).ready(function () {
   // END add, update, delete company
 
   // START add, update, delete quizzes
-  $("body").on("click", "#btnradio3", function () {});
-
   $("body").on("click", ".create-quiz", function (e) {
     e.preventDefault();
-    let main_id = $(".companyAdmin__selected").attr("data-main-id");
-    let sub_id = $(".companyAdmin__selected").attr("data-sub-id");
+    let main_id = $(".companyAdminQuiz")
+      .find("option:selected")
+      .attr("data-main-id");
+    let sub_id = $(".companyAdminQuiz")
+      .find("option:selected")
+      .attr("data-sub-id");
     let quizNewData = $(".quizNewData").val();
     let spectatePerson = $(".quizNewSpectatePerson").val();
     let responsePerson = $(".quizNewResponsePerson").val();
