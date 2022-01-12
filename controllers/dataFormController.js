@@ -135,10 +135,8 @@ const add_quiz = async (req, res) => {
   const id = req.body.id;
   const spectatePerson = req.body.spectatePerson;
   const responsePerson = req.body.responsePerson;
-  console.log(id);
   try {
     const result = await DataForm.findOne({ _id: id });
-    console.log(result);
     result["quizzes"].push({
       quiz: quiz,
       spectatePerson: spectatePerson,

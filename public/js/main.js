@@ -1,9 +1,9 @@
 $(document).ready(function () {
-  // BX24.init(function () {
-  //   console.log(BX24.isAdmin());
-  //   isUserAdmin = BX24.isAdmin();
-  // });
-  var isUserAdmin = true;
+  BX24.init(function () {
+    console.log(BX24.isAdmin());
+    isUserAdmin = BX24.isAdmin();
+  });
+  // var isUserAdmin = true;
   $.ajax({
     url: "/isAdmin",
     type: "POST",
@@ -512,40 +512,40 @@ $(document).ready(function () {
       var dateQuest = new Date();
       dateQuest.setDate(dateQuest.getDate() + 7);
 
-      // for (var i = 0; i < answers.length; ++i) {
-      //   if (answers[i] == "Нет") {
-      //     BX24.callMethod(
-      //       "tasks.task.add",
-      //       {
-      //         fields: {
-      //           TITLE:
-      //             cityName +
-      //             " " +
-      //             companyName +
-      //             " " +
-      //             name +
-      //             " получил замечание!",
-      //           RESPONSIBLE_ID: responsible[i],
-      //           AUDITORS: Array(mainWatcher, spectators[i]),
-      //           TASK_CONTROL: "Y",
-      //           DEADLINE: dateQuest,
-      //           DESCRIPTION:
-      //             "Сотрудник: " +
-      //             name +
-      //             " из " +
-      //             companyName +
-      //             " получил замечание при ответе на вопрос: " +
-      //             quizzes[i] +
-      //             ". Комментарий пользователя: " +
-      //             reasons[i],
-      //         },
-      //       },
-      //       function (res) {
-      //         console.log(res.answer.result);
-      //       }
-      //     );
-      //   }
-      // }
+      for (var i = 0; i < answers.length; ++i) {
+        if (answers[i] == "Нет") {
+          BX24.callMethod(
+            "tasks.task.add",
+            {
+              fields: {
+                TITLE:
+                  cityName +
+                  " " +
+                  companyName +
+                  " " +
+                  name +
+                  " получил замечание!",
+                RESPONSIBLE_ID: responsible[i],
+                AUDITORS: Array(mainWatcher, spectators[i]),
+                TASK_CONTROL: "Y",
+                DEADLINE: dateQuest,
+                DESCRIPTION:
+                  "Сотрудник: " +
+                  name +
+                  " из " +
+                  companyName +
+                  " получил замечание при ответе на вопрос: " +
+                  quizzes[i] +
+                  ". Комментарий пользователя: " +
+                  reasons[i],
+              },
+            },
+            function (res) {
+              console.log(res.answer.result);
+            }
+          );
+        }
+      }
 
       $.ajax({
         url: "/answer/save-answer",
