@@ -31,6 +31,7 @@ $(document).ready(function () {
       }
 
       $(".city").change(function () {
+        $(".main-form").empty();
         const form = $(this);
         $(".companyName").remove();
         let output = form.val();
@@ -69,8 +70,6 @@ $(document).ready(function () {
         let output = form.val();
         if (output !== "Выберите салон") {
           $(".search").removeAttr("readonly");
-        } else {
-          $(".main-form").empty();
         }
       });
 
