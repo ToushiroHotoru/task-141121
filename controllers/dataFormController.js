@@ -132,20 +132,17 @@ const delete_data_company = async (req, res) => {
 
 const add_quiz = async (req, res) => {
   const quiz = req.body.quiz;
-  const main_id = req.body.main_id;
-  const sub_id = req.body.sub_id;
+  const id = req.body.id;
   const spectatePerson = req.body.spectatePerson;
   const responsePerson = req.body.responsePerson;
+  console.log(id);
   try {
-    const result = await DataForm.findOne({ _id: main_id });
-    result["company"].forEach((item) => {
-      if (item["_id"] == sub_id) {
-        item["quizzes"].push({
-          quiz: quiz,
-          spectatePerson: spectatePerson,
-          responsePerson: responsePerson,
-        });
-      }
+    const result = await DataForm.findOne({ _id: id });
+    console.log(result);
+    result["quizzes"].push({
+      quiz: quiz,
+      spectatePerson: spectatePerson,
+      responsePerson: responsePerson,
     });
 
     result.save();
@@ -157,22 +154,17 @@ const add_quiz = async (req, res) => {
 
 const edit_quiz = async (req, res) => {
   const quiz = req.body.quiz;
-  const main_id = req.body.main_id;
-  const sub_id = req.body.sub_id;
+  const id = req.body.id;
   const quiz_id = req.body.quiz_id;
   const spectatePerson = req.body.spectatePerson;
   const responsePerson = req.body.responsePerson;
   try {
-    const result = await DataForm.findOne({ _id: main_id });
-    result["company"].forEach((item) => {
-      if (item["_id"] == sub_id) {
-        item["quizzes"].forEach((quizItem) => {
-          if (quizItem["_id"] == quiz_id) {
-            quizItem["quiz"] = quiz;
-            quizItem["spectatePerson"] = spectatePerson;
-            quizItem["responsePerson"] = responsePerson;
-          }
-        });
+    const result = await DataForm.findOne({ _id: id });
+    result["quizzes"].forEach((item) => {
+      if (item["_id"] == quiz_id) {
+        item["quiz"] = quiz;
+        item["spectatePerson"] = spectatePerson;
+        item["responsePerson"] = responsePerson;
       }
     });
 
@@ -184,18 +176,13 @@ const edit_quiz = async (req, res) => {
 };
 
 const delete_quiz = async (req, res) => {
-  const main_id = req.body.main_id;
-  const sub_id = req.body.sub_id;
+  const id = req.body.id;
   const quiz_id = req.body.quiz_id;
   try {
-    const result = await DataForm.findOne({ _id: main_id });
-    result["company"].forEach((item) => {
-      if (item["_id"] == sub_id) {
-        item["quizzes"].forEach((quizItem, i) => {
-          if (quizItem["_id"] == quiz_id) {
-            item["quizzes"].splice(i, 1);
-          }
-        });
+    const result = await DataForm.findOne({ _id: id });
+    result["quizzes"].forEach((item, i) => {
+      if (item["_id"] == quiz_id) {
+        result["quizzes"].splice(i, 1);
       }
     });
 

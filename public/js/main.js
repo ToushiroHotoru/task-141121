@@ -1,9 +1,9 @@
 $(document).ready(function () {
-  BX24.init(function () {
-    console.log(BX24.isAdmin());
-    isUserAdmin = BX24.isAdmin();
-  });
-  // var isUserAdmin = true;
+  // BX24.init(function () {
+  //   console.log(BX24.isAdmin());
+  //   isUserAdmin = BX24.isAdmin();
+  // });
+  var isUserAdmin = true;
   $.ajax({
     url: "/isAdmin",
     type: "POST",
@@ -48,10 +48,10 @@ $(document).ready(function () {
         }
       });
 
-      function getCompanyName(data, main_id) {
+      function getCompanyName(data, id) {
         let leak = "";
         for (let i = 0; i < data.length; i++) {
-          leak += `<option data-main-id="${main_id}" data-sub-id="${data[i]["_id"]}" class="companyName main-select-group__selected">
+          leak += `<option data-id="${id}" class="companyName main-select-group__selected">
               ${data[i]["companyName"]} 
               </option>`;
         }
@@ -77,25 +77,20 @@ $(document).ready(function () {
       $("body").on("change", ".checkListToggler", function () {
         const form = $(this);
         let output = form.val();
-        let main_id = $(".company")
-          .find("option:selected")
-          .attr("data-main-id");
-        let sub_id = $(".company").find("option:selected").attr("data-sub-id");
+        let id = $(".company").find("option:selected").attr("data-id");
         if (output !== "Выберите салон") {
           $(".search").removeAttr("readonly");
           getWatcher().then((result) => {
             $(".main-form").empty();
             for (key in data) {
-              if (data[key]["_id"] == main_id) {
-                data[key]["company"].forEach((company) => {
-                  if (company["_id"] == sub_id) {
-                    company["quizzes"].forEach((quiz, i) => {
-                      $(".main-form").append(`
+              if (data[key]["_id"] == id) {
+                data[key]["quizzes"].forEach((quiz, i) => {
+                  $(".main-form").append(`
                       <div>${
                         i + 1
                       }. <span class="quizMainValue" main-watcher="${
-                        result.name
-                      }">${quiz["quiz"]}</span>
+                    result.name
+                  }">${quiz["quiz"]}</span>
                       <div class="d-flex align-items-center form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label mx-1 pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">Нет</label>
@@ -109,8 +104,6 @@ $(document).ready(function () {
                       }"></input>
                       <hr class="quiz-hr"/></div>
                     `);
-                    });
-                  }
                 });
               }
             }
@@ -189,14 +182,9 @@ $(document).ready(function () {
               <h3>Вопросы</h3>
               <div class="container pb-2">
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col">
                     <select name="select" class="cityAdminQuiz form-select">
                         <option selected>Выберите город</option>
-                    </select>
-                  </div>
-                  <div class="col-6">
-                    <select name="select" class="companyAdminQuiz form-select" disabled>
-                        <option selected>Выберите салон</option>
                     </select>
                   </div>
                 </div>
@@ -276,34 +264,22 @@ $(document).ready(function () {
               });
 
               $(".cityAdminQuiz").change(function () {
-                $(".companyAdmin__selected").remove();
-                $(".companyAdminQuiz").prop("disabled", "");
                 let cityName = $(this).val();
                 for (key in data) {
                   if (data[key]["cityName"] == cityName) {
-                    data[key]["company"].forEach((item) => {
-                      $(".companyAdminQuiz").append(
-                        `<option class="companyAdmin__selected" data-main-id="${data[key]["_id"]}" data-sub-id="${item["_id"]}">${item.companyName}</option>`
-                      );
-                    });
-                  }
-                }
-              });
-
-              $(".companyAdminQuiz").change(function () {
-                $(".quizItem").remove();
-                $(".quizNewDataParent").remove();
-                let cityName = $(this)
-                  .parent()
-                  .parent()
-                  .find(".cityAdminQuiz")
-                  .val();
-                let companyName = $(this).val();
-                for (key in data) {
-                  if (data[key]["cityName"] === cityName) {
-                    data[key]["company"].forEach((company) => {
-                      if (company["companyName"] === companyName) {
-                        company["quizzes"].forEach((quiz, i) => {
+                    $(".quizItem").remove();
+                    $(".quizNewDataParent").remove();
+                    let cityName = $(this)
+                      .parent()
+                      .parent()
+                      .find(".cityAdminQuiz")
+                      .val();
+                    for (key in data) {
+                      console.log(data[key]["cityName"], cityName);
+                      console.log(data[key]["cityName"] === cityName);
+                      console.log(data[key]["quizzes"]);
+                      if (data[key]["cityName"] === cityName) {
+                        data[key]["quizzes"].forEach((quiz, i) => {
                           $(".main-form-quiz").append(
                             `<div class="d-flex mb-3 quizItem">
                               <div class="widthpx20 mx-1"> <span class="quizId">${
@@ -331,11 +307,9 @@ $(document).ready(function () {
                           );
                         });
                       }
-                    });
-                  }
-                }
-                setTimeout(() => {
-                  $(".main-form-quiz").append(`
+                    }
+                    setTimeout(() => {
+                      $(".main-form-quiz").append(`
                     <div class="d-flex align-items-center quizNewDataParent ms-3">
                       <div class="marginpx9 d-flex flex-column w-100">
                         <input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData w-100">
@@ -347,7 +321,9 @@ $(document).ready(function () {
                       </div>
                     </div>
                 `);
-                }, 500);
+                    }, 500);
+                  }
+                }
               });
             },
           });
@@ -536,40 +512,40 @@ $(document).ready(function () {
       var dateQuest = new Date();
       dateQuest.setDate(dateQuest.getDate() + 7);
 
-      for (var i = 0; i < answers.length; ++i) {
-        if (answers[i] == "Нет") {
-          BX24.callMethod(
-            "tasks.task.add",
-            {
-              fields: {
-                TITLE:
-                  cityName +
-                  " " +
-                  companyName +
-                  " " +
-                  name +
-                  " получил замечание!",
-                RESPONSIBLE_ID: responsible[i],
-                AUDITORS: Array(mainWatcher, spectators[i]),
-                TASK_CONTROL: "Y",
-                DEADLINE: dateQuest,
-                DESCRIPTION:
-                  "Сотрудник: " +
-                  name +
-                  " из " +
-                  companyName +
-                  " получил замечание при ответе на вопрос: " +
-                  quizzes[i] +
-                  ". Комментарий пользователя: " +
-                  reasons[i],
-              },
-            },
-            function (res) {
-              console.log(res.answer.result);
-            }
-          );
-        }
-      }
+      // for (var i = 0; i < answers.length; ++i) {
+      //   if (answers[i] == "Нет") {
+      //     BX24.callMethod(
+      //       "tasks.task.add",
+      //       {
+      //         fields: {
+      //           TITLE:
+      //             cityName +
+      //             " " +
+      //             companyName +
+      //             " " +
+      //             name +
+      //             " получил замечание!",
+      //           RESPONSIBLE_ID: responsible[i],
+      //           AUDITORS: Array(mainWatcher, spectators[i]),
+      //           TASK_CONTROL: "Y",
+      //           DEADLINE: dateQuest,
+      //           DESCRIPTION:
+      //             "Сотрудник: " +
+      //             name +
+      //             " из " +
+      //             companyName +
+      //             " получил замечание при ответе на вопрос: " +
+      //             quizzes[i] +
+      //             ". Комментарий пользователя: " +
+      //             reasons[i],
+      //         },
+      //       },
+      //       function (res) {
+      //         console.log(res.answer.result);
+      //       }
+      //     );
+      //   }
+      // }
 
       $.ajax({
         url: "/answer/save-answer",
@@ -931,7 +907,16 @@ $(document).ready(function () {
         cityId: cityId,
         isAdmin: isUserAdmin,
       },
-      success: function () {},
+      success: function () {
+        const sendAlert =
+          $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Изменение успешно!</strong> Название города было изменено.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+        sendAlert.prependTo(".main").fadeIn();
+        deleteAlert();
+      },
     });
   });
 
@@ -993,7 +978,16 @@ $(document).ready(function () {
         companyOldName: companyOldName,
         isAdmin: isUserAdmin,
       },
-      success: function () {},
+      success: function () {
+        const sendAlert =
+          $(`<div class="alert fixed-top alert-success alert-dismissible fade show my-3" role="alert">
+            <strong>Изменение успешно!</strong> Название компании было изменено.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>`).hide();
+
+        sendAlert.prependTo(".main").fadeIn();
+        deleteAlert();
+      },
     });
   });
 
@@ -1019,12 +1013,7 @@ $(document).ready(function () {
   // START add, update, delete quizzes
   $("body").on("click", ".create-quiz", function (e) {
     e.preventDefault();
-    let main_id = $(".companyAdminQuiz")
-      .find("option:selected")
-      .attr("data-main-id");
-    let sub_id = $(".companyAdminQuiz")
-      .find("option:selected")
-      .attr("data-sub-id");
+    let id = $(".cityAdminQuiz").find("option:selected").attr("data-id");
     let quizNewData = $(".quizNewData").val();
     let spectatePerson = $(".quizNewSpectatePerson").val();
     let responsePerson = $(".quizNewResponsePerson").val();
@@ -1042,8 +1031,7 @@ $(document).ready(function () {
         url: "/add-quiz",
         type: "POST",
         data: {
-          main_id: main_id,
-          sub_id: sub_id,
+          id: id,
           quiz: quizNewData,
           spectatePerson: spectatePerson,
           responsePerson: responsePerson,
@@ -1065,15 +1053,13 @@ $(document).ready(function () {
 
   $("body").on("click", ".btn-group-delete", function (e) {
     const quiz = $(this).parent().parent();
-    let main_id = $(".companyAdmin__selected").attr("data-main-id");
-    let sub_id = $(".companyAdmin__selected").attr("data-sub-id");
+    let id = $(".cityAdminQuiz").find("option:selected").attr("data-id");
     let quiz_id = quiz.find(".quizValue").attr("data-quiz-id");
     $.ajax({
       url: "/delete-quiz",
       type: "DELETE",
       data: {
-        main_id: main_id,
-        sub_id: sub_id,
+        id: id,
         quiz_id: quiz_id,
         isAdmin: isUserAdmin,
       },
@@ -1085,8 +1071,7 @@ $(document).ready(function () {
 
   $("body").on("click", ".btn-group-edit", function (e) {
     const quiz = $(this).parent().parent();
-    let main_id = $(".companyAdmin__selected").attr("data-main-id");
-    let sub_id = $(".companyAdmin__selected").attr("data-sub-id");
+    let id = $(".cityAdminQuiz").find("option:selected").attr("data-id");
     let quiz_id = quiz.find(".quizValue").attr("data-quiz-id");
     let quizNewData = quiz.find(".quizValue").val();
     let responsePerson = quiz.find(".quizResponsePerson").val();
@@ -1096,8 +1081,7 @@ $(document).ready(function () {
       url: "/edit-quiz",
       type: "POST",
       data: {
-        main_id: main_id,
-        sub_id: sub_id,
+        id: id,
         quiz_id: quiz_id,
         quiz: quizNewData,
         spectatePerson: spectatePerson,
