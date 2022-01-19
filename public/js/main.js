@@ -181,21 +181,18 @@ $(document).ready(function () {
           <div class="main-form-quiz">
           <hr />
               <h3>Вопросы</h3>
-              <div class="container pb-2">
-                <div class="row">
-                  <div class="col">
-                    <select name="select" class="cityAdminQuiz form-select">
+              <div class="w-100 pb-2">
+                    <select name="select" class="cityAdminQuiz w-100 form-select">
                         <option selected>Выберите город</option>
                     </select>
-                  </div>
-                </div>
               </div>
           </div>
         `);
               for (key in data) {
                 $(".main-form-city").append(`
           <div class="d-flex align-items-center cityItem">
-                <div><div class="widthpx20"><span class="cityId">${i}.</span></div> <input type="text" data-id="${data[key]["_id"]}" value="${data[key]["cityName"]}" class="cityValue"></div>
+          <div class="widthpx20"><span class="cityId">${i}.</span></div>
+                <input type="text" data-id="${data[key]["_id"]}" value="${data[key]["cityName"]}" class="cityValue w-75">
                 <div class="btn-city-group">
                     <button class="btn btn-dark my-1 btn-sm btn-city-edit">изменить</button>
                     <button class="btn btn-dark my-1 btn-sm btn-city-delete">удалить</button>
@@ -205,8 +202,9 @@ $(document).ready(function () {
                 i++;
               }
               $(".main-form-city").append(`
-            <div class="d-flex align-items-center ms-3">
-                <div class="width102 marginpx9"><input type="text" placeholder="Напишите название нового города..."  class="cityNewData width101"></div>
+            <div class="d-flex align-items-center">
+                  <div class="widthpx20"></div>
+                  <input type="text" placeholder="Напишите название нового города"  class="cityNewData width101">
                 <div>
                     <button class="btn btn-dark my-1 btn-sm w-100 add-data-city">Добавить</button>
                 </btn>
@@ -231,24 +229,28 @@ $(document).ready(function () {
                   if (data[key]["cityName"] == cityName) {
                     data[key]["company"].forEach((item, i) => {
                       $(".main-form-company").append(`
-                    <div class="d-flex align-items-center companyItem" data-id="${
+                    <div class="d-flex mb-3 companyItem" data-id="${
                       data[key]["_id"]
                     }">
-                      <div class="width102"><div class="widthpx20"><span class="companyId">${
-                        i + 1
-                      }</span>.</div> <input type="text" data-name="${
+                        <div class="widthpx20 mx-1">
+                          <span class="companyId">${i + 1}</span>.
+                        </div> 
+                        <div class="d-flex flex-column me-3 w-100">
+                        <input type="text" data-name="${
+                          item["companyName"]
+                        }" data-id="${item["_id"]}" value="${
                         item["companyName"]
-                      }" data-id="${item["_id"]}" value="${
-                        item["companyName"]
-                      }" class="companyValue width103">
-                      <input type="text" placeholder="Ответственный" class="companyResponsePerson" value="${
-                        item["companyResponsePerson"]
-                      }">
-                      </div>
-                      <div class="btn-company-group">
-                          <button class="btn btn-dark my-1 btn-sm btn-company-edit">изменить</button>
-                          <button class="btn btn-dark my-1 btn-sm btn-company-delete">удалить</button>
-                      </btn>
+                      }" class="companyValue w-100 ">
+                      
+                  
+                        <input type="text" placeholder="Ответственный" class="companyResponsePerson w-100" value="${
+                          item["companyResponsePerson"]
+                        }">
+                          <div class="btn-company-group d-flex w-100">
+                            <button class="btn btn-dark me-1 w-100 btn-company-edit">изменить</button>
+                            <button class="btn btn-dark ms-1 w-100 btn-company-delete">удалить</button>
+                          </div>
+                        </div>
                     </div>
               `);
                     });
@@ -256,14 +258,15 @@ $(document).ready(function () {
                 }
                 if (cityName != "Выберите город") {
                   $(".main-form-company").append(`
-           <div class="d-flex align-items-center addNewCompany ms-3">
-                <div class="marginpx9 width102">
-                  <input type="text" placeholder="Напишите название нового салона..." data-id="${dataId}" data-id-company="${dataCompanyId}" class="companyNewData width101">
-                  <input type="text" placeholder="Напишите ответсвенного" class="companyNewResponsePerson">
+           <div class="d-flex align-items-center addNewCompany mx-3">
+                <div class="marginpx9 d-flex flex-column w-100">
+                  <input type="text" placeholder="Напишите название нового салона" data-id="${dataId}" data-id-company="${dataCompanyId}" class="companyNewData w-100 width101">
+                  <input type="text" placeholder="Напишите ответсвенного" class="companyNewResponsePerson w-100">
+                  <div>
+                    <button class="btn btn-dark my-1 w-100 add-data-company">Добавить</button>
                 </div>
-                <div>
-                    <button class="btn btn-dark my-1 btn-sm w-100 add-data-company">Добавить</button>
                 </div>
+                
           </div>
           `);
                 } else {
@@ -290,7 +293,7 @@ $(document).ready(function () {
                               <div class="widthpx20 mx-1"> <span class="quizId">${
                                 i + 1
                               }</span>.</div>
-                                <div class="d-flex flex-column w-100">
+                                <div class="d-flex flex-column me-3 w-100">
                                   <input type="text" data-quiz-id="${
                                     quiz["_id"]
                                   }" data-value="${quiz["quiz"]}" value="${
@@ -301,7 +304,7 @@ $(document).ready(function () {
                                   }"  class="quizResponsePerson w-100">
                                   <input type="text" placeholder="Наблюдатель" value="${
                                     quiz["spectatePerson"]
-                                  }" class="quizSpectatePerson w-100">
+                                  }" class="quizSpectatePerson me-3 w-100">
                                   <div class="btn-quiz-group d-flex">
                                     <button class="btn btn-dark me-1 w-100 btn-group-edit">изменить</button>
                                     <button class="btn btn-dark ms-1 w-100 btn-group-delete">удалить</button>
@@ -315,7 +318,7 @@ $(document).ready(function () {
                     }
                     setTimeout(() => {
                       $(".main-form-quiz").append(`
-                    <div class="d-flex align-items-center quizNewDataParent ms-3">
+                    <div class="d-flex align-items-center quizNewDataParent mx-3">
                       <div class="marginpx9 d-flex flex-column w-100">
                         <input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData w-100">
                         <input type="text" placeholder="Соисполнитель"  class="quizNewResponsePerson w-100">
@@ -783,8 +786,8 @@ $(document).ready(function () {
                 <div class="d-flex align-items-center pe-2">
                   <span>1.</span>
                 </div>
-              <input type="text" class="watcherName" data-id="${data["watchers"]["0"]["_id"]}" placeholder="Введите главного наблюдателя #1" value="${data["watchers"]["0"]["name"]}">
-              <button class="btn btn-dark w-100 change-watcher">Изменить</button> 
+              <input type="text" class="watcherName w-100" data-id="${data["watchers"]["0"]["_id"]}" placeholder="Введите главного наблюдателя #1" value="${data["watchers"]["0"]["name"]}">
+              <button class="btn btn-dark change-watcher">Изменить</button> 
             </div>`
           );
         } else {
@@ -807,8 +810,8 @@ $(document).ready(function () {
                 <div class="d-flex align-items-center pe-2">
                   <span>2.</span>
                 </div>
-              <input type="text" class="watcherName" data-id="${data["watchers"]["1"]["_id"]}" placeholder="Введите главного наблюдателя #2" value="${data["watchers"]["1"]["name"]}">
-              <button class="btn btn-dark w-100 change-watcher">Изменить</button> 
+              <input type="text" class="watcherName w-100" data-id="${data["watchers"]["1"]["_id"]}" placeholder="Введите главного наблюдателя #2" value="${data["watchers"]["1"]["name"]}">
+              <button class="btn btn-dark change-watcher">Изменить</button> 
             </div>`
           );
         } else {
