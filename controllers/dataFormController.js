@@ -7,7 +7,9 @@ const get_watcher = async (req, res) => {
     if (data) {
       res.send(data);
     } else {
-      res.status(200).json({ status: "false" });
+      res.status(200).json({
+        status: false,
+      });
     }
   } catch (err) {
     console.log(err._message);
@@ -26,9 +28,14 @@ const create_watcher = async (req, res) => {
 
 const change_watcher = async (req, res) => {
   let name = req.body.name;
+  let id = req.body.id;
   try {
-    const result = await Watcher.findOne({});
-    result.name = name;
+    const result = await Watcher.findOne();
+    result.watchers.forEach((item, i) => {
+      if (item["_id"] == id) {
+        item["name"] = name;
+      }
+    });
     result.save();
 
     res.status(200).json(result);
@@ -84,9 +91,17 @@ const add_data_company = async (req, res) => {
   try {
     const id = req.body.id;
     const companyNewData = req.body.companyNewData;
+    const companyResponsePerson = req.body.responsePerson;
     const result = await DataForm.findOne({ _id: id });
-    result.company.push({ companyName: companyNewData, workers: [] });
+    console.log(id, companyNewData, companyResponsePerson);
+    console.log(result.company);
+    result.company.push({
+      companyName: companyNewData,
+      companyResponsePerson: companyResponsePerson,
+    });
+    console.log(result.company);
     result.save();
+
     res.status(200).json({ success: result });
   } catch (err) {
     console.log(err.meassage);
@@ -97,6 +112,7 @@ const edit_data_company = async (req, res) => {
   try {
     let companyOldName = req.body.companyOldName;
     let companyNewName = req.body.companyNewName;
+    const companyResponsePerson = req.body.responsePerson;
     let id = req.body.id;
     let result = await DataForm.findOne({
       _id: id,
@@ -105,6 +121,7 @@ const edit_data_company = async (req, res) => {
     result.company.forEach((element) => {
       if (element.companyName == companyOldName) {
         element.companyName = companyNewName;
+        element.companyResponsePerson = companyResponsePerson;
       }
     });
     await result.save();

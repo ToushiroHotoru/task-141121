@@ -2,10 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const mainWatcher = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
+  watchers: [{ name: String }],
 });
 
 const watcher = mongoose.model("watcher", mainWatcher);

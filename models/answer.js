@@ -15,7 +15,15 @@ const Answers = new Schema(
       type: String,
       required: true,
     },
-    mainWatcher: {
+    mainWatcherFirst: {
+      type: String,
+      required: true,
+    },
+    mainWatcherSecond: {
+      type: String,
+      required: true,
+    },
+    companyResponsePerson: {
       type: String,
       required: true,
     },

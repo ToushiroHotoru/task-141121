@@ -33,10 +33,7 @@ body {
 @media (min-width: 890px) {
   .watcherNameForCreation,
 .watcherName,
-.companyValue,
-.workerValue,
-.workerNewData,
-.companyNewData,
+.checkClass,
 .addNewCity,
 .cityNewData,
 .cityValue {

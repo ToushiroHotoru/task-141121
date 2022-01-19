@@ -9,8 +9,8 @@ const dataForms = new Schema(
     },
     company: [
       {
-        id: Number,
         companyName: String,
+        companyResponsePerson: String,
       },
     ],
     quizzes: [

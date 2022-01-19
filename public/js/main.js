@@ -1,9 +1,9 @@
 $(document).ready(function () {
-  BX24.init(function () {
-    console.log(BX24.isAdmin());
-    isUserAdmin = BX24.isAdmin();
-  });
-  // var isUserAdmin = true;
+  // BX24.init(function () {
+  //   console.log(BX24.isAdmin());
+  //   isUserAdmin = BX24.isAdmin();
+  // });
+  var isUserAdmin = true;
   $.ajax({
     url: "/isAdmin",
     type: "POST",
@@ -52,7 +52,7 @@ $(document).ready(function () {
       function getCompanyName(data, id) {
         let leak = "";
         for (let i = 0; i < data.length; i++) {
-          leak += `<option data-id="${id}" class="companyName main-select-group__selected">
+          leak += `<option data-id="${id}" data-response-person="${data[i]["companyResponsePerson"]}" class="companyName main-select-group__selected">
               ${data[i]["companyName"]} 
               </option>`;
         }
@@ -87,9 +87,11 @@ $(document).ready(function () {
                   $(".main-form").append(`
                       <div>${
                         i + 1
-                      }. <span class="quizMainValue" main-watcher="${
-                    result.name
-                  }">${quiz["quiz"]}</span>
+                      }. <span class="quizMainValue" main-watcher-first="${
+                    result["watchers"][0]["name"]
+                  }" main-watcher-second="${result["watchers"][1]["name"]}">${
+                    quiz["quiz"]
+                  }</span>
                       <div class="d-flex align-items-center form-check form-switch formatVoprosovChek">
                         <input class="form-check-input quiz " swich_id="${i}" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label mx-1 pala${i}" for="flexSwitchCheckChecked" id="flexSwitchCheckChecked">Нет</label>
@@ -238,7 +240,11 @@ $(document).ready(function () {
                         item["companyName"]
                       }" data-id="${item["_id"]}" value="${
                         item["companyName"]
-                      }" class="companyValue width103"></div>
+                      }" class="companyValue width103">
+                      <input type="text" placeholder="Ответственный" class="companyResponsePerson" value="${
+                        item["companyResponsePerson"]
+                      }">
+                      </div>
                       <div class="btn-company-group">
                           <button class="btn btn-dark my-1 btn-sm btn-company-edit">изменить</button>
                           <button class="btn btn-dark my-1 btn-sm btn-company-delete">удалить</button>
@@ -251,10 +257,13 @@ $(document).ready(function () {
                 if (cityName != "Выберите город") {
                   $(".main-form-company").append(`
            <div class="d-flex align-items-center addNewCompany ms-3">
-                <div class="marginpx9 width102"><input type="text" placeholder="Напишите название нового салона..." data-id="${dataId}" data-id-company="${dataCompanyId}" class="companyNewData width101"></div>
+                <div class="marginpx9 width102">
+                  <input type="text" placeholder="Напишите название нового салона..." data-id="${dataId}" data-id-company="${dataCompanyId}" class="companyNewData width101">
+                  <input type="text" placeholder="Напишите ответсвенного" class="companyNewResponsePerson">
+                </div>
                 <div>
                     <button class="btn btn-dark my-1 btn-sm w-100 add-data-company">Добавить</button>
-                </btn>
+                </div>
           </div>
           `);
                 } else {
@@ -274,9 +283,6 @@ $(document).ready(function () {
                       .find(".cityAdminQuiz")
                       .val();
                     for (key in data) {
-                      console.log(data[key]["cityName"], cityName);
-                      console.log(data[key]["cityName"] === cityName);
-                      console.log(data[key]["quizzes"]);
                       if (data[key]["cityName"] === cityName) {
                         data[key]["quizzes"].forEach((quiz, i) => {
                           $(".main-form-quiz").append(
@@ -290,7 +296,7 @@ $(document).ready(function () {
                                   }" data-value="${quiz["quiz"]}" value="${
                               quiz["quiz"]
                             }" class="quizValue w-100">
-                                  <input type="text" placeholder="Ответственный" value="${
+                                  <input type="text" placeholder="Соисполнитель" value="${
                                     quiz["responsePerson"]
                                   }"  class="quizResponsePerson w-100">
                                   <input type="text" placeholder="Наблюдатель" value="${
@@ -312,7 +318,7 @@ $(document).ready(function () {
                     <div class="d-flex align-items-center quizNewDataParent ms-3">
                       <div class="marginpx9 d-flex flex-column w-100">
                         <input type="text" placeholder="Напишите новый вопрос..."  class="quizNewData w-100">
-                        <input type="text" placeholder="Ответственный"  class="quizNewResponsePerson w-100">
+                        <input type="text" placeholder="Соисполнитель"  class="quizNewResponsePerson w-100">
                         <input type="text" placeholder="Наблюдатель"  class="quizNewSpectatePerson w-100">
                           <div>
                             <button class="btn btn-dark my-1 w-100 create-quiz">Добавить</button>
@@ -446,7 +452,12 @@ $(document).ready(function () {
 
     let companyName = $(".company").val();
     let cityName = $(".city").val();
-    let mainWatcher = $(".quizMainValue").attr("main-watcher");
+    let mainWatcherFirst = $(".quizMainValue").attr("main-watcher-first");
+    let mainWatcherSecond = $(".quizMainValue").attr("main-watcher-second");
+    let companyResponsePerson = $(".company")
+      .find("option:selected")
+      .attr("data-response-person");
+    console.log(companyResponsePerson);
 
     let reasons = [];
     let answers = [];
@@ -511,40 +522,41 @@ $(document).ready(function () {
       var dateQuest = new Date();
       dateQuest.setDate(dateQuest.getDate() + 7);
 
-      for (var i = 0; i < answers.length; ++i) {
-        if (answers[i] == "Нет") {
-          BX24.callMethod(
-            "tasks.task.add",
-            {
-              fields: {
-                TITLE:
-                  cityName +
-                  " " +
-                  companyName +
-                  " " +
-                  name +
-                  " получил замечание!",
-                RESPONSIBLE_ID: responsible[i],
-                AUDITORS: Array(mainWatcher, spectators[i]),
-                TASK_CONTROL: "Y",
-                DEADLINE: dateQuest,
-                DESCRIPTION:
-                  "Сотрудник: " +
-                  name +
-                  " из " +
-                  companyName +
-                  " получил замечание при ответе на вопрос: " +
-                  quizzes[i] +
-                  ". Комментарий пользователя: " +
-                  reasons[i],
-              },
-            },
-            function (res) {
-              console.log(res.answer.result);
-            }
-          );
-        }
-      }
+      // переменные mainWatcherSecond == второй наблюдатель, companyResponsePerson == ответственный у города
+      // for (var i = 0; i < answers.length; ++i) {
+      //   if (answers[i] == "Нет") {
+      //     BX24.callMethod(
+      //       "tasks.task.add",
+      //       {
+      //         fields: {
+      //           TITLE:
+      //             cityName +
+      //             " " +
+      //             companyName +
+      //             " " +
+      //             name +
+      //             " получил замечание!",
+      //           RESPONSIBLE_ID: responsible[i],
+      //           AUDITORS: Array(mainWatcherFirst, mainWatcherSecond, spectators[i]),
+      //           TASK_CONTROL: "Y",
+      //           DEADLINE: dateQuest,
+      //           DESCRIPTION:
+      //             "Сотрудник: " +
+      //             name +
+      //             " из " +
+      //             companyName +
+      //             " получил замечание при ответе на вопрос: " +
+      //             quizzes[i] +
+      //             ". Комментарий пользователя: " +
+      //             reasons[i],
+      //         },
+      //       },
+      //       function (res) {
+      //         console.log(res.answer.result);
+      //       }
+      //     );
+      //   }
+      // }
 
       $.ajax({
         url: "/answer/save-answer",
@@ -554,7 +566,9 @@ $(document).ready(function () {
           companyName: companyName,
           name: name,
           spectateAndResponsePersons: spectateAndResponsePersons,
-          mainWatcher: mainWatcher,
+          mainWatcherFirst: mainWatcherFirst,
+          mainWatcherSecond: mainWatcherSecond,
+          companyResponsePerson: companyResponsePerson,
           answers: answers,
           quizzes: quizzes,
           reasons: reasons,
@@ -757,6 +771,61 @@ $(document).ready(function () {
   });
   // END GET all users answers
 
+  // START change, get watcher
+
+  $("body").on("click", "#btnradio3, .checkAlert", function (e) {
+    $(".mainWatcherClass").empty();
+    getWatcher().then((data) => {
+      setTimeout(function () {
+        if (data.status || data.watchers) {
+          $(".main-form-watcher").append(
+            `<div class="d-flex mainWatcherClass my-1">
+                <div class="d-flex align-items-center pe-2">
+                  <span>1.</span>
+                </div>
+              <input type="text" class="watcherName" data-id="${data["watchers"]["0"]["_id"]}" placeholder="Введите главного наблюдателя #1" value="${data["watchers"]["0"]["name"]}">
+              <button class="btn btn-dark w-100 change-watcher">Изменить</button> 
+            </div>`
+          );
+        } else {
+          $(".main-form-watcher").append(
+            `<div class="d-flex mainWatcherClass my-1">
+            <div class="d-flex align-items-center pe-2">
+                  <span>1.</span>
+                </div>
+          <input type="text" class="watcherNameForCreationFirst w-100" placeholder="Введите главного наблюдателя #1">
+          <button class="btn btn-dark create-watcher">Создать</button> 
+          </div>`
+          );
+        }
+      }, 600);
+
+      setTimeout(function () {
+        if (data.status || data.watchers) {
+          $(".main-form-watcher").append(
+            `<div class="d-flex mainWatcherClass my-1">
+                <div class="d-flex align-items-center pe-2">
+                  <span>2.</span>
+                </div>
+              <input type="text" class="watcherName" data-id="${data["watchers"]["1"]["_id"]}" placeholder="Введите главного наблюдателя #2" value="${data["watchers"]["1"]["name"]}">
+              <button class="btn btn-dark w-100 change-watcher">Изменить</button> 
+            </div>`
+          );
+        } else {
+          $(".main-form-watcher").append(
+            `<div class="d-flex mainWatcherClass my-1">
+            <div class="d-flex align-items-center pe-2">
+                  <span>2.</span>
+                </div>
+          <input type="text" class="watcherNameForCreationSecond w-100" placeholder="Введите главного наблюдателя #2">
+          <button class="btn btn-dark create-watcher">Создать</button> 
+          </div>`
+          );
+        }
+      }, 900);
+    });
+  });
+
   function getWatcher() {
     return fetch("/get-watcher")
       .then((response) => response.json())
@@ -765,39 +834,23 @@ $(document).ready(function () {
       });
   }
 
-  // START change, get watcher
-
-  $("body").on("click", "#btnradio3, .checkAlert", function (e) {
-    $(".mainWatcherClass").empty();
-    setTimeout(function () {
-      getWatcher().then((data) => {
-        if (data.status != "false") {
-          $(".main-form-watcher").append(
-            `<div class="d-flex mainWatcherClass">
-          <input type="text" class="watcherName" placeholder="Введите главного наблюдателя" value="${data.name}">
-          <button class="btn btn-dark w-100 change-watcher">Изменить</button> 
-          </div>`
-          );
-        } else {
-          $(".main-form-watcher").append(
-            `<div class="d-flex mainWatcherClass">
-          <input type="text" class="watcherNameForCreation" placeholder="Введите главного наблюдателя">
-          <button class="btn btn-dark w-100 create-watcher">Создать</button> 
-          </div>`
-          );
-        }
-      });
-    }, 600);
-  });
-
   $("body").on("click", ".create-watcher", function (e) {
-    let name = $(".watcherNameForCreation").val();
-    if (name != "") {
+    if (
+      $(".watcherNameForCreationFirst").val() != "" ||
+      $(".watcherNameForCreationSecond").val() != ""
+    ) {
+      let firstName = $(".watcherNameForCreationFirst").val()
+        ? $(".watcherNameForCreationFirst").val()
+        : "отсутствует";
+      let secondName = $(".watcherNameForCreationSecond").val()
+        ? $(".watcherNameForCreationSecond").val()
+        : "отсутствует";
+
       $.ajax({
         url: "/create-watcher",
         type: "POST",
         data: {
-          name: name,
+          watchers: [{ name: firstName }, { name: secondName }],
           isAdmin: isUserAdmin,
         },
         success: function () {
@@ -824,13 +877,15 @@ $(document).ready(function () {
   });
 
   $("body").on("click", ".change-watcher", function (e) {
-    let name = $(".watcherName").val();
+    let name = $(this).parent().find(".watcherName").val();
+    let id = $(this).parent().find(".watcherName").attr("data-id");
     if (name != "") {
       $.ajax({
         url: "/change-watcher",
         type: "POST",
         data: {
           name: name,
+          id: id,
           isAdmin: isUserAdmin,
         },
         success: function () {
@@ -941,12 +996,16 @@ $(document).ready(function () {
   $("body").on("click", ".add-data-company", function () {
     let id = $(".companyNewData").attr("data-id");
     let companyNewData = $(".companyNewData").val();
-
+    let responsePerson = $(".companyNewResponsePerson").val()
+      ? $(".companyNewResponsePerson").val()
+      : "отсутствует";
+    console.log(responsePerson);
     $.ajax({
       url: "/add-data-company",
       type: "POST",
       data: {
         companyNewData: companyNewData,
+        responsePerson: responsePerson,
         id: id,
         isAdmin: isUserAdmin,
       },
@@ -968,11 +1027,18 @@ $(document).ready(function () {
     let companyNewName = company.find(".companyValue").val();
     let companyOldName = company.find(".companyValue").attr("data-name");
     let id = company.attr("data-id");
+    let responsePerson = company.find(".companyResponsePerson").val()
+      ? company.find(".companyResponsePerson").val()
+      : "отсутствует";
+
+    console.log(responsePerson);
+
     $.ajax({
       url: "/edit-data-company",
       type: "POST",
       data: {
         id: id,
+        responsePerson: responsePerson,
         companyNewName: companyNewName,
         companyOldName: companyOldName,
         isAdmin: isUserAdmin,
