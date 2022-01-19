@@ -93,13 +93,10 @@ const add_data_company = async (req, res) => {
     const companyNewData = req.body.companyNewData;
     const companyResponsePerson = req.body.responsePerson;
     const result = await DataForm.findOne({ _id: id });
-    console.log(id, companyNewData, companyResponsePerson);
-    console.log(result.company);
     result.company.push({
       companyName: companyNewData,
       companyResponsePerson: companyResponsePerson,
     });
-    console.log(result.company);
     result.save();
 
     res.status(200).json({ success: result });
@@ -110,16 +107,16 @@ const add_data_company = async (req, res) => {
 
 const edit_data_company = async (req, res) => {
   try {
-    let companyOldName = req.body.companyOldName;
     let companyNewName = req.body.companyNewName;
-    const companyResponsePerson = req.body.responsePerson;
-    let id = req.body.id;
+    let companyResponsePerson = req.body.responsePerson;
+    let main_id = req.body.main_id;
+    let sub_id = req.body.sub_id;
     let result = await DataForm.findOne({
-      _id: id,
-      companyName: companyOldName,
+      _id: main_id,
     });
+    console.log(result);
     result.company.forEach((element) => {
-      if (element.companyName == companyOldName) {
+      if (element._id == sub_id) {
         element.companyName = companyNewName;
         element.companyResponsePerson = companyResponsePerson;
       }

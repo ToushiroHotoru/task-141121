@@ -241,8 +241,6 @@ $(document).ready(function () {
                         }" data-id="${item["_id"]}" value="${
                         item["companyName"]
                       }" class="companyValue w-100 ">
-                      
-                  
                         <input type="text" placeholder="Ответственный" class="companyResponsePerson w-100" value="${
                           item["companyResponsePerson"]
                         }">
@@ -1029,18 +1027,20 @@ $(document).ready(function () {
     const company = $(this).parent().parent();
     let companyNewName = company.find(".companyValue").val();
     let companyOldName = company.find(".companyValue").attr("data-name");
-    let id = company.attr("data-id");
+    let sub_id = company.find(".companyValue").attr("data-id");
+    let main_id = $(".companyNewData").attr("data-id");
     let responsePerson = company.find(".companyResponsePerson").val()
       ? company.find(".companyResponsePerson").val()
       : "отсутствует";
 
-    console.log(responsePerson);
+    console.log(main_id, sub_id);
 
     $.ajax({
       url: "/edit-data-company",
       type: "POST",
       data: {
-        id: id,
+        main_id: main_id,
+        sub_id: sub_id,
         responsePerson: responsePerson,
         companyNewName: companyNewName,
         companyOldName: companyOldName,
@@ -1072,7 +1072,7 @@ $(document).ready(function () {
         isAdmin: isUserAdmin,
       },
       success: function () {
-        company.remove();
+        company.parent().remove();
       },
     });
   });
